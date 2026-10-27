@@ -17,3 +17,6 @@ android/local.properties
 *.iml
 # Generated delivery artifacts are uploaded to GitHub, not committed.
 artifacts/
+# Local asset-generator caches; GLB outputs themselves are versioned.
+__pycache__/
+*.pyc

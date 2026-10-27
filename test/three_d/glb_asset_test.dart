@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:elec_lab/src/models/component_catalog.dart';
 import 'package:elec_lab/src/models/terminal.dart';
@@ -24,29 +23,30 @@ void main() {
       final lods = model['lods'] as Map<String, dynamic>;
       for (final detail in MeshDetail.values) {
         final info = lods[detail.name] as Map<String, dynamic>;
-        final data = await rootBundle.load(info['path'] as String);
-        expect(data.lengthInBytes, info['bytes'], reason: info['path']);
+        final path = info['path'] as String;
+        final data = await rootBundle.load(path);
+        expect(data.lengthInBytes, info['bytes'], reason: path);
         final mesh = GlbMeshDecoder.decode(data, kind: kind);
         files++;
-        expect(mesh.faces, hasLength(info['triangles']), reason: info['path']);
-        expect(mesh.vertices, hasLength(info['vertices']), reason: info['path']);
-        expect(mesh.faces.length, greaterThan(100), reason: info['path']);
+        expect(mesh.faces, hasLength(info['triangles']), reason: path);
+        expect(mesh.vertices, hasLength(info['vertices']), reason: path);
+        expect(mesh.faces.length, greaterThan(100), reason: path);
         expect(
           mesh.terminals.map((terminal) => terminal.id).toSet(),
           ComponentCatalog.specOf(kind)
               .terminals
               .map((terminal) => terminal.id)
               .toSet(),
-          reason: info['path'],
+          reason: path,
         );
         for (final face in mesh.faces) {
-          expect(face.indices, hasLength(3), reason: info['path']);
+          expect(face.indices, hasLength(3), reason: path);
           expect(
             face.indices.every(
               (index) => index >= 0 && index < mesh.vertices.length,
             ),
             isTrue,
-            reason: info['path'],
+            reason: path,
           );
         }
       }

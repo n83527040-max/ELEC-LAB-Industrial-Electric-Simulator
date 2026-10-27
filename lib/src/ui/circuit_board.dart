@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../models/board_geometry.dart';
 import '../models/component.dart';
 import '../models/component_catalog.dart';
 import '../models/geometry.dart';
