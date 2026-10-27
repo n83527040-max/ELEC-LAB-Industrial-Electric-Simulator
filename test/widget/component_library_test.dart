@@ -99,7 +99,8 @@ void main() {
     expect(controller.selectedComponentId, 'k1');
 
     await tester.tap(find.byKey(const Key('terminal-k1-a1')));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pumpAndSettle();
     expect(controller.pendingWireStart?.componentId, 'k1');
     expect(controller.pendingWireStart?.terminalId, 'a1');
 
