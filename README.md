@@ -59,7 +59,7 @@ Workflow [`.github/workflows/android.yml`](.github/workflows/android.yml) ينف
 
 <https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/actions>
 
-لا يُعد وجود Workflow دليلاً على نجاح APK؛ راجع [`docs/FINAL_REPORT.md`](docs/FINAL_REPORT.md) للنتيجة الفعلية والرابط عند توفره.
+النسخة المتحقق منها **v0.1.0** نجحت في Analyze و**50/50 اختباراً** وبناء APK وفحص التوقيع والحزمة. يمكن تنزيلها مباشرة من [GitHub Release](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/releases/download/v0.1.0/app-release.apk). الحجم والهاش وروابط CI والقيود موثقة في [`docs/FINAL_REPORT.md`](docs/FINAL_REPORT.md).
 
 ## بنية المصدر
 
