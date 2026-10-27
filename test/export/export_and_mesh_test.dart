@@ -53,6 +53,8 @@ void main() {
     );
     await tester.drag(find.byType(InteractiveMeshViewer), const Offset(80, 30));
     await tester.pump();
+    // Let the double-tap recognition timeout finish before tree disposal.
+    await tester.pump(const Duration(milliseconds: 400));
     expect(find.byType(CustomPaint), findsWidgets);
     expect(tester.takeException(), isNull);
   });

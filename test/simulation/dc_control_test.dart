@@ -58,7 +58,11 @@ void main() {
       expect(result['v1']!.measurementValid, isTrue);
       expect(result['a1']!.measurementValid, isTrue);
       expect(result['v1']!.voltage, closeTo(result['h1']!.voltage, 1e-6));
-      expect(result['a1']!.current, closeTo(result['h1']!.current, 1e-6));
+      expect(
+        result['a1']!.current,
+        closeTo(result['h1']!.current + result['v1']!.current, 1e-6),
+        reason: 'The series ammeter measures lamp + parallel voltmeter current.',
+      );
       expect(result['v1']!.voltage, greaterThan(20));
     });
 

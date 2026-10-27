@@ -337,7 +337,7 @@ class ElectricalSimulator {
             current = network.current(measurement.first).magnitude;
             validMeasurement = current < 0.1 &&
                 voltage <= component.number('maxVoltage') * 1.1 &&
-                network.hasAlternatePath(
+                network.validVoltmeterConnection(
                   measurement.first.a,
                   measurement.first.b,
                   component.id,
@@ -645,7 +645,8 @@ class _Network {
   bool solved = false;
   bool singular = false;
   bool converged = false;
-  final List<List<String>> _adjacency = <List<String>>[];
+  final List<List<_AdjacencyEdge>> _adjacency = <List<_AdjacencyEdge>>[];
+  final Map<String, int> _adjacencyIndex = <String, int>{};
 
   factory _Network.build(
     ElectricalProject project,
@@ -1039,49 +1040,111 @@ class _Network {
 
   void _buildAdjacency() {
     final all = <String>{ground, ...nodes.keys}.toList()..sort();
-    final index = <String, int>{
-      for (var i = 0; i < all.length; i++) all[i]: i,
-    };
+    _adjacencyIndex
+      ..clear()
+      ..addAll(<String, int>{
+        for (var i = 0; i < all.length; i++) all[i]: i,
+      });
     _adjacency.clear();
-    _adjacency.addAll(List<List<String>>.generate(all.length, (_) => <String>[]));
-    void connect(String a, String b, String owner) {
-      final ai = index[a];
-      final bi = index[b];
+    _adjacency.addAll(
+      List<List<_AdjacencyEdge>>.generate(
+        all.length,
+        (_) => <_AdjacencyEdge>[],
+      ),
+    );
+    void connect(
+      String a,
+      String b,
+      String owner, {
+      bool isSource = false,
+      bool isLoad = false,
+    }) {
+      final ai = _adjacencyIndex[a];
+      final bi = _adjacencyIndex[b];
       if (ai == null || bi == null) return;
-      _adjacency[ai].add('$b|$owner');
-      _adjacency[bi].add('$a|$owner');
+      _adjacency[ai].add(_AdjacencyEdge(b, owner, isSource, isLoad));
+      _adjacency[bi].add(_AdjacencyEdge(a, owner, isSource, isLoad));
     }
 
     for (final ownerBranches in branches.values) {
       for (final branch in ownerBranches) {
         if (branch.impedance.magnitude < 1e7) {
-          connect(branch.a, branch.b, branch.ownerId);
+          final isSource = branch.role == 'sourceResistance';
+          final isLoad = !isSource &&
+              branch.role != 'measurement' &&
+              branch.role != 'wire' &&
+              branch.impedance.magnitude >= 0.1;
+          connect(
+            branch.a,
+            branch.b,
+            branch.ownerId,
+            isSource: isSource,
+            isLoad: isLoad,
+          );
         }
       }
     }
     for (final source in sources) {
-      connect(source.a, source.b, source.ownerId);
+      connect(source.a, source.b, source.ownerId, isSource: true);
     }
   }
 
-  bool hasAlternatePath(String start, String end, String excludedOwner) {
+  /// A voltmeter is valid across a load/network (a source-free alternate
+  /// path), or directly across a source (a load-free path). If every alternate
+  /// path contains both a source and a load, the meter is in series with them.
+  bool validVoltmeterConnection(
+    String start,
+    String end,
+    String excludedOwner,
+  ) {
+    return _hasAlternatePath(
+          start,
+          end,
+          excludedOwner,
+          avoidSources: true,
+        ) ||
+        _hasAlternatePath(
+          start,
+          end,
+          excludedOwner,
+          avoidLoads: true,
+        );
+  }
+
+  bool _hasAlternatePath(
+    String start,
+    String end,
+    String excludedOwner, {
+    bool avoidSources = false,
+    bool avoidLoads = false,
+  }) {
     final visited = <String>{start};
     final queue = <String>[start];
     while (queue.isNotEmpty) {
       final currentNode = queue.removeAt(0);
       if (currentNode == end) return true;
-      final all = <String>{ground, ...nodes.keys}.toList()..sort();
-      final index = all.indexOf(currentNode);
-      if (index < 0 || index >= _adjacency.length) continue;
+      final index = _adjacencyIndex[currentNode];
+      if (index == null || index >= _adjacency.length) continue;
       for (final edge in _adjacency[index]) {
-        final separator = edge.lastIndexOf('|');
-        final next = edge.substring(0, separator);
-        final owner = edge.substring(separator + 1);
-        if (owner == excludedOwner || visited.contains(next)) continue;
-        visited.add(next);
-        queue.add(next);
+        if (edge.owner == excludedOwner ||
+            (avoidSources && edge.isSource) ||
+            (avoidLoads && edge.isLoad) ||
+            visited.contains(edge.node)) {
+          continue;
+        }
+        visited.add(edge.node);
+        queue.add(edge.node);
       }
     }
     return false;
   }
+}
+
+class _AdjacencyEdge {
+  const _AdjacencyEdge(this.node, this.owner, this.isSource, this.isLoad);
+
+  final String node;
+  final String owner;
+  final bool isSource;
+  final bool isLoad;
 }
