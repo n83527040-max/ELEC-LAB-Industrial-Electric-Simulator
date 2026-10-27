@@ -91,6 +91,8 @@ void main() {
     expect(find.text('A1'), findsNothing);
 
     await tester.tap(find.byType(BoardComponent));
+    // The device also supports double-tap details; let single-tap recognition finish.
+    await tester.pump(const Duration(milliseconds: 350));
     await tester.pumpAndSettle();
     expect(find.text('A1'), findsOneWidget);
     expect(find.text('1/L1'), findsOneWidget);
