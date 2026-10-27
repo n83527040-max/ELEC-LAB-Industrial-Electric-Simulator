@@ -2,6 +2,7 @@ import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/component_catalog.dart';
 import 'package:elec_lab/src/models/geometry.dart';
 import 'package:elec_lab/src/models/project.dart';
+import 'package:elec_lab/src/models/supply_bay.dart';
 import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/models/wire.dart';
 
@@ -23,6 +24,9 @@ CircuitComponent device(
     layerId: layer,
     properties: <String, Object>{
       ...ComponentCatalog.specOf(kind).defaultProperties,
+      // Legacy electrical fixtures describe already-powered test circuits.
+      // New Supply Bay tests still verify that reserved sources default OFF.
+      if (SupplyBay.isSupplyKind(kind)) 'enabled': true,
       ...overrides,
     },
   );

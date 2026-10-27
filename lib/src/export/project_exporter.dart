@@ -8,6 +8,7 @@ import 'package:pdf/widgets.dart' as pw;
 
 import '../models/component_catalog.dart';
 import '../models/project.dart';
+import '../models/supply_bay.dart';
 import '../three_d/mesh_view.dart';
 import '../three_d/procedural_meshes.dart';
 import '../ui/board_painter.dart';
@@ -30,8 +31,14 @@ class SchematicExportPainter extends CustomPainter {
       visibleLayers: visibleLayers,
     ).paint(canvas, size);
     for (final component in project.components) {
-      if (!visibleLayers.contains(component.layerId)) continue;
+      if (!SupplyBay.isFixed(component) &&
+          !visibleLayers.contains(component.layerId)) {
+        continue;
+      }
       final spec = ComponentCatalog.specOf(component.kind);
+      final annotationColor = SupplyBay.isFixed(component)
+          ? const Color(0xffe6f6ff)
+          : const Color(0xff07111f);
       canvas.save();
       canvas.translate(
         component.position.x + spec.size.width * component.scale / 2,
@@ -54,8 +61,8 @@ class SchematicExportPainter extends CustomPainter {
         final text = TextPainter(
           text: TextSpan(
             text: terminal.label,
-            style: const TextStyle(
-              color: Color(0xff07111f),
+            style: TextStyle(
+              color: annotationColor,
               fontSize: 6,
               fontWeight: FontWeight.bold,
             ),
@@ -71,8 +78,8 @@ class SchematicExportPainter extends CustomPainter {
       final label = TextPainter(
         text: TextSpan(
           text: '${component.label} • ${spec.nameFr}',
-          style: const TextStyle(
-            color: Color(0xff07111f),
+          style: TextStyle(
+            color: annotationColor,
             fontSize: 9,
             fontWeight: FontWeight.bold,
           ),

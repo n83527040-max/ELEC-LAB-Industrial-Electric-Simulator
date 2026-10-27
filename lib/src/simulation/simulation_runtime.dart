@@ -6,6 +6,8 @@ class DeviceRuntime {
     this.timerElapsed = 0,
     this.thermalStress = 0,
     this.overloadTime = 0,
+    this.timerOutput = false,
+    this.energyKwh = 0,
   });
 
   final bool energized;
@@ -14,6 +16,8 @@ class DeviceRuntime {
   final double timerElapsed;
   final double thermalStress;
   final double overloadTime;
+  final bool timerOutput;
+  final double energyKwh;
 
   DeviceRuntime copyWith({
     bool? energized,
@@ -22,6 +26,8 @@ class DeviceRuntime {
     double? timerElapsed,
     double? thermalStress,
     double? overloadTime,
+    bool? timerOutput,
+    double? energyKwh,
   }) {
     return DeviceRuntime(
       energized: energized ?? this.energized,
@@ -30,6 +36,8 @@ class DeviceRuntime {
       timerElapsed: timerElapsed ?? this.timerElapsed,
       thermalStress: thermalStress ?? this.thermalStress,
       overloadTime: overloadTime ?? this.overloadTime,
+      timerOutput: timerOutput ?? this.timerOutput,
+      energyKwh: energyKwh ?? this.energyKwh,
     );
   }
 }

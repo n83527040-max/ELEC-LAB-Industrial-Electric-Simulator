@@ -5,9 +5,11 @@ import 'package:flutter/foundation.dart';
 import '../models/component.dart';
 import '../models/component_catalog.dart';
 import '../models/connection_validator.dart';
+import '../models/din_geometry.dart';
 import '../models/geometry.dart';
 import '../models/layer.dart';
 import '../models/project.dart';
+import '../models/supply_bay.dart';
 import '../models/terminal.dart';
 import '../models/wire.dart';
 import '../simulation/electrical_simulator.dart';
@@ -27,7 +29,13 @@ class EditorController extends ChangeNotifier {
         _onSave = onSave,
         simulator = simulator ?? ElectricalSimulator(),
         _ids = idFactory ?? IdFactory(),
-        _clock = clock ?? DateTime.now;
+        _clock = clock ?? DateTime.now {
+    final installed = SupplyBay.install(_project);
+    if (!identical(installed, _project)) {
+      _project = installed;
+      _scheduleSave();
+    }
+  }
 
   ElectricalProject _project;
   final Future<void> Function(ElectricalProject project)? _onSave;
@@ -114,19 +122,31 @@ class EditorController extends ChangeNotifier {
   String addComponent(ComponentKind kind, BoardPoint requestedPosition) {
     final spec = ComponentCatalog.specOf(kind);
     final id = _ids.create('c');
-    final position = _clampPosition(
-      snap(requestedPosition),
-      spec.size.width,
-      spec.size.height,
-    );
-    final layerId = _defaultLayer(kind);
-    final component = CircuitComponent(
+    final draft = CircuitComponent(
       id: id,
       kind: kind,
       label: _nextLabel(kind),
-      position: position,
-      layerId: layerId,
-      properties: Map<String, Object>.from(spec.defaultProperties),
+      position: requestedPosition,
+      layerId: _defaultLayer(kind),
+      properties: <String, Object>{
+        ...spec.defaultProperties,
+        if (SupplyBay.isSupplyKind(kind)) 'enabled': false,
+      },
+    );
+    var requested = snap(requestedPosition);
+    if (snapToGrid) {
+      requested = DinGeometry.snapWithHeight(
+        requested,
+        draft,
+        spec.size.height,
+      );
+    }
+    final component = draft.copyWith(
+      position: _clampPosition(
+        requested,
+        spec.size.width,
+        spec.size.height,
+      ),
     );
     _commit(
       _project.copyWith(
@@ -160,10 +180,22 @@ class EditorController extends ChangeNotifier {
     bool transient = false,
   }) {
     final component = _project.componentById(id);
-    if (component == null || _isLocked(component.layerId)) return;
+    if (component == null ||
+        SupplyBay.isFixed(component) ||
+        _isLocked(component.layerId)) {
+      return;
+    }
     final spec = ComponentCatalog.specOf(component.kind);
+    var requested = snap(requestedPosition);
+    if (snapToGrid) {
+      requested = DinGeometry.snapWithHeight(
+        requested,
+        component,
+        spec.size.height * component.scale,
+      );
+    }
     final position = _clampPosition(
-      snap(requestedPosition),
+      requested,
       spec.size.width * component.scale,
       spec.size.height * component.scale,
     );
@@ -177,13 +209,21 @@ class EditorController extends ChangeNotifier {
 
   void rotateComponent(String id) {
     final component = _project.componentById(id);
-    if (component == null || _isLocked(component.layerId)) return;
+    if (component == null ||
+        SupplyBay.isFixed(component) ||
+        _isLocked(component.layerId)) {
+      return;
+    }
     _replaceComponent(component.copyWith(rotation: (component.rotation + 1) % 4));
   }
 
   void resizeComponent(String id, double scale) {
     final component = _project.componentById(id);
-    if (component == null || _isLocked(component.layerId)) return;
+    if (component == null ||
+        SupplyBay.isFixed(component) ||
+        _isLocked(component.layerId)) {
+      return;
+    }
     final nextScale = scale.clamp(0.6, 1.8).toDouble();
     final spec = ComponentCatalog.specOf(component.kind);
     _replaceComponent(
@@ -227,15 +267,23 @@ class EditorController extends ChangeNotifier {
 
   String? duplicateComponent(String id) {
     final component = _project.componentById(id);
-    if (component == null) return null;
+    if (component == null || SupplyBay.isFixed(component)) return null;
     final newId = _ids.create('c');
     final spec = ComponentCatalog.specOf(component.kind);
+    var requested = snap(component.position + const BoardPoint(30, 30));
+    if (snapToGrid) {
+      requested = DinGeometry.snapWithHeight(
+        requested,
+        component,
+        spec.size.height * component.scale,
+      );
+    }
     final duplicate = CircuitComponent(
       id: newId,
       kind: component.kind,
       label: _nextLabel(component.kind),
       position: _clampPosition(
-        snap(component.position + const BoardPoint(30, 30)),
+        requested,
         spec.size.width * component.scale,
         spec.size.height * component.scale,
       ),
@@ -255,7 +303,8 @@ class EditorController extends ChangeNotifier {
   }
 
   void deleteComponent(String id) {
-    if (!_project.components.any((item) => item.id == id)) return;
+    final component = _project.componentById(id);
+    if (component == null || SupplyBay.isFixed(component)) return;
     _commit(
       _project.copyWith(
         components: _project.components
@@ -304,15 +353,30 @@ class EditorController extends ChangeNotifier {
       return null;
     }
     final fromComponent = _project.componentById(from.componentId)!;
-    final spec = ComponentCatalog.specOf(fromComponent.kind);
-    final terminal = spec.terminal(from.terminalId);
+    final toComponent = _project.componentById(to.componentId)!;
+    final fromTerminal = ComponentCatalog.specOf(
+      fromComponent.kind,
+    ).terminal(from.terminalId);
+    final toTerminal = ComponentCatalog.specOf(
+      toComponent.kind,
+    ).terminal(to.terminalId);
+    final isControl =
+        fromTerminal.kind == TerminalKind.coil ||
+        fromTerminal.kind == TerminalKind.auxiliary ||
+        toTerminal.kind == TerminalKind.coil ||
+        toTerminal.kind == TerminalKind.auxiliary;
+    final controlLayerId = _project.layerById('control')?.id;
     final id = _ids.create('w');
     final wire = CircuitWire(
       id: id,
       from: from,
       to: to,
-      layerId: fromComponent.layerId,
-      colorValue: _defaultWireColor(terminal.kind),
+      layerId: isControl
+          ? controlLayerId ?? toComponent.layerId
+          : fromComponent.layerId,
+      colorValue: isControl && fromTerminal.kind == TerminalKind.power
+          ? 0xff1e88e5
+          : _defaultWireColor(fromTerminal.kind),
     );
     _commit(_project.copyWith(wires: <CircuitWire>[..._project.wires, wire]));
     pendingWireStart = null;
@@ -553,27 +617,50 @@ class EditorController extends ChangeNotifier {
     if (!isRunning) return;
     final component = _project.componentById(id);
     if (component == null) return;
+    if (component.kind == ComponentKind.rotarySwitch) {
+      final position = component.number('position').round();
+      _updateOperationalProperties(
+        id,
+        <String, Object>{'position': (position + 1) % 3},
+      );
+      simulateOnce();
+      return;
+    }
     final key = switch (component.kind) {
-      ComponentKind.selectorSwitch => 'closed',
-      ComponentKind.sensor => 'active',
+      ComponentKind.selectorSwitch || ComponentKind.emergencyStop => 'closed',
+      ComponentKind.sensor || ComponentKind.limitSwitch => 'active',
       _ => null,
     };
     if (key == null) return;
+    _updateOperationalProperties(id, <String, Object>{key: !component.flag(key)});
+    simulateOnce();
+  }
+
+  void setSupplyEnabled(String id, bool enabled) {
+    final component = _project.componentById(id);
+    if (component == null || !SupplyBay.isSupplyKind(component.kind)) return;
+    updateComponentProperties(
+      id,
+      <String, Object>{...component.properties, 'enabled': enabled},
+    );
+    if (isRunning) simulateOnce();
+  }
+
+  void _updateOperationalProperties(
+    String id,
+    Map<String, Object> changes,
+  ) {
     _project = _project.copyWith(
       components: _project.components
           .map(
             (item) => item.id == id
                 ? item.copyWith(
-                    properties: <String, Object>{
-                      ...item.properties,
-                      key: !item.flag(key),
-                    },
+                    properties: <String, Object>{...item.properties, ...changes},
                   )
                 : item,
           )
           .toList(growable: false),
     );
-    simulateOnce();
   }
 
   void resetProtection(String id) {
@@ -704,20 +791,25 @@ class EditorController extends ChangeNotifier {
       ComponentKind.dcSupply ||
       ComponentKind.acSupply ||
       ComponentKind.threePhaseSupply => 'G',
-      ComponentKind.circuitBreaker => 'Q',
+      ComponentKind.circuitBreaker ||
+      ComponentKind.differentialBreaker ||
+      ComponentKind.motorBreaker => 'Q',
       ComponentKind.contactor => 'K',
       ComponentKind.thermalRelay => 'F',
       ComponentKind.auxiliaryRelay => 'KA',
       ComponentKind.pushButtonNO ||
-      ComponentKind.pushButtonNC => 'S',
-      ComponentKind.selectorSwitch => 'SA',
-      ComponentKind.timer => 'KT',
-      ComponentKind.sensor => 'B',
+      ComponentKind.pushButtonNC ||
+      ComponentKind.emergencyStop => 'S',
+      ComponentKind.selectorSwitch || ComponentKind.rotarySwitch => 'SA',
+      ComponentKind.timer || ComponentKind.timerOffDelay => 'KT',
+      ComponentKind.sensor || ComponentKind.limitSwitch => 'B',
       ComponentKind.indicator => 'H',
-      ComponentKind.motor3Phase => 'M',
+      ComponentKind.motor3Phase || ComponentKind.motor1Phase => 'M',
+      ComponentKind.transformer => 'T',
       ComponentKind.terminalBlock => 'X',
       ComponentKind.voltmeter => 'V',
       ComponentKind.ammeter => 'A',
+      ComponentKind.digitalCounter => 'P',
       ComponentKind.fuse => 'FU',
     };
     final count = _project.components.where((item) => item.kind == kind).length + 1;

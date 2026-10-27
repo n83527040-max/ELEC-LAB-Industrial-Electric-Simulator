@@ -4,8 +4,10 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../models/board_geometry.dart';
+import '../models/din_geometry.dart';
 import '../models/geometry.dart';
 import '../models/project.dart';
+import '../models/supply_bay.dart';
 import '../models/wire.dart';
 import '../simulation/simulation_result.dart';
 
@@ -30,44 +32,176 @@ class BoardPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final background = Paint()
-      ..color = Color(industrialSurface ? 0xffbcc4cc : 0xffdce3e8);
-    canvas.drawRect(Offset.zero & size, background);
     if (industrialSurface) {
-      _paintMetal(canvas, size);
+      _paintEnclosure(canvas, size);
+      _paintMountingHoles(canvas, size);
+      for (final rail in DinGeometry.railCenters) {
+        _paintDinRail(canvas, size, rail);
+      }
+    } else {
+      canvas.drawRect(
+        Offset.zero & size,
+        Paint()..color = const Color(0xffdce3e8),
+      );
+    }
+    if (project.components.any(SupplyBay.isFixed)) {
+      _paintSupplyBay(canvas, size);
     }
     if (showGrid) _paintGrid(canvas, size);
     for (final wire in project.wires) {
       if (!visibleLayers.contains(wire.layerId)) continue;
       _paintWire(canvas, wire, wire.id == selectedWireId);
     }
-    _paintCorners(canvas, size);
+    if (industrialSurface) _paintCorners(canvas, size);
   }
 
-  void _paintMetal(Canvas canvas, Size size) {
-    final gradient = ui.Gradient.linear(
-      Offset.zero,
-      Offset(size.width, size.height),
-      const <Color>[Color(0xffe2e6e9), Color(0xffaeb8c2), Color(0xffd8dde1)],
-      const <double>[0, 0.55, 1],
+  void _paintEnclosure(Canvas canvas, Size size) {
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()..color = const Color(0xff27343e),
     );
-    canvas.drawRect(Offset.zero & size, Paint()..shader = gradient);
-    final noise = Paint()..color = Colors.white.withValues(alpha: 0.08);
-    for (var y = 7.0; y < size.height; y += 19) {
-      for (var x = 11.0; x < size.width; x += 23) {
-        canvas.drawCircle(Offset(x, y), 0.65, noise);
+    final plate = Rect.fromLTWH(12, 12, size.width - 24, size.height - 24);
+    final gradient = ui.Gradient.linear(
+      plate.topLeft,
+      plate.bottomRight,
+      const <Color>[
+        Color(0xffe1e6e9),
+        Color(0xffaab5be),
+        Color(0xffd5dce0),
+      ],
+      const <double>[0, 0.52, 1],
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(plate, const Radius.circular(8)),
+      Paint()..shader = gradient,
+    );
+    final brushed = Paint()..color = Colors.white.withValues(alpha: 0.055);
+    for (var y = 24.0; y < size.height - 20; y += 13) {
+      canvas.drawLine(Offset(18, y), Offset(size.width - 18, y), brushed);
+    }
+    final edge = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2
+      ..color = const Color(0xff667682);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(plate, const Radius.circular(8)),
+      edge,
+    );
+  }
+
+  void _paintMountingHoles(Canvas canvas, Size size) {
+    final hole = Paint()..color = const Color(0xff596873);
+    final rim = Paint()..color = Colors.white.withValues(alpha: 0.34);
+    const step = 44.0;
+    for (var y = 246.0; y < size.height - 28; y += step) {
+      for (var x = 40.0; x < size.width - 28; x += step) {
+        final rect = Rect.fromCenter(center: Offset(x, y), width: 3.6, height: 5.2);
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(rect.shift(const Offset(-0.7, -0.7)), const Radius.circular(0.8)),
+          rim,
+        );
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(rect, const Radius.circular(0.8)),
+          hole,
+        );
       }
     }
   }
 
+  void _paintDinRail(Canvas canvas, Size size, double centerY) {
+    final left = 48.0;
+    final right = size.width - 48;
+    if (right <= left || centerY + 20 >= size.height) return;
+    final shadow = Rect.fromLTWH(left + 2, centerY - 10, right - left, 30);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(shadow, const Radius.circular(3)),
+      Paint()..color = Colors.black.withValues(alpha: 0.22),
+    );
+    final rail = Rect.fromLTWH(left, centerY - 13, right - left, 26);
+    canvas.drawRect(
+      rail,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          rail.topCenter,
+          rail.bottomCenter,
+          const <Color>[
+            Color(0xff79868f),
+            Color(0xffe6eaec),
+            Color(0xff8b979f),
+          ],
+        ),
+    );
+    final lip = Paint()..color = const Color(0xff59666f);
+    canvas.drawRect(Rect.fromLTWH(left, centerY - 13, right - left, 3), lip);
+    canvas.drawRect(Rect.fromLTWH(left, centerY + 10, right - left, 3), lip);
+    final slot = Paint()..color = const Color(0xff4b5962);
+    for (var x = left + 24; x < right - 18; x += 42) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromCenter(center: Offset(x, centerY), width: 20, height: 5),
+          const Radius.circular(2.5),
+        ),
+        slot,
+      );
+    }
+    for (final x in <double>[left - 12, right + 12]) {
+      final bracket = Rect.fromCenter(center: Offset(x, centerY), width: 15, height: 42);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(bracket, const Radius.circular(3)),
+        Paint()..color = const Color(0xff87949d),
+      );
+      for (final dy in <double>[-12.0, 12.0]) {
+        _paintScrew(canvas, Offset(x, centerY + dy), 3.5);
+      }
+    }
+  }
+
+  void _paintSupplyBay(Canvas canvas, Size size) {
+    final rect = Rect.fromLTWH(28, 28, size.width - 56, 178);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(10)),
+      Paint()..color = const Color(0xd9122736),
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(10)),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.4
+        ..color = const Color(0xff3a9fc4),
+    );
+    final painter = TextPainter(
+      text: const TextSpan(
+        text: 'ALIMENTATION  •  3~  L1 L2 L3 N PE   |   1~   |   DC',
+        style: TextStyle(
+          color: Color(0xffb9e9fa),
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.5,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: size.width - 80);
+    painter.paint(canvas, const Offset(44, 36));
+  }
+
   void _paintGrid(Canvas canvas, Size size) {
-    final hole = Paint()..color = const Color(0xff68737d);
-    final rim = Paint()..color = Colors.white.withValues(alpha: 0.42);
     final step = gridSize.clamp(10, 100).toDouble();
+    if (industrialSurface) {
+      final grid = Paint()
+        ..strokeWidth = 0.45
+        ..color = const Color(0xff17384a).withValues(alpha: 0.08);
+      for (var x = step; x < size.width; x += step) {
+        canvas.drawLine(Offset(x, 220), Offset(x, size.height), grid);
+      }
+      for (var y = 220 + step; y < size.height; y += step) {
+        canvas.drawLine(Offset(0, y), Offset(size.width, y), grid);
+      }
+      return;
+    }
+    final dot = Paint()..color = const Color(0xff8797a3).withValues(alpha: 0.55);
     for (var y = step; y < size.height; y += step) {
       for (var x = step; x < size.width; x += step) {
-        canvas.drawCircle(Offset(x - 0.6, y - 0.6), 1.65, rim);
-        canvas.drawCircle(Offset(x, y), 1.35, hole);
+        canvas.drawCircle(Offset(x, y), 0.9, dot);
       }
     }
   }
@@ -167,16 +301,36 @@ class BoardPainter extends CustomPainter {
   }
 
   void _paintCorners(Canvas canvas, Size size) {
-    final paint = Paint()..color = const Color(0xff596673);
     for (final offset in <Offset>[
       const Offset(16, 16),
       Offset(size.width - 16, 16),
       Offset(16, size.height - 16),
       Offset(size.width - 16, size.height - 16),
     ]) {
-      canvas.drawCircle(offset, 8, paint);
-      canvas.drawCircle(offset, 3, Paint()..color = const Color(0xff29333d));
+      _paintScrew(canvas, offset, 8);
     }
+  }
+
+  void _paintScrew(Canvas canvas, Offset offset, double radius) {
+    canvas.drawCircle(offset, radius, Paint()..color = const Color(0xff596673));
+    canvas.drawCircle(
+      offset - Offset(radius * 0.16, radius * 0.16),
+      radius * 0.72,
+      Paint()..color = const Color(0xffb9c2c8),
+    );
+    final slot = Paint()
+      ..strokeWidth = math.max(1, radius * 0.22)
+      ..color = const Color(0xff29333d);
+    canvas.drawLine(
+      offset - Offset(radius * 0.45, 0),
+      offset + Offset(radius * 0.45, 0),
+      slot,
+    );
+    canvas.drawLine(
+      offset - Offset(0, radius * 0.45),
+      offset + Offset(0, radius * 0.45),
+      slot,
+    );
   }
 
   static double distanceToWire(

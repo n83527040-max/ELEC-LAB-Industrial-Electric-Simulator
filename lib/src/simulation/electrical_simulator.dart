@@ -115,6 +115,25 @@ class ElectricalSimulator {
           final isClosed = elapsed >= delay;
           runtime.update(component.id, state.copyWith(timerElapsed: elapsed));
           if (wasClosed != isClosed) changed = true;
+        case ComponentKind.timerOffDelay:
+          final delay = math.max(0.05, component.number('delaySeconds'));
+          if (state.energized) {
+            if (!state.timerOutput || state.timerElapsed != 0) {
+              runtime.update(
+                component.id,
+                state.copyWith(timerElapsed: 0, timerOutput: true),
+              );
+              if (!state.timerOutput) changed = true;
+            }
+          } else if (state.timerOutput) {
+            final elapsed = state.timerElapsed + dt;
+            final output = elapsed < delay;
+            runtime.update(
+              component.id,
+              state.copyWith(timerElapsed: elapsed, timerOutput: output),
+            );
+            if (!output) changed = true;
+          }
         case ComponentKind.circuitBreaker:
           if (state.tripped || !component.flag('closed')) break;
           final current = reading?.current ?? 0;
@@ -150,8 +169,52 @@ class ElectricalSimulator {
               state.copyWith(overloadTime: overload),
             );
           }
+        case ComponentKind.differentialBreaker:
+          if (state.tripped || !component.flag('closed')) break;
+          final current = reading?.current ?? 0;
+          final residual = reading?.residualCurrent ?? 0;
+          final rated = math.max(0.1, component.number('ratedCurrent'));
+          final threshold = math.max(
+            0.001,
+            component.number('residualThreshold'),
+          );
+          var overload = state.overloadTime;
+          if (current > rated * 1.2) {
+            overload += dt * math.pow(current / rated, 2).toDouble();
+          } else {
+            overload = math.max(0, overload - dt * 0.5);
+          }
+          final residualTrip = residual > threshold;
+          final overcurrentTrip = current > rated * 6 || overload >= 2;
+          if (residualTrip || overcurrentTrip) {
+            runtime.update(
+              component.id,
+              state.copyWith(tripped: true, overloadTime: overload),
+            );
+            diagnostics.add(
+              SimulationDiagnostic(
+                code: residualTrip ? 'differential_trip' : 'breaker_trip',
+                componentId: component.id,
+                severity: DiagnosticSeverity.error,
+                messageAr: residualTrip
+                    ? 'فصل ${component.label}: تيار التسرب ${(residual * 1000).toStringAsFixed(1)}mA تجاوز ${(threshold * 1000).toStringAsFixed(1)}mA.'
+                    : 'فصل ${component.label} بسبب تجاوز التيار المقنن.',
+              ),
+            );
+            changed = true;
+          } else if (overload != state.overloadTime) {
+            runtime.update(
+              component.id,
+              state.copyWith(overloadTime: overload),
+            );
+          }
         case ComponentKind.thermalRelay:
-          if (state.tripped) break;
+        case ComponentKind.motorBreaker:
+          if (state.tripped ||
+              (component.kind == ComponentKind.motorBreaker &&
+                  !component.flag('closed'))) {
+            break;
+          }
           final current = reading?.current ?? 0;
           final rated = math.max(0.1, component.number('ratedCurrent'));
           final tripTime = math.max(0.2, component.number('tripTime'));
@@ -164,19 +227,23 @@ class ElectricalSimulator {
             stress -= dt / (tripTime * 2);
           }
           stress = stress.clamp(0.0, 1.2).toDouble();
-          final tripped = stress >= 1.0;
+          final instantaneous = component.kind == ComponentKind.motorBreaker &&
+              current > rated * 8;
+          final tripped = stress >= 1.0 || instantaneous;
           runtime.update(
             component.id,
             state.copyWith(thermalStress: stress, tripped: tripped),
           );
           if (tripped) {
+            final motorBreaker = component.kind == ComponentKind.motorBreaker;
             diagnostics.add(
               SimulationDiagnostic(
-                code: 'thermal_trip',
+                code: motorBreaker ? 'motor_breaker_trip' : 'thermal_trip',
                 componentId: component.id,
                 severity: DiagnosticSeverity.error,
-                messageAr:
-                    'فصل ${component.label} (Relais thermique) بسبب حمل زائد مستمر. أعد ضبطه بعد تشخيص السبب.',
+                messageAr: motorBreaker
+                    ? 'فصل ${component.label} (Disjoncteur moteur) بسبب حمل زائد أو تيار قصر.'
+                    : 'فصل ${component.label} (Relais thermique) بسبب حمل زائد مستمر. أعد ضبطه بعد تشخيص السبب.',
               ),
             );
             changed = true;
@@ -214,6 +281,16 @@ class ElectricalSimulator {
               state.copyWith(overloadTime: overload),
             );
           }
+        case ComponentKind.digitalCounter:
+          if (reading != null && reading.measurementValid) {
+            final energy = state.energyKwh +
+                math.max(0, reading.activePower) * dt / 3600000;
+            runtime.update(
+              component.id,
+              state.copyWith(energyKwh: energy),
+            );
+            changed = changed || energy != state.energyKwh;
+          }
         default:
           break;
       }
@@ -248,6 +325,7 @@ class ElectricalSimulator {
       var validMeasurement = true;
       var direction = 0;
       var timerRemaining = 0.0;
+      var residualCurrent = 0.0;
 
       if (coil.isNotEmpty) {
         voltage = network.voltage(coil.first.a, coil.first.b).magnitude;
@@ -259,6 +337,7 @@ class ElectricalSimulator {
       switch (component.kind) {
         case ComponentKind.dcSupply:
         case ComponentKind.acSupply:
+          active = component.flag('enabled');
           final source = network.sources
               .where((item) => item.ownerId == component.id)
               .firstOrNull;
@@ -280,6 +359,7 @@ class ElectricalSimulator {
             power = voltage * current;
           }
         case ComponentKind.threePhaseSupply:
+          active = component.flag('enabled');
           final sources = network.sources
               .where((item) => item.ownerId == component.id)
               .toList();
@@ -296,6 +376,12 @@ class ElectricalSimulator {
             final i = network.sourceCurrent(item);
             return value + v.real * i.real + v.imaginary * i.imaginary;
           });
+        case ComponentKind.differentialBreaker:
+          var sum = ComplexNumber.zero;
+          for (final branch in main) {
+            sum = sum + network.current(branch);
+          }
+          residualCurrent = sum.magnitude;
         case ComponentKind.contactor:
         case ComponentKind.auxiliaryRelay:
           active = state.energized;
@@ -303,6 +389,12 @@ class ElectricalSimulator {
           final delay = math.max(0.05, component.number('delaySeconds'));
           timerRemaining = math.max(0, delay - state.timerElapsed);
           active = state.energized && state.timerElapsed >= delay;
+        case ComponentKind.timerOffDelay:
+          final delay = math.max(0.05, component.number('delaySeconds'));
+          timerRemaining = !state.energized && state.timerOutput
+              ? math.max(0, delay - state.timerElapsed)
+              : 0;
+          active = state.timerOutput;
         case ComponentKind.indicator:
           final rated = math.max(0.1, component.number('ratedVoltage'));
           active = voltage >= rated * 0.5 && voltage <= rated * 1.5;
@@ -329,6 +421,38 @@ class ElectricalSimulator {
             final phaseDifference = _wrapAngle((v - neutral).angle - (u - neutral).angle);
             direction = math.sin(phaseDifference) < 0 ? 1 : -1;
           }
+        case ComponentKind.motor1Phase:
+          if (motor.isNotEmpty) {
+            voltage = network
+                .voltage(motor.first.a, motor.first.b)
+                .magnitude;
+            current = maximumCurrent(motor);
+            final nominal = math.max(1, component.number('nominalVoltage'));
+            active = voltage >= nominal * 0.55 && voltage <= nominal * 1.5;
+          }
+        case ComponentKind.transformer:
+          final primary = branches
+              .where((item) => item.role == 'primary')
+              .firstOrNull;
+          final secondary = branches
+              .where((item) => item.role == 'secondary')
+              .firstOrNull;
+          if (primary != null && secondary != null) {
+            final primaryVoltage = network.voltage(
+              _key(component.id, 'primaryLine'),
+              _key(component.id, 'primaryNeutral'),
+            );
+            final secondaryVoltage = network.voltage(
+              _key(component.id, 'secondaryLine'),
+              _key(component.id, 'secondaryNeutral'),
+            );
+            final primaryCurrent = network.current(primary);
+            voltage = secondaryVoltage.magnitude;
+            current = network.current(secondary).magnitude;
+            power = primaryVoltage.real * primaryCurrent.real +
+                primaryVoltage.imaginary * primaryCurrent.imaginary;
+            active = primaryVoltage.magnitude > 1 && voltage > 1;
+          }
         case ComponentKind.voltmeter:
           if (measurement.isNotEmpty) {
             voltage = network
@@ -353,12 +477,44 @@ class ElectricalSimulator {
                 current <= component.number('maxCurrent') * 1.1 &&
                     voltage < math.max(1.0, component.number('maxCurrent') * 0.02);
           }
+        case ComponentKind.digitalCounter:
+          final voltageBranch = branches
+              .where((item) => item.role == 'voltageMeasurement')
+              .firstOrNull;
+          final currentBranch = branches
+              .where((item) => item.role == 'currentMeasurement')
+              .firstOrNull;
+          if (voltageBranch != null && currentBranch != null) {
+            final measuredVoltage = network.voltage(
+              voltageBranch.a,
+              voltageBranch.b,
+            );
+            final measuredCurrent = network.current(currentBranch);
+            voltage = measuredVoltage.magnitude;
+            current = measuredCurrent.magnitude;
+            power = measuredVoltage.real * measuredCurrent.real +
+                measuredVoltage.imaginary * measuredCurrent.imaginary;
+            validMeasurement = voltage <= component.number('maxVoltage') * 1.1 &&
+                current <= component.number('maxCurrent') * 1.1 &&
+                network.current(voltageBranch).magnitude < 0.1 &&
+                network.validVoltmeterConnection(
+                  voltageBranch.a,
+                  voltageBranch.b,
+                  component.id,
+                );
+            active = validMeasurement && current > 0.000001;
+          }
         case ComponentKind.pushButtonNO:
         case ComponentKind.pushButtonNC:
           active = component.flag('pressed');
+        case ComponentKind.emergencyStop:
+          active = !component.flag('closed');
         case ComponentKind.selectorSwitch:
           active = component.flag('closed');
+        case ComponentKind.rotarySwitch:
+          active = component.number('position').round() != 0;
         case ComponentKind.sensor:
+        case ComponentKind.limitSwitch:
           active = component.flag('active');
         default:
           break;
@@ -376,6 +532,8 @@ class ElectricalSimulator {
         direction: direction,
         timerRemaining: timerRemaining,
         measurementValid: validMeasurement,
+        residualCurrent: residualCurrent,
+        energyKwh: state.energyKwh,
       );
     }
     return result;
@@ -407,7 +565,15 @@ class ElectricalSimulator {
         const SimulationDiagnostic(
           code: 'no_supply',
           severity: DiagnosticSeverity.warning,
-          messageAr: 'لا يوجد مصدر تغذية. أضف Alimentation من مكتبة العناصر.',
+          messageAr: 'لا يوجد مصدر تغذية. فعّل مصدراً من منطقة Alimentation أعلى اللوحة.',
+        ),
+      );
+    } else if (!supplies.any((item) => item.flag('enabled'))) {
+      diagnostics.add(
+        const SimulationDiagnostic(
+          code: 'supply_disabled',
+          severity: DiagnosticSeverity.warning,
+          messageAr: 'مصادر التغذية غير مفعلة. اختر 3~ أو 1~ أو DC من منطقة Alimentation.',
         ),
       );
     }
@@ -509,9 +675,11 @@ class ElectricalSimulator {
             code: 'invalid_measurement',
             componentId: component.id,
             severity: DiagnosticSeverity.error,
-            messageAr: isVolt
-                ? 'Voltmètre في وضع قياس غير صالح؛ وصله على التوازي مع نقطتين من الدائرة.'
-                : 'Ampèremètre في وضع غير صالح أو تجاوز المدى؛ وصله على التسلسل وليس على التوازي.',
+            messageAr: component.kind == ComponentKind.digitalCounter
+                ? 'Compteur: راجع توصيل الجهد على التوازي والتيار على التسلسل ومدى القياس.'
+                : isVolt
+                    ? 'Voltmètre في وضع قياس غير صالح؛ وصله على التوازي مع نقطتين من الدائرة.'
+                    : 'Ampèremètre في وضع غير صالح أو تجاوز المدى؛ وصله على التسلسل وليس على التوازي.',
           ),
         );
       }
@@ -573,7 +741,8 @@ class ElectricalSimulator {
   static bool _hasCoil(ComponentKind kind) =>
       kind == ComponentKind.contactor ||
       kind == ComponentKind.auxiliaryRelay ||
-      kind == ComponentKind.timer;
+      kind == ComponentKind.timer ||
+      kind == ComponentKind.timerOffDelay;
 
   static double _coilRatedVoltage(CircuitComponent component) =>
       component.number('coilVoltage');
@@ -660,6 +829,10 @@ class _Network {
       if (component.kind == ComponentKind.motor3Phase) {
         allNodes.add('${component.id}::__neutral');
       }
+      if (component.kind == ComponentKind.transformer) {
+        allNodes.add('${component.id}::__primary');
+        allNodes.add('${component.id}::__secondary');
+      }
       if (component.kind == ComponentKind.dcSupply ||
           component.kind == ComponentKind.acSupply) {
         allNodes.add('${component.id}::__source');
@@ -740,7 +913,7 @@ class _Network {
         bool closed, {
         String role = 'main',
       }) {
-        if (openFault && role != 'auxiliary') return;
+        if (openFault) return;
         if (closed || shortFault) {
           resistor(a, b, shortFault ? 0.001 : 0.01, role);
         }
@@ -825,18 +998,28 @@ class _Network {
                 ComplexNumber.polar(phaseVoltage, angle),
               );
             });
-            _addBranch(
-              _Branch(
-                component.id,
-                key('neutral'),
-                key('pe'),
-                const ComplexNumber(0.01),
-                'earthBond',
-              ),
-            );
           }
+          _addBranch(
+            _Branch(
+              component.id,
+              key('neutral'),
+              key('pe'),
+              const ComplexNumber(0.01),
+              'earthBond',
+            ),
+          );
         case ComponentKind.circuitBreaker:
           contact('line', 'load', component.flag('closed') && !state.tripped);
+        case ComponentKind.differentialBreaker:
+          final closed = component.flag('closed') && !state.tripped;
+          contact('lineIn', 'lineOut', closed);
+          contact('neutralIn', 'neutralOut', closed);
+        case ComponentKind.motorBreaker:
+          final closed = component.flag('closed') && !state.tripped;
+          contact('l1', 't1', closed);
+          contact('l2', 't2', closed);
+          contact('l3', 't3', closed);
+          contact('nc95', 'nc96', closed, role: 'auxiliary');
         case ComponentKind.contactor:
           contact('l1', 't1', state.energized);
           contact('l2', 't2', state.energized);
@@ -857,9 +1040,16 @@ class _Network {
           contact('input', 'output', component.flag('pressed'), role: 'auxiliary');
         case ComponentKind.pushButtonNC:
           contact('input', 'output', !component.flag('pressed'), role: 'auxiliary');
+        case ComponentKind.emergencyStop:
+          contact('input', 'output', component.flag('closed'), role: 'auxiliary');
         case ComponentKind.selectorSwitch:
           contact('input', 'output', component.flag('closed'), role: 'auxiliary');
+        case ComponentKind.rotarySwitch:
+          final position = component.number('position').round();
+          contact('common', 'out1', position == 1, role: 'auxiliary');
+          contact('common', 'out2', position == 2, role: 'auxiliary');
         case ComponentKind.sensor:
+        case ComponentKind.limitSwitch:
           contact('input', 'output', component.flag('active'), role: 'auxiliary');
         case ComponentKind.timer:
           contact(
@@ -867,6 +1057,14 @@ class _Network {
             't18',
             state.energized &&
                 state.timerElapsed >= math.max(0.05, component.number('delaySeconds')),
+            role: 'auxiliary',
+          );
+          coil();
+        case ComponentKind.timerOffDelay:
+          contact(
+            't15',
+            't18',
+            state.timerOutput,
             role: 'auxiliary',
           );
           coil();
@@ -899,12 +1097,72 @@ class _Network {
             );
             _addBranch(branch);
           }
+        case ComponentKind.motor1Phase:
+          if (!openFault) {
+            final nominal = math.max(1, component.number('nominalVoltage'));
+            final nominalCurrent = math.max(
+              0.05,
+              component.number('nominalCurrent'),
+            );
+            final pf = component.number('powerFactor').clamp(0.2, 1.0).toDouble();
+            final magnitude = nominal / nominalCurrent;
+            final resistance = magnitude * pf;
+            final reactance = magnitude * math.sqrt(1 - pf * pf);
+            final impedance = _supplyFrequency() == 0
+                ? ComplexNumber(resistance)
+                : ComplexNumber(resistance, reactance);
+            _addBranch(
+              _Branch(
+                component.id,
+                key('u'),
+                key('v'),
+                shortFault ? const ComplexNumber(0.001) : impedance,
+                'motor',
+              ),
+            );
+          }
+        case ComponentKind.transformer:
+          if (!openFault) {
+            resistor(
+              'primaryLine',
+              '__primary',
+              component.number('primaryResistance'),
+              'primary',
+            );
+            resistor(
+              'secondaryLine',
+              '__secondary',
+              component.number('secondaryResistance'),
+              'secondary',
+            );
+            final primaryVoltage = math.max(
+              0.001,
+              component.number('primaryVoltage'),
+            );
+            final secondaryVoltage = math.max(
+              0.001,
+              component.number('secondaryVoltage'),
+            );
+            _addIdealTransformer(
+              key('__primary'),
+              key('primaryNeutral'),
+              key('__secondary'),
+              key('secondaryNeutral'),
+              primaryVoltage / secondaryVoltage,
+            );
+            if (shortFault) {
+              resistor('secondaryLine', 'secondaryNeutral', 0.001, 'secondary');
+            }
+          }
         case ComponentKind.terminalBlock:
           contact('a', 'b', true);
         case ComponentKind.voltmeter:
           resistor('positive', 'negative', 1000000, 'measurement');
         case ComponentKind.ammeter:
           resistor('positive', 'negative', 0.01, 'measurement');
+        case ComponentKind.digitalCounter:
+          resistor('voltageL', 'voltageN', 1000000, 'voltageMeasurement');
+          resistor('currentIn', 'currentOut', 0.01, 'currentMeasurement');
         case ComponentKind.fuse:
           contact('line', 'load', !state.blown);
       }
@@ -1000,6 +1258,44 @@ class _Network {
       matrix[branchIndex][bi] = const ComplexNumber(-1);
     }
     sources.add(_VoltageBranch(ownerId, a, b, branchIndex));
+  }
+
+  /// Stamps an ideal transformer with one shared branch current:
+  /// Vp = ratio × Vs and Is = -ratio × Ip. Winding resistances are stamped
+  /// separately, so secondary loading changes both primary current and losses.
+  void _addIdealTransformer(
+    String primaryA,
+    String primaryB,
+    String secondaryA,
+    String secondaryB,
+    double ratio,
+  ) {
+    final oldSize = rhs.length;
+    for (final row in matrix) {
+      row.add(ComplexNumber.zero);
+    }
+    matrix.add(
+      List<ComplexNumber>.filled(
+        oldSize + 1,
+        ComplexNumber.zero,
+        growable: true,
+      ),
+    );
+    rhs.add(ComplexNumber.zero);
+    final branchIndex = oldSize;
+    void stamp(String node, double kcl, double equation) {
+      final index = nodes[node];
+      if (index == null) return;
+      matrix[index][branchIndex] = matrix[index][branchIndex] +
+          ComplexNumber(kcl);
+      matrix[branchIndex][index] = matrix[branchIndex][index] +
+          ComplexNumber(equation);
+    }
+
+    stamp(primaryA, 1, 1);
+    stamp(primaryB, -1, -1);
+    stamp(secondaryA, -ratio, -ratio);
+    stamp(secondaryB, ratio, ratio);
   }
 
   bool solve() {

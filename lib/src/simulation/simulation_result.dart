@@ -34,6 +34,8 @@ class DeviceReading {
     this.direction = 0,
     this.timerRemaining = 0,
     this.measurementValid = true,
+    this.residualCurrent = 0,
+    this.energyKwh = 0,
   });
 
   final String componentId;
@@ -47,6 +49,8 @@ class DeviceReading {
   final int direction;
   final double timerRemaining;
   final bool measurementValid;
+  final double residualCurrent;
+  final double energyKwh;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'componentId': componentId,
@@ -60,6 +64,8 @@ class DeviceReading {
         'direction': direction,
         'timerRemaining': timerRemaining,
         'measurementValid': measurementValid,
+        'residualCurrent': residualCurrent,
+        'energyKwh': energyKwh,
       };
 }
 

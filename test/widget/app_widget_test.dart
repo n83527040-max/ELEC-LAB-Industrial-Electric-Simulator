@@ -71,9 +71,9 @@ void main() {
     await tester.tap(find.byKey(const Key('add-component')));
     await tester.pumpAndSettle();
     expect(find.text('مكتبة العناصر'), findsOneWidget);
-    await tester.tap(find.text('مصدر تغذية DC'));
+    await tester.tap(find.text('كونتاكتور'));
     await tester.pumpAndSettle();
-    expect(find.text('G1'), findsWidgets);
+    expect(find.text('K1'), findsWidgets);
     await tester.tap(find.byTooltip('حفظ ورجوع'));
     await tester.pumpAndSettle();
     expect(find.byType(HomeScreen), findsOneWidget);

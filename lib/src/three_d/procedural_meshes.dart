@@ -15,39 +15,73 @@ abstract final class ProceduralMeshes {
   static DeviceMesh forComponent(
     CircuitComponent component, {
     MeshDetail detail = MeshDetail.preview,
-  }) => forKind(component.kind, detail: detail);
+  }) {
+    return _cached(
+      component.kind,
+      detail,
+      component.text('color'),
+    );
+  }
 
   static DeviceMesh forKind(
     ComponentKind kind, {
     MeshDetail detail = MeshDetail.preview,
   }) {
-    final key = '${kind.name}:${detail.name}';
+    final spec = ComponentCatalog.specOf(kind);
+    return _cached(kind, detail, spec.defaultProperties['color']?.toString() ?? '');
+  }
+
+  static DeviceMesh _cached(
+    ComponentKind kind,
+    MeshDetail detail,
+    String color,
+  ) {
+    final key = '${kind.name}:${detail.name}:$color';
     return _cache.putIfAbsent(
       key,
-      () => _build(ComponentCatalog.specOf(kind), detail),
+      () => _build(ComponentCatalog.specOf(kind), detail, color),
     );
   }
 
-  static DeviceMesh _build(ComponentSpec spec, MeshDetail detail) {
+  static DeviceMesh _build(
+    ComponentSpec spec,
+    MeshDetail detail,
+    String color,
+  ) {
     final builder = MeshBuilder();
     final width = spec.size.width / 48;
     final height = spec.size.height / 48;
     final depth = switch (spec.kind) {
       ComponentKind.motor3Phase => 1.65,
+      ComponentKind.motor1Phase => 1.45,
       ComponentKind.indicator ||
       ComponentKind.pushButtonNO ||
       ComponentKind.pushButtonNC ||
-      ComponentKind.selectorSwitch => 1.05,
-      ComponentKind.sensor => 0.9,
+      ComponentKind.emergencyStop ||
+      ComponentKind.selectorSwitch ||
+      ComponentKind.rotarySwitch => 1.05,
+      ComponentKind.sensor || ComponentKind.limitSwitch => 0.9,
       _ => 0.82,
     };
-    final context = _MeshContext(builder, spec, detail, width, height, depth);
+    final context = _MeshContext(
+      builder,
+      spec,
+      detail,
+      width,
+      height,
+      depth,
+      color,
+    );
 
     switch (spec.kind) {
       case ComponentKind.contactor:
         _contactor(context);
       case ComponentKind.circuitBreaker:
         _circuitBreaker(context);
+      case ComponentKind.differentialBreaker:
+        _differentialBreaker(context);
+      case ComponentKind.motorBreaker:
+        _motorBreaker(context);
       case ComponentKind.fuse:
         _fuse(context);
       case ComponentKind.thermalRelay:
@@ -56,16 +90,28 @@ abstract final class ProceduralMeshes {
         _auxiliaryRelay(context);
       case ComponentKind.timer:
         _timer(context);
+      case ComponentKind.timerOffDelay:
+        _offDelayTimer(context);
       case ComponentKind.pushButtonNO:
       case ComponentKind.pushButtonNC:
       case ComponentKind.selectorSwitch:
         _controlDevice(context);
+      case ComponentKind.emergencyStop:
+        _emergencyStop(context);
+      case ComponentKind.rotarySwitch:
+        _rotarySwitch(context);
       case ComponentKind.sensor:
         _sensor(context);
+      case ComponentKind.limitSwitch:
+        _limitSwitch(context);
       case ComponentKind.indicator:
         _indicator(context);
       case ComponentKind.motor3Phase:
         _motor(context);
+      case ComponentKind.motor1Phase:
+        _singlePhaseMotor(context);
+      case ComponentKind.transformer:
+        _transformer(context);
       case ComponentKind.dcSupply:
       case ComponentKind.acSupply:
       case ComponentKind.threePhaseSupply:
@@ -73,6 +119,8 @@ abstract final class ProceduralMeshes {
       case ComponentKind.voltmeter:
       case ComponentKind.ammeter:
         _meter(context);
+      case ComponentKind.digitalCounter:
+        _digitalCounter(context);
       case ComponentKind.terminalBlock:
         _terminalBlock(context);
     }
@@ -307,15 +355,23 @@ abstract final class ProceduralMeshes {
     final w = c.width;
     final h = c.height;
     final d = c.depth;
+    final lens = switch (c.colorName) {
+      'green' => c.green,
+      'yellow' => c.yellow,
+      _ => c.red,
+    };
+    final lensDark = c.colorName == 'red' || c.colorName.isEmpty
+        ? c.redDark
+        : c.graphite;
     b.addBeveledBox(Vector3D(0, -h * 0.25, -d * 0.18),
         Vector3D(w * 0.6, h * 0.43, d * 0.55), c.contactBlock, bevel: 0.05);
     b.addCylinder(Vector3D(0, h * 0.1, d * 0.23), w * 0.39, 0.2, c.metal,
         segments: c.segments);
-    b.addCylinder(Vector3D(0, h * 0.1, d * 0.38), w * 0.32, 0.16, c.redDark,
+    b.addCylinder(Vector3D(0, h * 0.1, d * 0.38), w * 0.32, 0.16, lensDark,
         segments: c.segments);
-    b.addSphere(Vector3D(0, h * 0.1, d * 0.49), w * 0.31, c.red,
+    b.addSphere(Vector3D(0, h * 0.1, d * 0.49), w * 0.31, lens,
         segments: c.segments, rings: c.rings, scale: const Vector3D(1, 1, 0.58));
-    b.addSphere(Vector3D(-w * 0.09, h * 0.2, d * 0.65), w * 0.07, c.lightRed,
+    b.addSphere(Vector3D(-w * 0.09, h * 0.2, d * 0.65), w * 0.07, c.label,
         segments: c.segments, rings: c.rings);
   }
 
@@ -441,6 +497,335 @@ abstract final class ProceduralMeshes {
     }
   }
 
+  static void _differentialBreaker(_MeshContext c) {
+    _circuitBreaker(c);
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(-w * 0.23, h * 0.03, d * 0.76),
+      Vector3D(w * 0.18, h * 0.26, 0.18),
+      c.blue,
+      bevel: 0.025,
+    );
+    b.addBeveledBox(
+      Vector3D(w * 0.31, -h * 0.22, d * 0.63),
+      Vector3D(w * 0.18, h * 0.1, 0.1),
+      c.orange,
+      bevel: 0.02,
+    );
+    b.addBox(
+      Vector3D(0, -h * 0.39, d * 0.54),
+      Vector3D(w * 0.68, h * 0.06, 0.04),
+      c.graphite,
+    );
+  }
+
+  static void _motorBreaker(_MeshContext c) {
+    _thermalRelay(c);
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(w * 0.19, -h * 0.11, d * 0.67),
+      Vector3D(w * 0.25, h * 0.25, 0.18),
+      c.graphite,
+      bevel: 0.04,
+    );
+    b.addCylinder(
+      Vector3D(w * 0.19, -h * 0.11, d * 0.79),
+      w * 0.1,
+      0.08,
+      c.red,
+      segments: c.segments,
+    );
+    b.addBox(
+      Vector3D(0, h * 0.47, d * 0.5),
+      Vector3D(w * 0.74, h * 0.06, 0.08),
+      c.metal,
+    );
+  }
+
+  static void _emergencyStop(_MeshContext c) {
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(0, 0, -d * 0.12),
+      Vector3D(w * 0.92, h * 0.82, d * 0.45),
+      c.yellow,
+      bevel: 0.09,
+    );
+    b.addBeveledBox(
+      Vector3D(0, -h * 0.28, -d * 0.3),
+      Vector3D(w * 0.58, h * 0.25, d * 0.5),
+      c.contactBlock,
+      bevel: 0.05,
+    );
+    b.addCylinder(
+      Vector3D(0, h * 0.08, d * 0.24),
+      w * 0.35,
+      0.22,
+      c.graphite,
+      segments: c.segments,
+    );
+    b.addFrustum(
+      Vector3D(0, h * 0.08, d * 0.52),
+      w * 0.28,
+      w * 0.43,
+      0.42,
+      c.red,
+      segments: c.segments,
+    );
+    b.addCylinder(
+      Vector3D(0, h * 0.08, d * 0.77),
+      w * 0.43,
+      0.12,
+      c.red,
+      segments: c.segments,
+    );
+    if (c.detail == MeshDetail.detailed) {
+      for (var i = 0; i < 4; i++) {
+        final angle = i * math.pi / 2;
+        b.addCylinder(
+          Vector3D(math.cos(angle) * w * 0.37, math.sin(angle) * h * 0.31, d * 0.16),
+          0.045,
+          0.04,
+          c.metal,
+          segments: c.segments,
+        );
+      }
+    }
+  }
+
+  static void _rotarySwitch(_MeshContext c) {
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(0, 0, -d * 0.16),
+      Vector3D(w * 0.9, h * 0.84, d * 0.52),
+      c.yellow,
+      bevel: 0.1,
+    );
+    b.addCylinder(
+      Vector3D(0, 0, d * 0.24),
+      w * 0.36,
+      0.22,
+      c.graphite,
+      segments: c.segments,
+    );
+    b.addCylinder(
+      Vector3D(0, 0, d * 0.43),
+      w * 0.29,
+      0.18,
+      c.redDark,
+      segments: c.segments,
+    );
+    b.addBeveledBox(
+      Vector3D(0, h * 0.06, d * 0.66),
+      Vector3D(w * 0.18, h * 0.58, 0.24),
+      c.red,
+      bevel: 0.07,
+    );
+    b.addBox(
+      Vector3D(0, h * 0.31, d * 0.55),
+      Vector3D(w * 0.07, h * 0.09, 0.05),
+      c.label,
+    );
+  }
+
+  static void _offDelayTimer(_MeshContext c) {
+    _timer(c);
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(w * 0.29, -h * 0.1, d * 0.57),
+      Vector3D(w * 0.16, h * 0.25, 0.14),
+      c.blue,
+      bevel: 0.025,
+    );
+    b.addBox(
+      Vector3D(-w * 0.25, h * 0.25, d * 0.6),
+      Vector3D(w * 0.13, h * 0.055, 0.03),
+      c.orange,
+    );
+  }
+
+  static void _limitSwitch(_MeshContext c) {
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(0, -h * 0.14, 0),
+      Vector3D(w * 0.62, h * 0.64, d * 0.72),
+      c.graphite,
+      bevel: 0.07,
+    );
+    b.addBeveledBox(
+      Vector3D(0, h * 0.24, d * 0.05),
+      Vector3D(w * 0.46, h * 0.2, d * 0.58),
+      c.black,
+      bevel: 0.04,
+    );
+    b.addBox(
+      Vector3D(w * 0.12, h * 0.36, d * 0.32),
+      Vector3D(w * 0.1, h * 0.42, 0.09),
+      c.metal,
+      angleZ: -0.48,
+    );
+    b.addCylinder(
+      Vector3D(w * 0.28, h * 0.45, d * 0.35),
+      w * 0.15,
+      0.18,
+      c.lightGrey,
+      segments: c.segments,
+    );
+    b.addBox(
+      Vector3D(0, -h * 0.13, d * 0.41),
+      Vector3D(w * 0.35, h * 0.09, 0.04),
+      c.label,
+    );
+  }
+
+  static void _singlePhaseMotor(_MeshContext c) {
+    _motor(c);
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(-w * 0.18, h * 0.39, -d * 0.34),
+      Vector3D(w * 0.24, h * 0.29, d * 0.42),
+      c.graphite,
+      bevel: 0.07,
+    );
+    b.addCylinder(
+      Vector3D(-w * 0.18, h * 0.39, d * 0.03),
+      w * 0.1,
+      h * 0.23,
+      c.metal,
+      axis: MeshAxis.y,
+      segments: c.segments,
+    );
+  }
+
+  static void _transformer(_MeshContext c) {
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(0, -h * 0.42, 0),
+      Vector3D(w * 0.94, h * 0.15, d * 0.9),
+      c.graphite,
+      bevel: 0.04,
+    );
+    for (final side in <double>[-1, 1]) {
+      b.addBox(
+        Vector3D(side * w * 0.34, 0, 0),
+        Vector3D(w * 0.18, h * 0.72, d * 0.72),
+        c.metal,
+      );
+    }
+    b.addBox(
+      Vector3D(0, h * 0.31, 0),
+      Vector3D(w * 0.84, h * 0.15, d * 0.74),
+      c.metal,
+    );
+    b.addBox(
+      Vector3D(0, -h * 0.28, 0),
+      Vector3D(w * 0.84, h * 0.14, d * 0.74),
+      c.metal,
+    );
+    b.addCylinder(
+      Vector3D(0, 0, d * 0.08),
+      w * 0.24,
+      h * 0.48,
+      c.orange,
+      axis: MeshAxis.y,
+      segments: c.segments,
+    );
+    for (var i = -4; i <= 4; i++) {
+      b.addCylinder(
+        Vector3D(0, i * h * 0.052, d * 0.08),
+        w * 0.255,
+        h * 0.012,
+        c.brass,
+        axis: MeshAxis.y,
+        segments: c.segments,
+      );
+    }
+    b.addBeveledBox(
+      Vector3D(0, h * 0.43, d * 0.18),
+      Vector3D(w * 0.7, h * 0.12, d * 0.4),
+      c.bornier,
+      bevel: 0.025,
+    );
+    if (c.detail == MeshDetail.detailed) {
+      for (var i = -3; i <= 3; i++) {
+        b.addBox(
+          Vector3D(i * w * 0.1, 0, -d * 0.39),
+          Vector3D(0.025, h * 0.66, 0.025),
+          c.graphite,
+        );
+      }
+    }
+  }
+
+  static void _digitalCounter(_MeshContext c) {
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    b.addBeveledBox(
+      Vector3D(0, 0, 0),
+      Vector3D(w, h, d),
+      c.graphite,
+      bevel: 0.09,
+    );
+    b.addBeveledBox(
+      Vector3D(0, h * 0.1, d * 0.49),
+      Vector3D(w * 0.84, h * 0.45, 0.14),
+      c.black,
+      bevel: 0.035,
+    );
+    for (var digit = -1; digit <= 1; digit++) {
+      final x = digit * w * 0.23;
+      for (final y in <double>[-0.09, 0.09]) {
+        b.addBox(
+          Vector3D(x, h * 0.1 + y * h, d * 0.6),
+          Vector3D(w * 0.15, h * 0.035, 0.025),
+          c.red,
+        );
+      }
+      b.addBox(
+        Vector3D(x, h * 0.1, d * 0.6),
+        Vector3D(w * 0.15, h * 0.028, 0.025),
+        c.redDark,
+      );
+      for (final side in <double>[-1, 1]) {
+        b.addBox(
+          Vector3D(x + side * w * 0.075, h * 0.1, d * 0.6),
+          Vector3D(w * 0.025, h * 0.19, 0.025),
+          c.red,
+        );
+      }
+    }
+    b.addBox(
+      Vector3D(0, -h * 0.31, d * 0.5),
+      Vector3D(w * 0.55, h * 0.08, 0.04),
+      c.label,
+    );
+  }
+
   static void _terminalHardware(
     _MeshContext c,
     Vector3D position,
@@ -486,6 +871,7 @@ class _MeshContext {
     this.width,
     this.height,
     this.depth,
+    this.colorName,
   );
 
   final MeshBuilder builder;
@@ -494,6 +880,7 @@ class _MeshContext {
   final double width;
   final double height;
   final double depth;
+  final String colorName;
 
   int get segments => switch (detail) {
         MeshDetail.board => 8,
@@ -522,6 +909,7 @@ class _MeshContext {
   int get redDark => 0xff8e201f;
   int get lightRed => 0xffff9a8f;
   int get orange => 0xffe69a2d;
+  int get yellow => 0xffe8b83d;
   int get glass => 0xffc6d9d8;
   int get contactBlock => 0xffd7d9d2;
   int get displayGreen => 0xff62e6a4;

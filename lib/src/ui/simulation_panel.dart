@@ -102,9 +102,14 @@ class SimulationPanel extends StatelessWidget {
   static bool _showReading(ComponentKind kind) =>
       kind == ComponentKind.voltmeter ||
       kind == ComponentKind.ammeter ||
+      kind == ComponentKind.digitalCounter ||
+      kind == ComponentKind.differentialBreaker ||
       kind == ComponentKind.motor3Phase ||
+      kind == ComponentKind.motor1Phase ||
+      kind == ComponentKind.transformer ||
       kind == ComponentKind.indicator ||
-      kind == ComponentKind.timer;
+      kind == ComponentKind.timer ||
+      kind == ComponentKind.timerOffDelay;
 
   static String _readingText(ComponentKind kind, DeviceReading reading) {
     return switch (kind) {
@@ -112,10 +117,19 @@ class SimulationPanel extends StatelessWidget {
         '${reading.voltage.toStringAsFixed(2)} V ${reading.measurementValid ? '' : '• قياس غير صالح'}',
       ComponentKind.ammeter =>
         '${reading.current.toStringAsFixed(3)} A ${reading.measurementValid ? '' : '• قياس غير صالح'}',
+      ComponentKind.digitalCounter =>
+        '${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A • ${reading.energyKwh.toStringAsFixed(6)} kWh ${reading.measurementValid ? '' : '• قياس غير صالح'}',
+      ComponentKind.differentialBreaker =>
+        'ΔI ${(reading.residualCurrent * 1000).toStringAsFixed(1)} mA • ${reading.current.toStringAsFixed(2)} A',
+      ComponentKind.transformer =>
+        'ثانوي ${reading.voltage.toStringAsFixed(2)} V • ${reading.current.toStringAsFixed(3)} A • مدخل ${reading.activePower.toStringAsFixed(2)} W',
       ComponentKind.motor3Phase =>
         '${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A • ${reading.direction == 0 ? 'متوقف' : reading.direction > 0 ? 'أمامي' : 'عكسي'}',
-      ComponentKind.timer =>
-        reading.active ? 'انتهى التأخير والنقطة مغلقة' : 'المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s',
+      ComponentKind.motor1Phase =>
+        '${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A • ${reading.active ? 'يدور' : 'متوقف'}',
+      ComponentKind.timer ||
+      ComponentKind.timerOffDelay =>
+        reading.active ? 'النقطة مغلقة • المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s' : 'المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s',
       _ => '${reading.voltage.toStringAsFixed(1)} V • ${reading.activePower.toStringAsFixed(2)} W',
     };
   }

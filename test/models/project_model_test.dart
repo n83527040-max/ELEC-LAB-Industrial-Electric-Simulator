@@ -7,6 +7,7 @@ import 'package:elec_lab/src/models/connection_validator.dart';
 import 'package:elec_lab/src/models/geometry.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
+import 'package:elec_lab/src/models/supply_bay.dart';
 import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/models/wire.dart';
 import 'package:elec_lab/src/models/wire_sizing.dart';
@@ -96,6 +97,62 @@ void main() {
       expect(decoded.wires.singleWhere((wire) => wire.id == 'w1').waypoints, hasLength(2));
       expect(decoded.components.first.rotation, 2);
       expect(decoded.layers, hasLength(4));
+    });
+
+    test('permanent supply bay has real disabled sources and persists N and PE', () {
+      final empty = ElectricalProject.empty(
+        id: 'supply_bay',
+        name: 'Supply bay',
+        now: testNow,
+      );
+      final project = SupplyBay.install(empty);
+      expect(project.components, hasLength(3));
+      expect(SupplyBay.ids.every(project.components.map((item) => item.id).contains), isTrue);
+      expect(project.components.every((item) => !item.flag('enabled')), isTrue);
+      final threePhase = project.componentById(SupplyBay.threePhaseId)!;
+      expect(
+        ComponentCatalog.specOf(threePhase.kind).terminals.map((item) => item.id),
+        containsAll(<String>['l1', 'l2', 'l3', 'neutral', 'pe']),
+      );
+      expect(identical(SupplyBay.install(project), project), isTrue);
+      final wired = project.copyWith(
+        components: <CircuitComponent>[
+          ...project.components,
+          device('m1', ComponentKind.motor3Phase),
+        ],
+        wires: <CircuitWire>[
+          connection(
+            'protective_earth',
+            SupplyBay.threePhaseId,
+            'pe',
+            'm1',
+            'earth',
+          ),
+        ],
+      );
+      final decoded = ElectricalProject.fromJson(
+        jsonDecode(wired.encode()) as Map<String, dynamic>,
+      );
+      expect(decoded.componentById(SupplyBay.dcId)?.flag('enabled'), isFalse);
+      expect(decoded.componentById(SupplyBay.threePhaseId)?.position, threePhase.position);
+      expect(decoded.wires.single.from.componentId, SupplyBay.threePhaseId);
+      expect(decoded.wires.single.from.terminalId, 'pe');
+      expect(decoded.wires.single.to.componentId, 'm1');
+    });
+
+    test('supply installation restores a missing power layer in legacy blanks', () {
+      final legacy = ElectricalProject.empty(
+        id: 'legacy_blank',
+        name: 'Legacy blank',
+        now: testNow,
+      );
+      final withoutPower = legacy.copyWith(
+        layers: legacy.layers.where((layer) => layer.id != 'power').toList(),
+      );
+      final installed = SupplyBay.install(withoutPower);
+      expect(installed.layerById('power'), isNotNull);
+      expect(installed.components, hasLength(3));
+      expect(() => installed.validate(), returnsNormally);
     });
 
     test('version 1 document is migrated with default layers', () {

@@ -74,21 +74,7 @@ void main() {
   });
 
   test('industrial device families differ in geometry, not only labels or colors', () {
-    const kinds = <ComponentKind>[
-      ComponentKind.contactor,
-      ComponentKind.circuitBreaker,
-      ComponentKind.thermalRelay,
-      ComponentKind.motor3Phase,
-      ComponentKind.pushButtonNO,
-      ComponentKind.pushButtonNC,
-      ComponentKind.timer,
-      ComponentKind.sensor,
-      ComponentKind.indicator,
-      ComponentKind.terminalBlock,
-      ComponentKind.dcSupply,
-      ComponentKind.voltmeter,
-      ComponentKind.ammeter,
-    ];
+    final kinds = ComponentKind.values;
     final signatures = kinds.map((kind) {
       final mesh = ProceduralMeshes.forKind(kind);
       return mesh.vertices

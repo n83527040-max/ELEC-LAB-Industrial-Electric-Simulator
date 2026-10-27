@@ -1,6 +1,7 @@
 import 'package:elec_lab/src/models/geometry.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
+import 'package:elec_lab/src/models/supply_bay.dart';
 import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/state/editor_controller.dart';
 import 'package:elec_lab/src/state/id_factory.dart';
@@ -32,13 +33,18 @@ void main() {
     expect(controller.project.componentById(id)!.rotation, 1);
     final duplicate = controller.duplicateComponent(id)!;
     expect(duplicate, isNot(id));
-    expect(controller.project.components, hasLength(2));
+    expect(controller.project.components, hasLength(5));
     controller.deleteComponent(id);
-    expect(controller.project.components.map((item) => item.id), <String>[duplicate]);
+    expect(
+      controller.project.components.map((item) => item.id),
+      containsAll(<String>[...SupplyBay.ids, duplicate]),
+    );
+    expect(controller.project.components, hasLength(4));
     controller.undo();
-    expect(controller.project.components, hasLength(2));
+    expect(controller.project.components, hasLength(5));
     controller.redo();
-    expect(controller.project.components.map((item) => item.id), <String>[duplicate]);
+    expect(controller.project.components, hasLength(4));
+    expect(controller.project.componentById(duplicate), isNotNull);
   });
 
   test('continuous drag is one undo operation', () {
@@ -56,10 +62,16 @@ void main() {
   });
 
   test('terminal-to-terminal flow validates and edits wires and waypoints', () {
-    controller.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
-    controller.addComponent(ComponentKind.indicator, const BoardPoint(500, 100));
-    final source = controller.project.components[0];
-    final lamp = controller.project.components[1];
+    final sourceId = controller.addComponent(
+      ComponentKind.dcSupply,
+      const BoardPoint(100, 100),
+    );
+    final lampId = controller.addComponent(
+      ComponentKind.indicator,
+      const BoardPoint(500, 100),
+    );
+    final source = controller.project.componentById(sourceId)!;
+    final lamp = controller.project.componentById(lampId)!;
     final start = TerminalRef(componentId: source.id, terminalId: 'positive');
     final end = TerminalRef(componentId: lamp.id, terminalId: 'x1');
     controller.beginWire(start);
@@ -85,6 +97,27 @@ void main() {
     expect(controller.project.wires, hasLength(1));
   });
 
+  test('source-to-coil wiring is stored on the control layer with control color', () {
+    final contactorId = controller.addComponent(
+      ComponentKind.contactor,
+      const BoardPoint(500, 261),
+    );
+    controller.beginWire(
+      const TerminalRef(
+        componentId: SupplyBay.dcId,
+        terminalId: 'positive',
+      ),
+    );
+    final wireId = controller.completeWire(
+      TerminalRef(componentId: contactorId, terminalId: 'a1'),
+    );
+    final wire = controller.project.wireById(wireId!)!;
+    expect(wire.layerId, 'control');
+    expect(wire.colorValue, 0xff1e88e5);
+    expect(wire.from.componentId, SupplyBay.dcId);
+    expect(wire.to.terminalId, 'a1');
+  });
+
   test('layers rename, hide, lock and protect against accidental deletion', () {
     final id = controller.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
     final before = controller.project.componentById(id)!.position;
@@ -98,6 +131,29 @@ void main() {
     controller.renameLayer(layerId, 'قياس');
     expect(controller.project.layerById(layerId)!.name, 'قياس');
     expect(controller.deleteLayer(layerId), isTrue);
+  });
+
+  test('reserved supplies stay fixed and DIN devices snap near a rail', () {
+    final supply = controller.project.componentById(SupplyBay.threePhaseId)!;
+    controller.moveComponent(supply.id, const BoardPoint(700, 500));
+    controller.rotateComponent(supply.id);
+    controller.resizeComponent(supply.id, 1.8);
+    expect(controller.duplicateComponent(supply.id), isNull);
+    controller.deleteComponent(supply.id);
+    final retained = controller.project.componentById(supply.id)!;
+    expect(retained.position, supply.position);
+    expect(retained.rotation, supply.rotation);
+    expect(retained.scale, supply.scale);
+    controller.setSupplyEnabled(supply.id, true);
+    expect(controller.project.componentById(supply.id)!.flag('enabled'), isTrue);
+
+    final id = controller.addComponent(
+      ComponentKind.contactor,
+      const BoardPoint(300, 260),
+    );
+    expect(controller.project.componentById(id)!.position, const BoardPoint(300, 261));
+    controller.moveComponent(id, const BoardPoint(320, 420));
+    expect(controller.project.componentById(id)!.position, const BoardPoint(320, 420));
   });
 
   test('viewport limits and snap settings are enforced', () {
@@ -126,7 +182,7 @@ void main() {
     savingController.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
     await savingController.flush();
     expect(saved, isNotNull);
-    expect(saved!.components, hasLength(1));
+    expect(saved!.components, hasLength(4));
     expect(saved!.name, 'Editor');
     savingController.dispose();
   });

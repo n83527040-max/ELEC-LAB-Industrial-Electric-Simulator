@@ -156,6 +156,7 @@ class _ComponentCard extends StatelessWidget {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final mesh = ProceduralMeshes.forKind(spec.kind);
     return Card(
+      key: Key('component-card-${spec.kind.name}'),
       elevation: 0,
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -230,15 +231,22 @@ class _ComponentCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(
-                  spec.nameFr,
-                  textDirection: TextDirection.ltr,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 10,
-                    height: 1.1,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                SizedBox(
+                  height: 24,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      spec.nameFr,
+                      textDirection: TextDirection.ltr,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 10,
+                        height: 1.1,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                   ),
                 ),
               ],

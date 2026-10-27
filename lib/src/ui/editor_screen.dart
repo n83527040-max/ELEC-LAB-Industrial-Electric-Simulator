@@ -9,6 +9,7 @@ import '../export/project_exporter.dart';
 import '../models/component_catalog.dart';
 import '../models/geometry.dart';
 import '../models/project.dart';
+import '../models/supply_bay.dart';
 import '../models/terminal.dart';
 import '../state/editor_controller.dart';
 import '../storage/project_repository.dart';
@@ -18,6 +19,7 @@ import 'component_library_sheet.dart';
 import 'layers_sheet.dart';
 import 'learning_screen.dart';
 import 'simulation_panel.dart';
+import 'supply_panel.dart';
 import 'wire_settings_sheet.dart';
 
 class EditorScreen extends StatefulWidget {
@@ -279,6 +281,12 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                       child: const Icon(Icons.add),
                     ),
                     IconButton(
+                      key: const Key('supply-panel'),
+                      onPressed: _showSupplies,
+                      icon: const Icon(Icons.bolt),
+                      tooltip: 'مصادر التغذية',
+                    ),
+                    IconButton(
                       onPressed: _showLayers,
                       icon: const Icon(Icons.layers),
                       tooltip: 'الطبقات',
@@ -308,11 +316,33 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
     );
     if (kind == null) return;
     final spec = ComponentCatalog.specOf(kind);
+    final center = _boardKey.currentState?.visibleCenter ??
+        BoardPoint(
+          _controller.project.boardWidth / 2,
+          _controller.project.boardHeight / 2,
+        );
+    final requestedY = center.y - spec.size.height / 2;
     _controller.addComponent(
       kind,
       BoardPoint(
-        _controller.project.boardWidth / 2 - spec.size.width / 2,
-        _controller.project.boardHeight / 2 - spec.size.height / 2,
+        center.x - spec.size.width / 2,
+        requestedY < SupplyBay.reservedHeight + 20
+            ? SupplyBay.reservedHeight + 20
+            : requestedY,
+      ),
+    );
+  }
+
+  void _showSupplies() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) => SupplyPanel(
+        controller: _controller,
+        onShowDetails: (id) {
+          Navigator.of(sheetContext).pop();
+          _showDetails(id);
+        },
       ),
     );
   }
@@ -431,8 +461,9 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
         title: const Text('نطاق المحاكاة والسلامة'),
         content: const SingleChildScrollView(
           child: Text(
-            'النطاق المدعوم: DC وAC جيبي خطي بطور واحد أو ثلاثة أطوار متوازنة، اتصالات وملفات وحمايات وقياسات.\n\n'
-            'غير مدعوم: العابرات الكهرومغناطيسية، harmonics، VFD/PLC، المحول، نموذج العزم والانزلاق الميكانيكي الدقيق، واختيار حمايات مطابق للمعايير.\n\n'
+            'النطاق المدعوم: DC وAC جيبي خطي بطور واحد أو ثلاثة أطوار متوازنة، محول مثالي بمقاومات الملفات، اتصالات وملفات وحمايات وقياسات وطاقة.\n\n'
+            'المحول المثالي مخصص لـAC، وRCD يحسب المجموع المتجهي L+N لدائرة أحادية الطور. لا يُحسب قصر أرضي أو منحنى فصل خاص بمصنّع.\n\n'
+            'غير مدعوم: العابرات الكهرومغناطيسية، harmonics، VFD/PLC، نموذج العزم والانزلاق الميكانيكي الدقيق، منحنيات RCD والحمايات الخاصة بالمصنعين، واختيار حمايات مطابق للمعايير.\n\n'
             'المحاكاة تعليمية فقط. لا توصّل أو تختبر قصراً على معدات حقيقية اعتماداً على التطبيق.',
           ),
         ),
@@ -452,6 +483,7 @@ class _ComponentContextBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final component = controller.selectedComponent!;
+    final fixedSupply = SupplyBay.isFixed(component);
     return Material(
       elevation: 8,
       borderRadius: BorderRadius.circular(14),
@@ -477,26 +509,30 @@ class _ComponentContextBar extends StatelessWidget {
               icon: const Icon(Icons.info_outline),
               tooltip: 'التفاصيل و3D والخصائص',
             ),
-            IconButton(
-              onPressed: () => controller.rotateComponent(component.id),
+            if (!fixedSupply)
+              IconButton(
+                onPressed: () => controller.rotateComponent(component.id),
               icon: const Icon(Icons.rotate_90_degrees_cw),
               tooltip: 'تدوير',
             ),
-            IconButton(
-              onPressed: () => controller.duplicateComponent(component.id),
+            if (!fixedSupply)
+              IconButton(
+                onPressed: () => controller.duplicateComponent(component.id),
               icon: const Icon(Icons.copy),
               tooltip: 'نسخ',
             ),
-            IconButton(
-              onPressed: () => controller.resizeComponent(
+            if (!fixedSupply)
+              IconButton(
+                onPressed: () => controller.resizeComponent(
                 component.id,
                 component.scale >= 1.4 ? 0.8 : component.scale + 0.2,
               ),
               icon: const Icon(Icons.open_in_full),
               tooltip: 'تغيير الحجم',
             ),
-            IconButton(
-              onPressed: () => controller.deleteComponent(component.id),
+            if (!fixedSupply)
+              IconButton(
+                onPressed: () => controller.deleteComponent(component.id),
               icon: const Icon(Icons.delete_outline),
               tooltip: 'حذف مع إمكانية التراجع',
             ),

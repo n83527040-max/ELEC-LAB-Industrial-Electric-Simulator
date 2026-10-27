@@ -1,5 +1,6 @@
 import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/project.dart';
+import 'package:elec_lab/src/models/supply_bay.dart';
 import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/state/editor_controller.dart';
 import 'package:elec_lab/src/ui/app_theme.dart';
@@ -58,11 +59,15 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    for (var index = 0; index < 4; index++) {
-      await tester.drag(find.byKey(const Key('component-grid')), const Offset(0, -500));
-      await tester.pumpAndSettle();
+    for (final kind in ComponentKind.values) {
+      await tester.scrollUntilVisible(
+        find.byKey(Key('component-card-${kind.name}')),
+        240,
+        scrollable: find.byKey(const Key('component-grid')),
+      );
+      await tester.pump();
+      expect(tester.takeException(), isNull, reason: kind.name);
     }
-    expect(tester.takeException(), isNull);
   });
 
   testWidgets('board terminals are hidden until selection and accept real taps', (tester) async {
@@ -90,7 +95,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('A1'), findsNothing);
 
-    await tester.tap(find.byType(BoardComponent));
+    await tester.tap(find.byKey(const Key('k1')));
     // The device also supports double-tap details; let single-tap recognition finish.
     await tester.pump(const Duration(milliseconds: 350));
     await tester.pumpAndSettle();
@@ -108,6 +113,59 @@ void main() {
     controller.rotateComponent('k1');
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('terminal-k1-a1')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('permanent supply bay toggles a real source and accepts L1 wiring', (tester) async {
+    final controller = EditorController(
+      project: ElectricalProject.empty(
+        id: 'supply_widget',
+        name: 'Supply widget',
+        now: testNow,
+      ),
+    );
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: AppTheme.dark(),
+        home: Scaffold(
+          body: AnimatedBuilder(
+            animation: controller,
+            builder: (context, _) => CircuitBoard(
+              controller: controller,
+              onShowDetails: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.byKey(const Key('terminal-${SupplyBay.threePhaseId}-l1')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('terminal-${SupplyBay.threePhaseId}-neutral')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const Key('terminal-${SupplyBay.threePhaseId}-pe')),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const Key('supply-toggle-${SupplyBay.threePhaseId}')));
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pumpAndSettle();
+    expect(
+      controller.project.componentById(SupplyBay.threePhaseId)!.flag('enabled'),
+      isTrue,
+    );
+    await tester.tap(
+      find.byKey(const Key('terminal-${SupplyBay.threePhaseId}-l1')),
+    );
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pumpAndSettle();
+    expect(controller.pendingWireStart?.componentId, SupplyBay.threePhaseId);
+    expect(controller.pendingWireStart?.terminalId, 'l1');
     expect(tester.takeException(), isNull);
   });
 }

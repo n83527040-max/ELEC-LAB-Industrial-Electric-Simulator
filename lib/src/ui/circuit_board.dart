@@ -6,6 +6,7 @@ import '../models/board_geometry.dart';
 import '../models/component.dart';
 import '../models/component_catalog.dart';
 import '../models/geometry.dart';
+import '../models/supply_bay.dart';
 import '../models/terminal.dart';
 import '../models/wire.dart';
 import '../simulation/simulation_result.dart';
@@ -40,13 +41,34 @@ class CircuitBoardState extends State<CircuitBoard> {
     super.dispose();
   }
 
+  BoardPoint get visibleCenter {
+    final matrix = _transformation.value;
+    final scale = math.max(0.35, matrix.getMaxScaleOnAxis());
+    final translation = matrix.getTranslation();
+    return BoardPoint(
+      (_viewportSize.width / 2 - translation.x) / scale,
+      (_viewportSize.height / 2 - translation.y) / scale,
+    );
+  }
+
   /// Fits existing devices instead of showing an empty corner of the board. An
-  /// empty project is centred where the first device will be inserted.
+  /// empty project includes the supply bay and a useful DIN working area.
   void fitToContent() {
     if (_viewportSize.isEmpty) return;
     final project = widget.controller.project;
-    Rect? content;
+    final hasUserDevices = project.components.any(
+      (component) => !SupplyBay.isFixed(component),
+    );
+    Rect? content = hasUserDevices
+        ? null
+        : Rect.fromLTWH(
+            28,
+            28,
+            math.min(620, project.boardWidth - 56),
+            620,
+          );
     for (final component in project.components) {
+      if (hasUserDevices && SupplyBay.isFixed(component)) continue;
       final bounds = BoardGeometry.bounds(component, padding: 36);
       content = content == null ? bounds : content.expandToInclude(bounds);
     }
@@ -109,11 +131,27 @@ class CircuitBoardState extends State<CircuitBoard> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final nextSize = constraints.biggest;
-          if (_viewportSize != nextSize) _viewportSize = nextSize;
+          BoardPoint? previousCenter;
+          if (_viewportSize != nextSize) {
+            if (_initialized && !_viewportSize.isEmpty) {
+              previousCenter = visibleCenter;
+            }
+            _viewportSize = nextSize;
+          }
           if (!_initialized && !nextSize.isEmpty) {
             _initialized = true;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) fitToContent();
+            });
+          } else if (previousCenter != null) {
+            final scale = _transformation.value.getMaxScaleOnAxis();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted || _viewportSize != nextSize) return;
+              _applyViewport(
+                scale,
+                previousCenter!,
+                Offset(nextSize.width / 2, nextSize.height / 2),
+              );
             });
           }
           return InteractiveViewer(
@@ -155,7 +193,9 @@ class CircuitBoardState extends State<CircuitBoard> {
                     ),
                     ...project.components
                         .where(
-                          (component) => visibleLayers.contains(component.layerId),
+                          (component) =>
+                              SupplyBay.isFixed(component) ||
+                              visibleLayers.contains(component.layerId),
                         )
                         .map(
                           (component) => BoardComponent(
@@ -233,6 +273,9 @@ class CircuitBoardState extends State<CircuitBoard> {
     CircuitWire? nearest;
     var distance = 12.0;
     for (final wire in controller.project.wires) {
+      if (!(controller.project.layerById(wire.layerId)?.visible ?? true)) {
+        continue;
+      }
       final current = BoardPainter.distanceToWire(
         controller.project,
         wire,
@@ -282,7 +325,9 @@ class _BoardComponentState extends State<BoardComponent> {
   @override
   void didUpdateWidget(BoardComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.component.kind != widget.component.kind) {
+    if (oldWidget.component.kind != widget.component.kind ||
+        oldWidget.component.properties['color'] !=
+            widget.component.properties['color']) {
       _mesh = ProceduralMeshes.forComponent(
         widget.component,
         detail: MeshDetail.board,
@@ -299,8 +344,11 @@ class _BoardComponentState extends State<BoardComponent> {
     final width = spec.size.width * scale;
     final height = spec.size.height * scale;
     final selected = controller.selectedComponentId == component.id;
-    final showTerminals = !controller.isRunning &&
-        (selected || controller.pendingWireStart != null);
+    final fixedSupply = SupplyBay.isFixed(component);
+    final showTerminals = fixedSupply ||
+        (!controller.isRunning &&
+            (selected || controller.pendingWireStart != null));
+    final movable = !fixedSupply && !controller.isRunning;
     final reading = widget.reading;
     final active = reading?.active ?? false;
     final tripped = reading?.tripped ?? false;
@@ -330,22 +378,24 @@ class _BoardComponentState extends State<BoardComponent> {
           onTap: () {
             if (controller.isRunning &&
                 (component.kind == ComponentKind.sensor ||
-                    component.kind == ComponentKind.selectorSwitch)) {
+                    component.kind == ComponentKind.limitSwitch ||
+                    component.kind == ComponentKind.selectorSwitch ||
+                    component.kind == ComponentKind.rotarySwitch ||
+                    component.kind == ComponentKind.emergencyStop)) {
               controller.toggleOperationalState(component.id);
             } else {
               controller.selectComponent(component.id);
             }
           },
           onDoubleTap: widget.onShowDetails,
-          onPanStart: controller.isRunning
-              ? null
-              : (_) {
+          onPanStart: movable
+              ? (_) {
                   controller.selectComponent(component.id);
                   controller.beginInteraction();
-                },
-          onPanUpdate: controller.isRunning
-              ? null
-              : (details) => controller.moveComponent(
+                }
+              : null,
+          onPanUpdate: movable
+              ? (details) => controller.moveComponent(
                     component.id,
                     component.position +
                         BoardPoint(
@@ -353,11 +403,10 @@ class _BoardComponentState extends State<BoardComponent> {
                           details.delta.dy / math.max(0.35, controller.zoom),
                         ),
                     transient: true,
-                  ),
-          onPanEnd: controller.isRunning
-              ? null
-              : (_) => controller.endInteraction(),
-          onPanCancel: controller.isRunning ? null : controller.endInteraction,
+                  )
+              : null,
+          onPanEnd: movable ? (_) => controller.endInteraction() : null,
+          onPanCancel: movable ? controller.endInteraction : null,
           child: Stack(
             clipBehavior: Clip.none,
             children: <Widget>[
@@ -396,6 +445,19 @@ class _BoardComponentState extends State<BoardComponent> {
                   ),
                 ),
               ),
+              if (fixedSupply)
+                Positioned(
+                  top: hitOverflow + 5,
+                  left: hitOverflow + 5,
+                  child: _SupplyToggle(
+                    key: Key('supply-toggle-${component.id}'),
+                    enabled: component.flag('enabled'),
+                    onChanged: (enabled) => controller.setSupplyEnabled(
+                      component.id,
+                      enabled,
+                    ),
+                  ),
+                ),
               if (showTerminals)
                 for (final terminal in spec.terminals)
                   _TerminalButton(
@@ -407,6 +469,7 @@ class _BoardComponentState extends State<BoardComponent> {
                     scale: scale,
                     origin: hitOverflow,
                     hitSize: 34 / controller.zoom.clamp(0.35, 3.0),
+                    interactive: !controller.isRunning,
                     pending: controller.pendingWireStart ==
                         TerminalRef(
                           componentId: component.id,
@@ -468,6 +531,50 @@ class _BoardComponentState extends State<BoardComponent> {
   }
 }
 
+class _SupplyToggle extends StatelessWidget {
+  const _SupplyToggle({
+    required this.enabled,
+    required this.onChanged,
+    super.key,
+  });
+
+  final bool enabled;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: enabled ? 'تعطيل مصدر التغذية' : 'تفعيل مصدر التغذية',
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => onChanged(!enabled),
+        child: Container(
+          width: 38,
+          height: 20,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: enabled ? const Color(0xff148b62) : const Color(0xff273846),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: enabled ? const Color(0xff65e0ae) : const Color(0xff748897),
+            ),
+          ),
+          child: Text(
+            enabled ? 'ON' : 'OFF',
+            textDirection: TextDirection.ltr,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _TerminalButton extends StatelessWidget {
   const _TerminalButton({
     required this.terminal,
@@ -475,6 +582,7 @@ class _TerminalButton extends StatelessWidget {
     required this.scale,
     required this.origin,
     required this.hitSize,
+    required this.interactive,
     required this.pending,
     required this.onTap,
     super.key,
@@ -485,6 +593,7 @@ class _TerminalButton extends StatelessWidget {
   final double scale;
   final double origin;
   final double hitSize;
+  final bool interactive;
   final bool pending;
   final VoidCallback onTap;
 
@@ -492,7 +601,21 @@ class _TerminalButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final left = origin + terminal.position.x * scale - hitSize / 2;
     final top = origin + terminal.position.y * scale - hitSize / 2;
-    final color = pending ? const Color(0xffffb300) : const Color(0xff00b7ff);
+    final terminalColor = switch (terminal.phase) {
+      'L1' => const Color(0xffe53935),
+      'L2' => const Color(0xfffdd835),
+      'L3' => const Color(0xff1e88e5),
+      _ => switch (terminal.kind) {
+          TerminalKind.earth => const Color(0xff43a047),
+          TerminalKind.neutral => const Color(0xff64b5f6),
+          _ => terminal.id == 'positive'
+              ? const Color(0xffe53935)
+              : terminal.label == '0V'
+                  ? const Color(0xff64b5f6)
+                  : const Color(0xff00b7ff),
+        },
+    };
+    final color = pending ? const Color(0xffffb300) : terminalColor;
     return Positioned(
       left: left,
       top: top,
@@ -503,7 +626,7 @@ class _TerminalButton extends StatelessWidget {
         label: 'طرف ${terminal.label} في ${component.label}',
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: onTap,
+          onTap: interactive ? onTap : null,
           child: Stack(
             clipBehavior: Clip.none,
             alignment: Alignment.center,

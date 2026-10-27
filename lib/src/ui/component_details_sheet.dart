@@ -101,12 +101,18 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                     color: Theme.of(context).colorScheme.primaryContainer,
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      child: Wrap(
+                        alignment: WrapAlignment.spaceAround,
+                        spacing: 18,
+                        runSpacing: 6,
                         children: <Widget>[
                           Text('${reading.voltage.toStringAsFixed(2)} V'),
                           Text('${reading.current.toStringAsFixed(3)} A'),
                           Text('${reading.activePower.toStringAsFixed(2)} W'),
+                          if (reading.residualCurrent > 0)
+                            Text('ΔI ${(reading.residualCurrent * 1000).toStringAsFixed(1)} mA'),
+                          if (reading.energyKwh > 0)
+                            Text('${reading.energyKwh.toStringAsFixed(6)} kWh'),
                         ],
                       ),
                     ),
@@ -121,8 +127,21 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
 
   Widget _propertiesTab(String componentId) {
     final component = widget.controller.project.componentById(componentId)!;
+    final supportsReset = const <ComponentKind>{
+      ComponentKind.circuitBreaker,
+      ComponentKind.differentialBreaker,
+      ComponentKind.motorBreaker,
+      ComponentKind.thermalRelay,
+      ComponentKind.fuse,
+    }.contains(component.kind);
     final editable = component.properties.entries.where(
-      (entry) => !const <String>{'pressed', 'color', 'fault'}.contains(entry.key),
+      (entry) => !const <String>{
+        'pressed',
+        'color',
+        'fault',
+        'position',
+        'supplyBay',
+      }.contains(entry.key),
     );
     return Form(
       key: _formKey,
@@ -164,19 +183,43 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                     labelText: _propertyName(entry.key),
                     suffixText: entry.key,
                   ),
-                  validator: (text) {
-                    final parsed = double.tryParse(text ?? '');
-                    if (parsed == null || !parsed.isFinite || parsed < 0) {
-                      return 'أدخل رقماً صالحاً';
-                    }
-                    return null;
-                  },
+                  validator: (text) => _validateNumber(entry.key, text),
                   onSaved: (text) => _numbers[entry.key] = double.parse(text!),
                 ),
               );
             }
             return const SizedBox.shrink();
           }),
+          if (component.kind == ComponentKind.indicator)
+            DropdownButtonFormField<String>(
+              initialValue: component.text('color').isEmpty
+                  ? 'red'
+                  : component.text('color'),
+              decoration: const InputDecoration(labelText: 'لون المصباح'),
+              items: const <DropdownMenuItem<String>>[
+                DropdownMenuItem(value: 'red', child: Text('أحمر')),
+                DropdownMenuItem(value: 'green', child: Text('أخضر')),
+                DropdownMenuItem(value: 'yellow', child: Text('أصفر')),
+              ],
+              onChanged: (value) => widget.controller.updateComponentProperties(
+                componentId,
+                <String, Object>{...component.properties, 'color': value ?? 'red'},
+              ),
+            ),
+          if (component.kind == ComponentKind.rotarySwitch)
+            DropdownButtonFormField<int>(
+              initialValue: component.number('position').round(),
+              decoration: const InputDecoration(labelText: 'وضعية المفتاح الدوار'),
+              items: const <DropdownMenuItem<int>>[
+                DropdownMenuItem(value: 0, child: Text('0 — فصل')),
+                DropdownMenuItem(value: 1, child: Text('1 — COM إلى 1')),
+                DropdownMenuItem(value: 2, child: Text('2 — COM إلى 2')),
+              ],
+              onChanged: (value) => widget.controller.updateComponentProperties(
+                componentId,
+                <String, Object>{...component.properties, 'position': value ?? 0},
+              ),
+            ),
           const SizedBox(height: 12),
           FilledButton.icon(
             onPressed: () {
@@ -193,28 +236,31 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
             label: const Text('تطبيق الخصائص'),
           ),
           const SizedBox(height: 20),
-          DropdownButtonFormField<String>(
-            initialValue: component.text('fault').isEmpty ? 'none' : component.text('fault'),
-            decoration: const InputDecoration(labelText: 'حقن عطل افتراضي'),
-            items: const <DropdownMenuItem<String>>[
-              DropdownMenuItem(value: 'none', child: Text('لا يوجد عطل')),
-              DropdownMenuItem(value: 'open', child: Text('انقطاع Open circuit')),
-              DropdownMenuItem(value: 'short', child: Text('قصر Short circuit')),
-              DropdownMenuItem(value: 'coilOpen', child: Text('انقطاع الملف Coil open')),
-            ],
-            onChanged: (value) => widget.controller.injectFault(componentId, value!),
-          ),
-          const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: () => widget.controller.resetProtection(componentId),
-            icon: const Icon(Icons.restart_alt),
-            label: const Text('إعادة ضبط الحماية / استبدال الفيوز'),
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'الأعطال افتراضية داخل المحاكي فقط. لا تجرّب القصر على معدات حقيقية.',
-            style: TextStyle(color: Colors.orange),
-          ),
+          if (component.properties.containsKey('fault')) ...<Widget>[
+            DropdownButtonFormField<String>(
+              initialValue: component.text('fault').isEmpty ? 'none' : component.text('fault'),
+              decoration: const InputDecoration(labelText: 'حقن عطل افتراضي'),
+              items: const <DropdownMenuItem<String>>[
+                DropdownMenuItem(value: 'none', child: Text('لا يوجد عطل')),
+                DropdownMenuItem(value: 'open', child: Text('انقطاع Open circuit')),
+                DropdownMenuItem(value: 'short', child: Text('قصر Short circuit')),
+                DropdownMenuItem(value: 'coilOpen', child: Text('انقطاع الملف Coil open')),
+              ],
+              onChanged: (value) => widget.controller.injectFault(componentId, value!),
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'الأعطال افتراضية داخل المحاكي فقط. لا تجرّب القصر على معدات حقيقية.',
+              style: TextStyle(color: Colors.orange),
+            ),
+            const SizedBox(height: 12),
+          ],
+          if (supportsReset)
+            OutlinedButton.icon(
+              onPressed: () => widget.controller.resetProtection(componentId),
+              icon: const Icon(Icons.restart_alt),
+              label: const Text('إعادة ضبط الحماية / استبدال الفيوز'),
+            ),
         ],
       ),
     );
@@ -263,11 +309,57 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
         TerminalKind.earth => 'حماية أرضية PE',
       };
 
+  static String? _validateNumber(String key, String? text) {
+    final parsed = double.tryParse(text ?? '');
+    if (parsed == null || !parsed.isFinite || parsed < 0) {
+      return 'أدخل رقماً صالحاً';
+    }
+    final limits = const <String, List<double>>{
+      'frequency': <double>[40, 70],
+      'residualThreshold': <double>[0.001, 1],
+      'powerFactor': <double>[0.2, 1],
+      'delaySeconds': <double>[0.05, 3600],
+      'tripTime': <double>[0.2, 3600],
+      'internalResistance': <double>[0.001, 100],
+      'primaryResistance': <double>[0.001, 100],
+      'secondaryResistance': <double>[0.001, 100],
+      'ratedCurrent': <double>[0.001, 1000],
+      'nominalCurrent': <double>[0.01, 1000],
+      'coilResistance': <double>[0.1, 1000000],
+      'powerWatts': <double>[0.01, 10000],
+      'maxVoltage': <double>[1, 1000],
+      'maxCurrent': <double>[0.001, 1000],
+      'pickupRatio': <double>[0.1, 1],
+      'dropoutRatio': <double>[0.05, 1],
+    }[key];
+    if (limits != null && (parsed < limits[0] || parsed > limits[1])) {
+      return 'القيمة المدعومة بين ${limits[0]} و${limits[1]}';
+    }
+    const voltages = <String>{
+      'voltage',
+      'lineVoltage',
+      'nominalVoltage',
+      'ratedVoltage',
+      'coilVoltage',
+      'primaryVoltage',
+      'secondaryVoltage',
+    };
+    if (voltages.contains(key) && (parsed < 0.1 || parsed > 1000)) {
+      return 'الجهد المدعوم بين 0.1 و1000 V';
+    }
+    return null;
+  }
+
   static String _propertyName(String key) => switch (key) {
         'voltage' => 'الجهد RMS/DC',
         'lineVoltage' => 'الجهد بين الأطوار',
         'frequency' => 'التردد Hz',
         'internalResistance' => 'المقاومة الداخلية Ω',
+        'residualThreshold' => 'عتبة تيار التسرب A',
+        'primaryVoltage' => 'جهد الملف الابتدائي V',
+        'secondaryVoltage' => 'جهد الملف الثانوي V',
+        'primaryResistance' => 'مقاومة الملف الابتدائي Ω',
+        'secondaryResistance' => 'مقاومة الملف الثانوي Ω',
         'enabled' => 'المصدر مفعل',
         'ratedCurrent' => 'التيار المقنن A',
         'closed' => 'الوضع مغلق',

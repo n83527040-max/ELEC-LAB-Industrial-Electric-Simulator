@@ -201,8 +201,12 @@ abstract final class DiagnosticAdvisor {
   static List<String> hintsFor(SimulationDiagnostic diagnostic) {
     return switch (diagnostic.code) {
       'no_supply' => const <String>[
-          'افتح مكتبة العناصر ثم «مصادر التغذية».',
+          'افتح زر «مصادر التغذية» أسفل المحرر.',
           'اختر DC 24V لدوائر التحكم البسيطة.',
+        ],
+      'supply_disabled' => const <String>[
+          'فعّل المصدر المطلوب فقط من Supply Bay أو من زر ON/OFF عليه.',
+          'اضبط الجهد والتردد من الخصائص قبل توصيل الأحمال.',
         ],
       'singular_network' => const <String>[
           'ابحث عن سلك يصل مباشرة بين خرجي مصدرين.',
@@ -216,7 +220,14 @@ abstract final class DiagnosticAdvisor {
           'قِس الجهد بين U/V/W للتأكد من وصول الأطوار الثلاثة.',
           'تحقق من Contacteur وRelais thermique والأسلاك المفتوحة.',
         ],
-      'breaker_trip' || 'thermal_trip' || 'fuse_blown' => const <String>[
+      'differential_trip' => const <String>[
+          'تحقق من تيار التسرب ومن عودة N عبر القاطع التفاضلي.',
+          'PE مسار حماية ولا يدخل كتيار حمل داخل قياس ΔI.',
+        ],
+      'breaker_trip' ||
+      'thermal_trip' ||
+      'motor_breaker_trip' ||
+      'fuse_blown' => const <String>[
           'افحص القصر أو الحمل الزائد قبل إعادة الضبط.',
           'قارن التيار المحسوب بالتيار المقنن للحماية.',
           'لا ترفع تصنيف الحماية لمجرد إخفاء العطل.',
