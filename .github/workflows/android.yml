@@ -77,8 +77,16 @@ jobs:
           cat test.log
           if [ "$STATUS" -ne 0 ]; then
             python3 - test.log <<'PY'
+          import re
           import sys
-          text = open(sys.argv[1], encoding='utf-8').read()[-14000:]
+          raw = open(sys.argv[1], encoding='utf-8').read()
+          descriptions = list(dict.fromkeys(re.findall(
+              r'The test description was:\s*\n([^\n]+)', raw,
+          )))
+          for description in descriptions:
+              escaped = description.replace('%', '%25').replace('\r', '%0D')
+              print('::error::FAILED TEST: ' + escaped)
+          text = raw[-14000:]
           text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
           for offset in range(0, len(text), 2400):
               print('::error::' + text[offset:offset + 2400])
