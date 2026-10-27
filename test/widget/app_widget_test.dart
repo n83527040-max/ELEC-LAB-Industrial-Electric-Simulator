@@ -71,7 +71,16 @@ void main() {
     await tester.tap(find.byKey(const Key('add-component')));
     await tester.pumpAndSettle();
     expect(find.text('مكتبة العناصر'), findsOneWidget);
-    await tester.tap(find.text('كونتاكتور'));
+    final contactorCard = find.byKey(const Key('component-card-contactor'));
+    await tester.scrollUntilVisible(
+      contactorCard,
+      240,
+      scrollable: find.descendant(
+        of: find.byKey(const Key('component-grid')),
+        matching: find.byType(Scrollable),
+      ),
+    );
+    await tester.tap(contactorCard);
     await tester.pumpAndSettle();
     expect(find.text('K1'), findsWidgets);
     await tester.tap(find.byTooltip('حفظ ورجوع'));
