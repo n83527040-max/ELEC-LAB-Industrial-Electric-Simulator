@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:elec_lab/src/export/project_exporter.dart';
 import 'package:elec_lab/src/models/component_catalog.dart';
 import 'package:elec_lab/src/models/project.dart';
@@ -95,6 +97,37 @@ void main() {
           .join('|');
     }).toSet();
     expect(signatures.length, kinds.length);
+  });
+
+  test('perspective auto-fit leaves a transparent margin around every preview', () async {
+    const size = Size(140, 120);
+    for (final kind in ComponentKind.values) {
+      final recorder = ui.PictureRecorder();
+      final canvas = Canvas(recorder);
+      MeshPainter(
+        mesh: ProceduralMeshes.forKind(kind),
+        fitPadding: 0.88,
+      ).paint(canvas, size);
+      final picture = recorder.endRecording();
+      final image = await picture.toImage(size.width.toInt(), size.height.toInt());
+      final data = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+      expect(data, isNotNull);
+      final pixels = data!.buffer.asUint8List();
+      var borderHasGeometry = false;
+      for (var x = 0; x < size.width.toInt(); x++) {
+        borderHasGeometry |= pixels[x * 4 + 3] != 0;
+        final bottom = ((size.height.toInt() - 1) * size.width.toInt() + x) * 4 + 3;
+        borderHasGeometry |= pixels[bottom] != 0;
+      }
+      for (var y = 0; y < size.height.toInt(); y++) {
+        borderHasGeometry |= pixels[y * size.width.toInt() * 4 + 3] != 0;
+        final right = (y * size.width.toInt() + size.width.toInt() - 1) * 4 + 3;
+        borderHasGeometry |= pixels[right] != 0;
+      }
+      expect(borderHasGeometry, isFalse, reason: '${kind.name} touches the preview clip');
+      picture.dispose();
+      image.dispose();
+    }
   });
 
   testWidgets('3D viewer responds to rotation gestures', (tester) async {

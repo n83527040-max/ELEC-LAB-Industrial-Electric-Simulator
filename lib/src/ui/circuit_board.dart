@@ -243,11 +243,9 @@ class CircuitBoardState extends State<CircuitBoard> {
         nearest = wire;
       }
     }
-    if (nearest == null) {
-      controller.selectComponent(null);
-    } else {
-      controller.selectWire(nearest.id);
-    }
+    // A child device may handle the same tap before this board-level handler.
+    // Never clear its fresh selection when no wire was actually hit.
+    if (nearest != null) controller.selectWire(nearest.id);
   }
 }
 
