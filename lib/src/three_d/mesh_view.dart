@@ -128,10 +128,10 @@ class MeshPainter extends CustomPainter {
 
   Color _shade(Color color, double brightness) {
     return Color.fromARGB(
-      color.alpha,
-      (color.red * brightness).round().clamp(0, 255).toInt(),
-      (color.green * brightness).round().clamp(0, 255).toInt(),
-      (color.blue * brightness).round().clamp(0, 255).toInt(),
+      (color.a * 255).round().clamp(0, 255).toInt(),
+      (color.r * brightness * 255).round().clamp(0, 255).toInt(),
+      (color.g * brightness * 255).round().clamp(0, 255).toInt(),
+      (color.b * brightness * 255).round().clamp(0, 255).toInt(),
     );
   }
 

@@ -6,7 +6,6 @@ import '../models/board_geometry.dart';
 import '../models/component.dart';
 import '../models/component_catalog.dart';
 import '../models/geometry.dart';
-import '../models/project.dart';
 import '../models/terminal.dart';
 import '../models/wire.dart';
 import '../simulation/simulation_result.dart';
@@ -133,7 +132,10 @@ class _CircuitBoardState extends State<CircuitBoard> {
                 wire.id,
                 index,
                 current.waypoints[index] +
-                    details.delta / math.max(0.35, controller.zoom),
+                    BoardPoint(
+                      details.delta.dx / math.max(0.35, controller.zoom),
+                      details.delta.dy / math.max(0.35, controller.zoom),
+                    ),
                 transient: true,
               );
             },
@@ -265,7 +267,10 @@ class _BoardComponentState extends State<BoardComponent> {
               : (details) => controller.moveComponent(
                     component.id,
                     component.position +
-                        details.delta / math.max(0.35, controller.zoom),
+                        BoardPoint(
+                          details.delta.dx / math.max(0.35, controller.zoom),
+                          details.delta.dy / math.max(0.35, controller.zoom),
+                        ),
                     transient: true,
                   ),
           onPanEnd: controller.isRunning

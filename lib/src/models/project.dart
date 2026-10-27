@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'component.dart';
 import 'component_catalog.dart';
-import 'geometry.dart';
 import 'layer.dart';
 import 'terminal.dart';
 import 'wire.dart';
@@ -257,7 +256,8 @@ class ElectricalProject {
   }
 
   static Object _setting(Object? value) {
-    if (value is String || value is bool) return value;
+    if (value is String) return value;
+    if (value is bool) return value;
     if (value is num && value.isFinite) return value;
     throw const FormatException('Invalid simulation setting.');
   }

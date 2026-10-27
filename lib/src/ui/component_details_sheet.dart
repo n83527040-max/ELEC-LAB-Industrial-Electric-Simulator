@@ -127,7 +127,9 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
             initialValue: component.label,
             decoration: const InputDecoration(labelText: 'مرجع الجهاز'),
             onSaved: (value) {
-              if (value != null) widget.controller.renameComponent(componentId, value);
+              if (value != null) {
+                widget.controller.renameComponent(componentId, value);
+              }
             },
           ),
           const SizedBox(height: 12),

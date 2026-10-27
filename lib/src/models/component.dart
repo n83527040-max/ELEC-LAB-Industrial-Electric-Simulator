@@ -140,7 +140,8 @@ class CircuitComponent {
   }
 
   static Object _validateProperty(Object? value) {
-    if (value is String || value is bool) return value;
+    if (value is String) return value;
+    if (value is bool) return value;
     if (value is num && value.isFinite) return value;
     throw const FormatException('Component properties must be scalar values.');
   }

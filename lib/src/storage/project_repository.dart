@@ -185,7 +185,9 @@ class ProjectRepository {
       throw const FormatException('Not an ELEC LAB project file.');
     }
     final payload = decoded['project'];
-    if (payload is! Map) throw const FormatException('Missing project payload.');
+    if (payload is! Map) {
+      throw const FormatException('Missing project payload.');
+    }
     final canonical = jsonEncode(payload);
     final expected = sha256.convert(utf8.encode(canonical)).toString();
     if (expected != decoded['checksum']) {

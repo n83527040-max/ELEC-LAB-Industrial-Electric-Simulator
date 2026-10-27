@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../export/project_exporter.dart';
-import '../models/component.dart';
+import '../models/terminal.dart';
 import '../models/component_catalog.dart';
 import '../models/geometry.dart';
 import '../models/project.dart';

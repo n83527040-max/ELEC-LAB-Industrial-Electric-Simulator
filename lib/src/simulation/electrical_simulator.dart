@@ -5,7 +5,6 @@ import '../models/component.dart';
 import '../models/component_catalog.dart';
 import '../models/project.dart';
 import '../models/terminal.dart';
-import '../models/wire.dart';
 import 'complex_number.dart';
 import 'linear_solver.dart';
 import 'simulation_result.dart';
@@ -590,8 +589,12 @@ class ElectricalSimulator {
 
   static double _wrapAngle(double angle) {
     var value = angle;
-    while (value > math.pi) value -= 2 * math.pi;
-    while (value < -math.pi) value += 2 * math.pi;
+    while (value > math.pi) {
+      value -= 2 * math.pi;
+    }
+    while (value < -math.pi) {
+      value += 2 * math.pi;
+    }
     return value;
   }
 
@@ -704,7 +707,7 @@ class _Network {
       final openFault = fault == 'open' || fault == 'coilOpen';
       final shortFault = fault == 'short';
       final state = runtime[component.id];
-      String key(String terminal) => '${component.id}::${terminal.id}';
+      String key(String terminal) => '${component.id}::$terminal';
       void resistor(
         String a,
         String b,

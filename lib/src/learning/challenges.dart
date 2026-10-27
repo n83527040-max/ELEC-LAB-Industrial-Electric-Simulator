@@ -1,4 +1,3 @@
-import '../models/component.dart';
 import '../models/project.dart';
 import '../models/terminal.dart';
 import '../simulation/simulation_result.dart';
