@@ -86,6 +86,11 @@ jobs:
           for description in descriptions:
               escaped = description.replace('%', '%25').replace('\r', '%0D')
               print('::error::FAILED TEST: ' + escaped)
+          for match in re.finditer(r'The test description was:', raw):
+              context = raw[max(0, match.start() - 3500):match.start()]
+              context = context.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+              for offset in range(0, len(context), 2400):
+                  print('::error::FAILURE CONTEXT: ' + context[offset:offset + 2400])
           text = raw[-14000:]
           text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
           for offset in range(0, len(text), 2400):
