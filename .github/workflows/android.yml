@@ -80,6 +80,23 @@ jobs:
           fi
           exit "$STATUS"
 
+      - name: Build installable Release APK
+        run: |
+          set +e
+          flutter build apk --release > build.log 2>&1
+          STATUS=$?
+          cat build.log
+          if [ "$STATUS" -ne 0 ]; then
+            python3 - build.log <<'PY'
+          import sys
+          text = open(sys.argv[1], encoding='utf-8').read()[-14000:]
+          text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          for offset in range(0, len(text), 2400):
+              print('::error::' + text[offset:offset + 2400])
+          PY
+          fi
+          exit "$STATUS"
+
       - name: Upload logs on failure
         if: always()
         uses: actions/upload-artifact@v4
@@ -88,10 +105,8 @@ jobs:
           path: |
             analysis.log
             test.log
+            build.log
           if-no-files-found: warn
-
-      - name: Build installable Release APK
-        run: flutter build apk --release
 
       - name: Verify APK signature and package
         run: |
