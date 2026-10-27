@@ -7,9 +7,20 @@ on:
       - 'arena/**'
   pull_request:
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish the verified APK to a GitHub Release
+        required: true
+        default: false
+        type: boolean
+      release_tag:
+        description: Release tag (for example v0.1.0)
+        required: false
+        default: v0.1.0
+        type: string
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test-and-build:
@@ -104,3 +115,21 @@ jobs:
             coverage/lcov.info
           retention-days: 30
           if-no-files-found: error
+
+      - name: Publish verified APK to GitHub Release
+        if: success() && github.event_name == 'workflow_dispatch' && inputs.publish_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" \
+              --target "${{ github.sha }}" \
+              --title "ELEC LAB $RELEASE_TAG" \
+              --notes "Verified Flutter CI build. Debug-signed evaluation APK; see docs/FINAL_REPORT.md for tests, size and limitations."
+          fi
+          gh release upload "$RELEASE_TAG" \
+            "$APK#ELEC-LAB-${RELEASE_TAG#v}-android.apk" \
+            apk-sha256.txt \
+            --clobber

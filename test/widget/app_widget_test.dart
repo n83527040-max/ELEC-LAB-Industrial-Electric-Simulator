@@ -56,6 +56,8 @@ void main() {
     await tester.tap(find.text('مشروع جديد'));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField).first, 'دائرة الاختبار');
+    await tester.ensureVisible(find.text('إنشاء المشروع'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('إنشاء المشروع'));
     await tester.pumpAndSettle();
     expect(find.byType(EditorScreen), findsOneWidget);

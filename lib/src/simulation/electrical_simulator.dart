@@ -184,7 +184,7 @@ class ElectricalSimulator {
         case ComponentKind.fuse:
           if (state.blown) break;
           final current = reading?.current ?? 0;
-          final rated = math.max(0.1, component.number('ratedCurrent'));
+          final rated = math.max(0.001, component.number('ratedCurrent'));
           var overload = state.overloadTime;
           var blown = current > rated * 5;
           if (current > rated * 1.5) {
@@ -980,7 +980,13 @@ class _Network {
     for (final row in matrix) {
       row.add(ComplexNumber.zero);
     }
-    matrix.add(List<ComplexNumber>.filled(oldSize + 1, ComplexNumber.zero));
+    matrix.add(
+      List<ComplexNumber>.filled(
+        oldSize + 1,
+        ComplexNumber.zero,
+        growable: true,
+      ),
+    );
     rhs.add(voltage);
     final branchIndex = oldSize;
     final ai = nodes[a];
