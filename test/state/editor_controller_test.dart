@@ -1,0 +1,144 @@
+import 'package:elec_lab/src/models/component.dart';
+import 'package:elec_lab/src/models/geometry.dart';
+import 'package:elec_lab/src/models/project.dart';
+import 'package:elec_lab/src/models/project_templates.dart';
+import 'package:elec_lab/src/models/terminal.dart';
+import 'package:elec_lab/src/state/editor_controller.dart';
+import 'package:elec_lab/src/state/id_factory.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../test_helpers.dart';
+
+void main() {
+  late ElectricalProject empty;
+  late EditorController controller;
+
+  setUp(() {
+    empty = ElectricalProject.empty(id: 'editor', name: 'Editor', now: testNow);
+    controller = EditorController(
+      project: empty,
+      idFactory: IdFactory(clock: () => testNow),
+      clock: () => testNow,
+    );
+  });
+
+  tearDown(() => controller.dispose());
+
+  test('add, snap, move, rotate, duplicate, delete and undo/redo are real edits', () {
+    final id = controller.addComponent(ComponentKind.dcSupply, const BoardPoint(103, 207));
+    expect(controller.project.componentById(id)!.position, const BoardPoint(100, 200));
+    controller.moveComponent(id, const BoardPoint(122, 244));
+    expect(controller.project.componentById(id)!.position, const BoardPoint(120, 240));
+    controller.rotateComponent(id);
+    expect(controller.project.componentById(id)!.rotation, 1);
+    final duplicate = controller.duplicateComponent(id)!;
+    expect(duplicate, isNot(id));
+    expect(controller.project.components, hasLength(2));
+    controller.deleteComponent(id);
+    expect(controller.project.components.map((item) => item.id), <String>[duplicate]);
+    controller.undo();
+    expect(controller.project.components, hasLength(2));
+    controller.redo();
+    expect(controller.project.components.map((item) => item.id), <String>[duplicate]);
+  });
+
+  test('continuous drag is one undo operation', () {
+    final id = controller.addComponent(ComponentKind.indicator, const BoardPoint(100, 100));
+    final before = controller.undoCount;
+    controller.beginInteraction();
+    controller.moveComponent(id, const BoardPoint(120, 100), transient: true);
+    controller.moveComponent(id, const BoardPoint(140, 100), transient: true);
+    controller.moveComponent(id, const BoardPoint(160, 100), transient: true);
+    controller.endInteraction();
+    expect(controller.undoCount, before + 1);
+    expect(controller.project.componentById(id)!.position, const BoardPoint(160, 100));
+    controller.undo();
+    expect(controller.project.componentById(id)!.position, const BoardPoint(100, 100));
+  });
+
+  test('terminal-to-terminal flow validates and edits wires and waypoints', () {
+    controller.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
+    controller.addComponent(ComponentKind.indicator, const BoardPoint(500, 100));
+    final source = controller.project.components[0];
+    final lamp = controller.project.components[1];
+    final start = TerminalRef(componentId: source.id, terminalId: 'positive');
+    final end = TerminalRef(componentId: lamp.id, terminalId: 'x1');
+    controller.beginWire(start);
+    expect(controller.pendingWireStart, start);
+    final wireId = controller.completeWire(end)!;
+    expect(wireId, isNotNull);
+    expect(controller.project.wires, hasLength(1));
+    expect(controller.selectedWireId, wireId);
+    controller.addWireWaypoint(wireId, const BoardPoint(305, 205));
+    expect(controller.selectedWire!.waypoints.single, const BoardPoint(300, 200));
+    controller.moveWireWaypoint(wireId, 0, const BoardPoint(330, 240));
+    expect(controller.selectedWire!.waypoints.single, const BoardPoint(340, 240));
+    controller.updateWire(controller.selectedWire!.copyWith(crossSectionMm2: 2.5));
+    expect(controller.selectedWire!.crossSectionMm2, 2.5);
+    controller.autoRouteWire(wireId);
+    expect(controller.selectedWire!.waypoints, isEmpty);
+    controller.beginWire(start);
+    expect(controller.completeWire(end), isNull);
+    expect(controller.lastError, contains('موجود'));
+    controller.deleteWire(wireId);
+    expect(controller.project.wires, isEmpty);
+    controller.undo();
+    expect(controller.project.wires, hasLength(1));
+  });
+
+  test('layers rename, hide, lock and protect against accidental deletion', () {
+    final id = controller.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
+    final before = controller.project.componentById(id)!.position;
+    controller.setLayerVisibility('power', false);
+    expect(controller.project.layerById('power')!.visible, isFalse);
+    controller.setLayerLocked('power', true);
+    controller.moveComponent(id, const BoardPoint(300, 300));
+    expect(controller.project.componentById(id)!.position, before);
+    expect(controller.deleteLayer('power'), isFalse);
+    final layerId = controller.addLayer('إشارات خاصة');
+    controller.renameLayer(layerId, 'قياس');
+    expect(controller.project.layerById(layerId)!.name, 'قياس');
+    expect(controller.deleteLayer(layerId), isTrue);
+  });
+
+  test('viewport limits and snap settings are enforced', () {
+    controller.setViewport(scale: 10, offset: const BoardPoint(20, 30));
+    expect(controller.zoom, 3);
+    expect(controller.viewportOffset, const BoardPoint(20, 30));
+    controller.setViewport(scale: 0.01);
+    expect(controller.zoom, 0.35);
+    controller.setGrid(visible: false, snap: false, size: 25);
+    expect(controller.showGrid, isFalse);
+    expect(controller.snap(const BoardPoint(31, 32)), const BoardPoint(31, 32));
+    controller.setGrid(snap: true);
+    expect(controller.snap(const BoardPoint(31, 32)), const BoardPoint(25, 25));
+  });
+
+  test('flush persists the actual edited project', () async {
+    ElectricalProject? saved;
+    final savingController = EditorController(
+      project: empty,
+      onSave: (project) async {
+        saved = project;
+      },
+    );
+    savingController.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
+    await savingController.flush();
+    expect(saved, isNotNull);
+    expect(saved!.components, hasLength(1));
+    expect(saved!.name, 'Editor');
+    savingController.dispose();
+  });
+
+  test('controller stores the last calculated result when simulation stops', () {
+    final project = ProjectTemplates.apply(empty, ProjectTemplateKind.dcLamp);
+    final simulationController = EditorController(project: project);
+    simulationController.startSimulation();
+    simulationController.setMomentaryPressed('s1', true);
+    expect(simulationController.result?['h1']?.active, isTrue);
+    simulationController.stopSimulation();
+    expect(simulationController.project.lastSimulation, isNotNull);
+    expect(simulationController.project.lastSimulation!['success'], isTrue);
+    simulationController.dispose();
+  });
+}

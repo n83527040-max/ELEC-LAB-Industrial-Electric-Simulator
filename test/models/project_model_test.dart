@@ -1,0 +1,212 @@
+import 'dart:convert';
+
+import 'package:elec_lab/src/models/board_geometry.dart';
+import 'package:elec_lab/src/models/component.dart';
+import 'package:elec_lab/src/models/component_catalog.dart';
+import 'package:elec_lab/src/models/connection_validator.dart';
+import 'package:elec_lab/src/models/geometry.dart';
+import 'package:elec_lab/src/models/project.dart';
+import 'package:elec_lab/src/models/project_templates.dart';
+import 'package:elec_lab/src/models/terminal.dart';
+import 'package:elec_lab/src/models/wire.dart';
+import 'package:elec_lab/src/models/wire_sizing.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../test_helpers.dart';
+
+void main() {
+  group('Component catalog and terminals', () {
+    test('every simulated component has unique, bounded terminals', () {
+      for (final spec in ComponentCatalog.byKind.values) {
+        final ids = spec.terminals.map((terminal) => terminal.id).toList();
+        expect(ids.toSet().length, ids.length, reason: spec.kind.name);
+        expect(spec.terminals, isNotEmpty, reason: spec.kind.name);
+        for (final terminal in spec.terminals) {
+          expect(terminal.position.x, inInclusiveRange(0, spec.size.width));
+          expect(terminal.position.y, inInclusiveRange(0, spec.size.height));
+        }
+      }
+    });
+
+    test('contactor exposes real power, coil and auxiliary terminal names', () {
+      final spec = ComponentCatalog.specOf(ComponentKind.contactor);
+      expect(
+        spec.terminals.map((item) => item.id),
+        containsAll(<String>['l1', 'l2', 'l3', 't1', 't2', 't3', 'a1', 'a2', 'aux13', 'aux14', 'aux21', 'aux22']),
+      );
+      expect(spec.terminal('a1').kind, TerminalKind.coil);
+      expect(spec.terminal('t3').phase, 'L3');
+    });
+
+    test('terminal positions rotate around the actual device centre', () {
+      final component = device('k1', ComponentKind.contactor).copyWith(rotation: 1);
+      final spec = ComponentCatalog.specOf(ComponentKind.contactor);
+      final original = BoardGeometry.terminalPosition(
+        device('k1', ComponentKind.contactor),
+        'l1',
+      );
+      final rotated = BoardGeometry.terminalPosition(component, 'l1');
+      expect(rotated, isNot(original));
+      expect(
+        rotated.distanceTo(BoardGeometry.center(component)),
+        closeTo(original.distanceTo(BoardGeometry.center(component)), 1e-9),
+      );
+      expect(spec.size.width, greaterThan(0));
+    });
+  });
+
+  group('Project schema', () {
+    test('round trip preserves components, layers, wires and manual path', () {
+      final source = projectOf(
+        <CircuitComponent>[
+          device('g1', ComponentKind.dcSupply).copyWith(rotation: 2, scale: 1.2),
+          device('h1', ComponentKind.indicator, layer: 'signals'),
+        ],
+        <CircuitWire>[
+          connection(
+            'w1',
+            'g1',
+            'positive',
+            'h1',
+            'x1',
+            waypoints: const <BoardPoint>[BoardPoint(220, 80), BoardPoint(280, 130)],
+          ),
+          connection('w2', 'h1', 'x2', 'g1', 'negative'),
+        ],
+      ).copyWith(description: 'مخطط تجريبي');
+      final decoded = ElectricalProject.fromJson(
+        jsonDecode(source.encode()) as Map<String, dynamic>,
+      );
+      expect(decoded.encode(), source.encode());
+      expect(decoded.wires.singleWhere((wire) => wire.id == 'w1').waypoints, hasLength(2));
+      expect(decoded.components.first.rotation, 2);
+      expect(decoded.layers, hasLength(4));
+    });
+
+    test('version 1 document is migrated with default layers', () {
+      final project = ElectricalProject.empty(
+        id: 'legacy',
+        name: 'Legacy',
+        now: testNow,
+      );
+      final json = project.toJson()
+        ..['schemaVersion'] = 1
+        ..remove('layers')
+        ..remove('simulationSettings');
+      final migrated = ElectricalProject.fromJson(json);
+      expect(migrated.schemaVersion, ElectricalProject.currentSchemaVersion);
+      expect(migrated.layers, hasLength(4));
+    });
+
+    test('invalid references and unsafe ids are rejected', () {
+      final project = projectOf(
+        <CircuitComponent>[device('g1', ComponentKind.dcSupply)],
+        <CircuitWire>[],
+      );
+      final bad = project.toJson();
+      bad['id'] = '../escape';
+      expect(() => ElectricalProject.fromJson(bad), throwsFormatException);
+      expect(
+        () => projectOf(
+          <CircuitComponent>[device('g1', ComponentKind.dcSupply)],
+          <CircuitWire>[connection('bad', 'g1', 'positive', 'g1', 'negative')],
+        ),
+        throwsFormatException,
+      );
+    });
+
+    test('all delivered templates are valid non-empty circuits', () {
+      for (final template in ProjectTemplateKind.values.skip(1)) {
+        final empty = ElectricalProject.empty(
+          id: 'template',
+          name: 'Template',
+          now: testNow,
+        );
+        final project = ProjectTemplates.apply(empty, template);
+        expect(project.components, isNotEmpty);
+        expect(project.wires, isNotEmpty);
+        expect(() => project.validate(), returnsNormally);
+      }
+    });
+  });
+
+  group('Connections and routing', () {
+    test('duplicate and PE mismatch are explained and rejected', () {
+      final project = projectOf(
+        <CircuitComponent>[
+          device('g3', ComponentKind.threePhaseSupply),
+          device('m1', ComponentKind.motor3Phase),
+        ],
+        <CircuitWire>[connection('pe', 'g3', 'pe', 'm1', 'earth')],
+      );
+      expect(
+        ConnectionValidator.validate(
+          project,
+          const TerminalRef(componentId: 'g3', terminalId: 'pe'),
+          const TerminalRef(componentId: 'm1', terminalId: 'earth'),
+        )?.code,
+        'duplicate',
+      );
+      expect(
+        ConnectionValidator.validate(
+          project,
+          const TerminalRef(componentId: 'g3', terminalId: 'l1'),
+          const TerminalRef(componentId: 'm1', terminalId: 'earth'),
+        )?.code,
+        'earth_mismatch',
+      );
+    });
+
+    test('orthogonal route has clean points and exact terminal endpoints', () {
+      final project = projectOf(
+        <CircuitComponent>[
+          device('g1', ComponentKind.dcSupply, x: 50, y: 50),
+          device('x1', ComponentKind.terminalBlock, x: 600, y: 400),
+        ],
+        <CircuitWire>[connection('w1', 'g1', 'positive', 'x1', 'a')],
+      );
+      final points = WireRouter.route(project, project.wires.single);
+      expect(points.first, BoardGeometry.terminalPosition(project.components[0], 'positive'));
+      expect(points.last, BoardGeometry.terminalPosition(project.components[1], 'a'));
+      expect(points.toSet().length, points.length);
+      expect(points.length, greaterThanOrEqualTo(2));
+    });
+
+    test('wire sizing uses declared conditions and exposes disclaimer', () {
+      final normal = EducationalWireSizing.suggest(
+        const WireSizingInput(
+          expectedCurrent: 10,
+          material: ConductorMaterial.copper,
+          usage: CableUsage.power,
+          ambientTemperature: 30,
+          groupedInConduit: false,
+        ),
+      );
+      final derated = EducationalWireSizing.suggest(
+        const WireSizingInput(
+          expectedCurrent: 10,
+          material: ConductorMaterial.aluminum,
+          usage: CableUsage.power,
+          ambientTemperature: 45,
+          groupedInConduit: true,
+        ),
+      );
+      expect(normal, isNotNull);
+      expect(derated, isNotNull);
+      expect(derated!.sectionMm2, greaterThan(normal!.sectionMm2));
+      expect(derated.disclaimerAr, contains('ليس'));
+      expect(
+        EducationalWireSizing.suggest(
+          const WireSizingInput(
+            expectedCurrent: -2,
+            material: ConductorMaterial.copper,
+            usage: CableUsage.power,
+            ambientTemperature: 30,
+            groupedInConduit: false,
+          ),
+        ),
+        isNull,
+      );
+    });
+  });
+}

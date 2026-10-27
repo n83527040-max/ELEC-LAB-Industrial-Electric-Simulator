@@ -1,0 +1,69 @@
+name: Flutter tests and Android APK
+
+on:
+  push:
+    branches:
+      - main
+      - 'arena/**'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Flutter stable
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter environment
+        run: |
+          flutter config --no-analytics
+          flutter doctor -v
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Format Dart sources
+        run: dart format lib test
+
+      - name: Static analysis
+        run: flutter analyze
+
+      - name: Unit and widget tests
+        run: flutter test --coverage
+
+      - name: Build installable Release APK
+        run: flutter build apk --release
+
+      - name: Verify APK signature and package
+        run: |
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          test -s "$APK"
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
+          "$APKSIGNER" verify --verbose "$APK"
+          AAPT=$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)
+          "$AAPT" dump badging "$APK" | head -n 8
+          stat -c 'APK_SIZE_BYTES=%s' "$APK"
+          sha256sum "$APK" | tee apk-sha256.txt
+
+      - name: Upload APK and verification
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elec-lab-release-apk
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            apk-sha256.txt
+            coverage/lcov.info
+          retention-days: 30
+          if-no-files-found: error

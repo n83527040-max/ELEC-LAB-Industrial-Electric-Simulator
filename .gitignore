@@ -1,0 +1,19 @@
+# Dart / Flutter
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+.flutter-plugins
+.flutter-plugins-dependencies
+# Android / IDE
+android/.gradle/
+android/local.properties
+*.jks
+*.keystore
+.idea/
+.vscode/
+*.iml
+# Generated delivery artifacts are uploaded to GitHub, not committed.
+artifacts/
