@@ -1,4 +1,3 @@
-import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/geometry.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
