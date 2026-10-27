@@ -8,13 +8,16 @@
 
 - واجهة عربية RTL بمصطلحات فرنسية، وضع داكن/فاتح محفوظ محلياً، وتصميم متجاوب للهاتف والدوران.
 - مشاريع محلية: إنشاء من لوحة فارغة أو قوالب، فتح، بحث، إعادة تسمية، نسخ، حذف بتأكيد، وحفظ تلقائي ذري.
-- لوحة Pan/Zoom، شبكة وSnap، تحريك/تدوير/نسخ/حذف/تحجيم، طبقات قابلة للتسمية والإخفاء والقفل، وUndo/Redo.
+- لوحة معدنية بثقوب ومثبتات و**DIN Rails وظيفية** للتركيب والـSnap، مع Pan/Zoom وFit يحافظ على مركز العرض عند تغيير اتجاه الهاتف.
+- **Supply Bay دائم ومحفوظ داخل المشروع:** 3~ مع L1/L2/L3/N/PE، و1~ مع L/N، وDC مع +/0V؛ لكل مصدر ON/OFF وجهد وتردد حقيقيان في نموذج الدائرة.
+- تحريك/تدوير/نسخ/حذف/تحجيم، طبقات قابلة للتسمية والإخفاء والقفل، وUndo/Redo؛ المصادر الدائمة محمية من النقل والحذف والتكرار.
 - توصيل Terminal-to-Terminal مع تحقق، مسارات Straight/90°/Curved، ألوان ومقاطع وأنواع وعزل، ونقاط انحناء قابلة للتحريك.
-- محرك MNA مستقل بأعداد مركبة لـDC وAC RMS، Contacteur وRelais وTemporisateur وتعشيق ذاتي، حمايات وأعطال وقياسات.
-- محرك ثلاثي الطور مكافئ مع حساب فقدان الطور وعدم التوازن واتجاه التسلسل.
-- مجسمات صناعية polygon meshes مخصصة لكل عائلة، مع LOD خفيف للوحة وpreview للمكتبة ونموذج مفصل قابل للتدوير والتكبير؛ أطرافها من تعريف المحاكاة نفسه.
-- مكتبة متجاوبة بلا قص، ولوحة تركيب/شبكة قابلة للتبديل، Fit وتحريك سلس، أطراف تظهر عند التحديد ومسارات تتفادى الأجهزة قدر الإمكان.
-- Voltmètre وAmpèremètre وتيارات الأسلاك والرسائل التشخيصية والمساعدة المحلية والتحديات.
+- محرك MNA مستقل بأعداد مركبة لـDC وAC RMS، Contacteur وRelais وTemporisateur ON/OFF-delay وتعشيق ذاتي، حمايات وأعطال وقياسات.
+- MCB وDisjoncteur différentier وDisjoncteur moteur وRelais thermique وFusible؛ حساب ΔI من L+N وقواعد فصل تعليمية مرتبطة بالحل.
+- محرك ثلاثي وأحادي الطور، ومحول AC مثالي مقترن داخل MNA مع مقاومتي الملفات، وعداد يقيس V/I/P ويكامل الطاقة kWh.
+- **27 هندسة polygon** مخصصة للأنواع المدعومة، مع LOD خفيف للوحة وpreview للمكتبة ونموذج مفصل قابل للتدوير والتكبير؛ أطرافها من تعريف المحاكاة نفسه.
+- مكتبة داكنة متجاوبة بتحميل كسول وبطاقات وأسماء عربية/فرنسية، مع لوحة تركيب/شبكة قابلة للتبديل وأطراف تفاعلية ومسارات تتفادى الأجهزة قدر الإمكان.
+- Voltmètre وAmpèremètre وCompteur وتيارات الأسلاك والرسائل التشخيصية والمساعدة المحلية والتحديات.
 - مشاركة مشروع بChecksum واستيراده، نسخة احتياطية واستعادتها، وتصدير PNG وPDF فعليين.
 
 ## نطاق وقيود مهمة
@@ -23,7 +26,8 @@
 
 - DC وAC جيبي خطي فقط؛ لا عابرات كهرومغناطيسية ولا harmonics.
 - المحرك نموذج معاوقة steady-state، وليس نموذج إقلاع/عزم/انزلاق ميكانيكي.
-- المحول وVFD وPLC وRCD غير منفذة، ولذلك لا تظهر كمكونات محاكاة مدعومة.
+- المحول مثالي لـAC مع مقاومات الملفات فقط؛ لا نموذج للتشبع أو DC أو الفاقد الديناميكي.
+- RCD ثنائي القطب يحسب ΔI من مجموع L+N؛ لا يحاكي منحنيات المصنعين أو كل أشكال أعطال الأرضي. VFD وPLC غير منفذين.
 - منحنيات الحماية واقتراح مقطع السلك تعليمية مبسطة وليست مطابقة لمعايير أو كتالوجات مصنعين.
 - meshes مبسطة وليست نماذج CAD photorealistic بأبعاد مصنع.
 
@@ -31,7 +35,7 @@
 
 ## المكونات المدعومة حالياً
 
-Alimentation DC، Alimentation monophasée، Alimentation triphasée، Disjoncteur MCB، Contacteur 3P + aux، Relais thermique، Relais auxiliaire، Boutons NO/NC، Sélecteur، Temporisateur ON-delay، Capteur NO، Voyant، Moteur triphasé، Bornier، Voltmètre، Ampèremètre وFusible.
+Alimentation DC/monophasée/triphasée، Disjoncteur MCB/différentiel/moteur، Contacteur 3P + aux، Relais thermique/auxiliaire، Boutons NO/NC وArrêt d'urgence، Sélecteur وCommutateur rotatif 0-1-2، Temporisateurs ON/OFF-delay، Capteur NO وFin de course، Voyant، Moteur triphasé/monophasé، Transformateur، Bornier، Voltmètre، Ampèremètre، Compteur numérique وFusible.
 
 ## التشغيل والبناء
 
@@ -60,7 +64,7 @@ Workflow [`.github/workflows/android.yml`](.github/workflows/android.yml) ينف
 
 <https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/actions>
 
-النسخة المتحقق منها **v0.2.0** نجحت في Format وAnalyze و**59/59 اختباراً** وبناء APK وفحص التوقيع والحزمة ونشر Release. يمكن تنزيلها مباشرة من [GitHub Release](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/releases/download/v0.2.0/app-release.apk). الحجم **67,149,922 bytes (64.04 MiB)** وSHA-256 هو `b5c3417af502ac4a867d8845d1ef1fc900ae50ada9bcad1d5b98a9a3d69ba20c`. روابط CI والقيود الكاملة موثقة في [`docs/FINAL_REPORT.md`](docs/FINAL_REPORT.md).
+آخر Release موثق قبل هذه التوسعة هو **v0.2.0**؛ نجح في Format وAnalyze و**59/59 اختباراً** وبناء APK وفحص التوقيع والحزمة ونشر Release. يمكن تنزيلها مباشرة من [GitHub Release](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/releases/download/v0.2.0/app-release.apk). الحجم **67,149,922 bytes (64.04 MiB)** وSHA-256 هو `b5c3417af502ac4a867d8845d1ef1fc900ae50ada9bcad1d5b98a9a3d69ba20c`. روابط CI والقيود الكاملة موثقة في [`docs/FINAL_REPORT.md`](docs/FINAL_REPORT.md).
 
 ## بنية المصدر
 
