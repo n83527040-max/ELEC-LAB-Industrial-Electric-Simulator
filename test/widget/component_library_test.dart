@@ -90,7 +90,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('A1'), findsNothing);
 
-    await tester.tap(find.text('K1'));
+    await tester.tap(find.byType(BoardComponent));
     await tester.pumpAndSettle();
     expect(find.text('A1'), findsOneWidget);
     expect(find.text('1/L1'), findsOneWidget);
