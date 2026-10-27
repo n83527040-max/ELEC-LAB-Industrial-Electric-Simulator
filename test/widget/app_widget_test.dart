@@ -80,6 +80,8 @@ void main() {
         matching: find.byType(Scrollable),
       ),
     );
+    await tester.ensureVisible(contactorCard);
+    await tester.pumpAndSettle();
     await tester.tap(contactorCard);
     await tester.pumpAndSettle();
     expect(find.text('K1'), findsWidgets);
