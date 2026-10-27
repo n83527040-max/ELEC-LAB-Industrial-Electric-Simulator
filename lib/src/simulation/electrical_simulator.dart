@@ -688,9 +688,17 @@ class _Network {
     }
     final matrix = List<List<ComplexNumber>>.generate(
       index,
-      (_) => List<ComplexNumber>.filled(index, ComplexNumber.zero),
+      (_) => List<ComplexNumber>.filled(
+        index,
+        ComplexNumber.zero,
+        growable: true,
+      ),
     );
-    final rhs = List<ComplexNumber>.filled(index, ComplexNumber.zero);
+    final rhs = List<ComplexNumber>.filled(
+      index,
+      ComplexNumber.zero,
+      growable: true,
+    );
     final network = _Network._(project, runtime, ground, indices, matrix, rhs);
     for (final node in orderedNodes) {
       if (node != ground) network._addLeakage(node);
