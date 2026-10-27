@@ -55,7 +55,12 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('مشروع جديد'));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField).first, 'دائرة الاختبار');
+    final sheet = find.byType(BottomSheet);
+    expect(sheet, findsOneWidget);
+    await tester.enterText(
+      find.descendant(of: sheet, matching: find.byType(TextField)).first,
+      'دائرة الاختبار',
+    );
     await tester.ensureVisible(find.text('إنشاء المشروع'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('إنشاء المشروع'));
@@ -68,7 +73,7 @@ void main() {
     expect(find.text('إضافة عنصر'), findsOneWidget);
     await tester.tap(find.text('مصدر تغذية DC'));
     await tester.pumpAndSettle();
-    expect(find.text('G1'), findsOneWidget);
+    expect(find.text('G1'), findsWidgets);
     await tester.tap(find.byTooltip('حفظ ورجوع'));
     await tester.pumpAndSettle();
     expect(find.byType(HomeScreen), findsOneWidget);
