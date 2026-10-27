@@ -98,7 +98,7 @@ void main() {
     expect(find.text('1/L1'), findsOneWidget);
     expect(controller.selectedComponentId, 'k1');
 
-    await tester.tap(find.bySemanticsLabel('طرف A1 في K1'));
+    await tester.tap(find.text('A1'));
     await tester.pump();
     expect(controller.pendingWireStart?.componentId, 'k1');
     expect(controller.pendingWireStart?.terminalId, 'a1');

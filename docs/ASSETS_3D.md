@@ -2,17 +2,17 @@
 
 ## المجسمات
 
-المجسمات في هذا الإصدار **parametric polygon meshes أصلية** مولّدة في:
+المجسمات **parametric polygon meshes أصلية** مولّدة محلياً:
 
-- `lib/src/three_d/mesh_model.dart`: الرؤوس، الأوجه، boxes/cylinders ومواقع الأطراف.
-- `lib/src/three_d/procedural_meshes.dart`: هندسة كل نوع جهاز.
-- `lib/src/three_d/mesh_view.dart`: تدوير X/Y، منظور، depth sorting وإضاءة flat shading.
+- `lib/src/three_d/mesh_model.dart`: الرؤوس والأوجه وboxes وchamfered enclosures وcylinders/frusta وspheres.
+- `lib/src/three_d/procedural_meshes.dart`: هندسة مميزة لكل جهاز و`board/preview/detailed` LOD مع lazy cache.
+- `lib/src/three_d/mesh_view.dart`: تدوير X/Y، منظور، depth sorting وإضاءة وظلال وauto-fit بعد المنظور.
 
-هي هندسة 3D حقيقية وليست صوراً مسطحة أو screenshots. يمكن تدويرها بالسحب وتكبيرها بإصبعين في بطاقة التفاصيل. نسخة مبسطة منها تُرسم على اللوحة.
+هي هندسة 3D حقيقية وليست صوراً مسطحة. يمكن تدويرها بالسحب وتكبيرها بإصبعين في بطاقة التفاصيل. اللوحة تستعمل LOD خفيفاً بنفس هندسة الجهاز، والمكتبة تنشئ previews للبطاقات الظاهرة فقط.
 
-مواقع `MeshTerminal` مشتقة برمجياً من `ComponentCatalog` نفسه الذي يغذي أطراف اللوحة وعقد MNA. لذلك لا يوجد ملف محطات منفصل يمكن أن يتعارض مع المحاكاة.
+مواقع `MeshTerminal` مشتقة برمجياً من `ComponentCatalog` نفسه الذي يغذي أطراف اللوحة وعقد MNA. على اللوحة تستعمل وحدة ثابتة `48 × scale` بلا منظور حتى تتطابق أجهزة العرض ومناطق اللمس ونقاط الأسلاك. التفاصيل في [`UI_WORKSPACE.md`](UI_WORKSPACE.md).
 
-المجسمات تعليمية مبسطة وليست CAD photorealistic ولا تمثل أبعاد مصنع أو ترتيب أطراف منتج تجاري محدد. لم تُستخدم أسماء أو شعارات مصنعين.
+المجسمات تعليمية مخصصة وليست CAD photorealistic ولا تمثل أبعاد مصنع أو ترتيب أطراف منتج تجاري محدد. لم تُستخدم أسماء أو شعارات مصنعين. لا يوجد Transformateur شكلي في المكتبة لأن نموذجه الكهربائي غير منفذ.
 
 ## الأيقونة والصور المرجعية
 

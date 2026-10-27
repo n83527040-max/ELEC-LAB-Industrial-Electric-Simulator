@@ -23,8 +23,9 @@ flutter build apk --release
 | الحماية والمحرك | `test/simulation/protection_and_motor_test.dart` | MCB، Fuse، Relais thermique، الأطوار، الاتجاه، فقدان الطور وإعادة النتائج |
 | المحرر | `test/state/editor_controller_test.dart` | الإضافة والسحب والتوصيل والمسارات والطبقات والحفظ وUndo/Redo |
 | التخزين | `test/storage/project_repository_test.dart` | ملفات حقيقية، فتح بعد الإغلاق، .bak، checksum، backup وpath traversal |
-| 3D والتصدير | `test/export/export_and_mesh_test.dart` | هندسة وأطراف meshes، تدوير المجسم، PNG وPDF |
+| 3D والتصدير | `test/export/export_and_mesh_test.dart` | LOD لكل الأنواع، تفرد الهندسة، تطابق الأطراف، هامش بلا قص بعد perspective، تدوير المجسم، PNG وPDF |
 | التحديات | `test/learning/challenges_test.dart` | النجاح مرتبط بالحالة الكهربائية وتحرير Start |
 | الواجهة | `test/widget/app_widget_test.dart` | RTL، dark/light، إنشاء مشروع وإضافة جهاز، هاتف صغير/landscape، Play/Stop |
+| المكتبة واللوحة | `test/widget/component_library_test.dart` | بحث وتصفية وبطاقات على 320px وlandscape، إخفاء/إظهار الأطراف ولمسها بعد التحجيم والتدوير |
 
 الاختبارات لا تستبدل تجربة يدوية على عدة أجهزة Android فعلية، ولا تثبت سلامة دوائر حقيقية. النتائج التي تم الحصول عليها فعلاً في البيئة تُسجل في `docs/FINAL_REPORT.md` مع رقم CI run.
