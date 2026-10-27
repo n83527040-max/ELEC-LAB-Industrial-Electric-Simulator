@@ -388,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
     showAboutDialog(
       context: context,
       applicationName: 'ELEC LAB',
-      applicationVersion: '0.2.0',
+      applicationVersion: '0.3.0',
       applicationIcon: Image.asset('assets/icon/app_icon.png', width: 64, height: 64),
       children: const <Widget>[
         Text('مختبر تعليمي يعمل دون إنترنت لدوائر DC وAC الجيبية الخطية.'),
