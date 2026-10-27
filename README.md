@@ -1,14 +1,79 @@
 # ELEC LAB — Industrial Electric Simulator
 
-هذا الملف يحتوي على مرجعيات التصميم والبرومبت الشامل لتطوير تطبيق Android باستعمال Flutter.
+تطبيق Android مبني بـFlutter لمختبر كهرباء صناعية تعليمي يعمل دون إنترنت. يتيح بناء مخطط بمكونات وأطراف حقيقية داخل نموذج البيانات، ثم حل الدائرة وقراءة التيار والجهد وسلوك الحمايات.
 
-## الملفات
-- `designs/01_app_ui_reference.png`: مرجع بصري للواجهة ولوحة العمل ومكتبة الأجهزة.
-- `designs/02_app_icon_reference.png`: مرجع أيقونة التطبيق.
-- `designs/03_user_flow_reference.png`: مرجع تسلسل تجربة المستخدم من إنشاء المشروع حتى ربط الأسلاك.
-- `designs/04_ui_screens_reference.png`: مرجع إضافي للشاشات وعناصر الواجهة.
-- `docs/MASTER_PROMPT_AR.md`: البرومبت الرئيسي التفصيلي الذي يجب على وكيل التطوير اتباعه.
-- `docs/AGENT_MESSAGE.txt`: رسالة منفصلة جاهزة لإرسالها للوكيل.
+> **تنبيه:** المحاكاة تعليمية فقط، وليست اعتماداً لتصميم أو تنفيذ دائرة حقيقية. لا تجرب القصر أو الأعطال على معدات فعلية.
 
-## ملاحظة مهمة
-الصور مراجع بصرية وليست أصولاً تفاعلية جاهزة. يجب بناء واجهات Flutter والمجسمات ثلاثية الأبعاد ومحرك المحاكاة فعلياً، واختبار الوظائف قبل الادعاء باكتمالها.
+## ما هو منفذ في المصدر
+
+- واجهة عربية RTL بمصطلحات فرنسية، وضع داكن/فاتح محفوظ محلياً، وتصميم متجاوب للهاتف والدوران.
+- مشاريع محلية: إنشاء من لوحة فارغة أو قوالب، فتح، بحث، إعادة تسمية، نسخ، حذف بتأكيد، وحفظ تلقائي ذري.
+- لوحة Pan/Zoom، شبكة وSnap، تحريك/تدوير/نسخ/حذف/تحجيم، طبقات قابلة للتسمية والإخفاء والقفل، وUndo/Redo.
+- توصيل Terminal-to-Terminal مع تحقق، مسارات Straight/90°/Curved، ألوان ومقاطع وأنواع وعزل، ونقاط انحناء قابلة للتحريك.
+- محرك MNA مستقل بأعداد مركبة لـDC وAC RMS، Contacteur وRelais وTemporisateur وتعشيق ذاتي، حمايات وأعطال وقياسات.
+- محرك ثلاثي الطور مكافئ مع حساب فقدان الطور وعدم التوازن واتجاه التسلسل.
+- مجسمات polygon meshes ثلاثية الأبعاد أصلية قابلة للتدوير والتكبير؛ أطرافها من تعريف المحاكاة نفسه.
+- Voltmètre وAmpèremètre وتيارات الأسلاك والرسائل التشخيصية والمساعدة المحلية والتحديات.
+- مشاركة مشروع بChecksum واستيراده، نسخة احتياطية واستعادتها، وتصدير PNG وPDF فعليين.
+
+## نطاق وقيود مهمة
+
+هذا الإصدار **ليس محللاً عاماً لكل دوائر الكهرباء الصناعية**:
+
+- DC وAC جيبي خطي فقط؛ لا عابرات كهرومغناطيسية ولا harmonics.
+- المحرك نموذج معاوقة steady-state، وليس نموذج إقلاع/عزم/انزلاق ميكانيكي.
+- المحول وVFD وPLC وRCD غير منفذة، ولذلك لا تظهر كمكونات محاكاة مدعومة.
+- منحنيات الحماية واقتراح مقطع السلك تعليمية مبسطة وليست مطابقة لمعايير أو كتالوجات مصنعين.
+- meshes مبسطة وليست نماذج CAD photorealistic بأبعاد مصنع.
+
+التفاصيل والمعادلات في [`docs/SIMULATION.md`](docs/SIMULATION.md)، وصيغة الحفظ في [`docs/PROJECT_FORMAT.md`](docs/PROJECT_FORMAT.md)، والأصول في [`docs/ASSETS_3D.md`](docs/ASSETS_3D.md).
+
+## المكونات المدعومة حالياً
+
+Alimentation DC، Alimentation monophasée، Alimentation triphasée، Disjoncteur MCB، Contacteur 3P + aux، Relais thermique، Relais auxiliaire، Boutons NO/NC، Sélecteur، Temporisateur ON-delay، Capteur NO، Voyant، Moteur triphasé، Bornier، Voltmètre، Ampèremètre وFusible.
+
+## التشغيل والبناء
+
+المتطلبات: Flutter stable، Android SDK وJava 17. الحد الأدنى للتطبيق Android 6.0 (API 23).
+
+```bash
+flutter pub get
+dart format lib test
+flutter analyze
+flutter test --coverage
+flutter run
+```
+
+بناء APK:
+
+```bash
+flutter build apk --release
+# build/app/outputs/flutter-apk/app-release.apk
+```
+
+إعداد Release في هذا المشروع يوقّع APK بمفتاح **debug** ليكون قابلاً للتثبيت كنسخة تقييم CI. هذا ليس مفتاح نشر رسمي؛ يجب إعداد مفتاح upload خاص وعدم إيداعه في Git قبل النشر على متجر.
+
+## GitHub Actions
+
+Workflow [`.github/workflows/android.yml`](.github/workflows/android.yml) ينفذ formatter وanalyzer وكل الاختبارات، ثم Release APK ويتحقق من التوقيع والحزمة وSHA-256. عند النجاح يرفع Artifact باسم **`elec-lab-release-apk`** من صفحة Actions:
+
+<https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/actions>
+
+لا يُعد وجود Workflow دليلاً على نجاح APK؛ راجع [`docs/FINAL_REPORT.md`](docs/FINAL_REPORT.md) للنتيجة الفعلية والرابط عند توفره.
+
+## بنية المصدر
+
+```text
+lib/src/models/       البيانات، الأطراف، الأسلاك، الطبقات والقوالب
+lib/src/simulation/   MNA والحالات والحمايات والقياسات
+lib/src/state/        المحرر وUndo/Redo والحفظ التلقائي والإعدادات
+lib/src/storage/      JSON المحلي والاستيراد والنسخ الاحتياطي
+lib/src/three_d/      meshes والإسقاط والتفاعل 3D
+lib/src/export/       رسم المخطط وPNG/PDF
+lib/src/ui/           الشاشات واللوحة والمكتبة والنوافذ
+test/                 اختبارات النماذج والمحرك والتخزين والتصدير والواجهات
+```
+
+## المراجع
+
+المواصفات الأصلية في `docs/MASTER_PROMPT_AR.md` والصور المرجعية في `designs/`. الصور ليست واجهات التطبيق ولا بديلاً عن هندسته الداخلية.

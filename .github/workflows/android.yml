@@ -37,10 +37,46 @@ jobs:
         run: dart format lib test
 
       - name: Static analysis
-        run: flutter analyze
+        run: |
+          set +e
+          flutter analyze > analysis.log 2>&1
+          STATUS=$?
+          cat analysis.log
+          if [ "$STATUS" -ne 0 ]; then
+            python3 - analysis.log <<'PY'
+          import sys
+          text = open(sys.argv[1], encoding='utf-8').read()[-14000:]
+          text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error::' + text)
+          PY
+          fi
+          exit "$STATUS"
 
       - name: Unit and widget tests
-        run: flutter test --coverage
+        run: |
+          set +e
+          flutter test --coverage > test.log 2>&1
+          STATUS=$?
+          cat test.log
+          if [ "$STATUS" -ne 0 ]; then
+            python3 - test.log <<'PY'
+          import sys
+          text = open(sys.argv[1], encoding='utf-8').read()[-14000:]
+          text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+          print('::error::' + text)
+          PY
+          fi
+          exit "$STATUS"
+
+      - name: Upload logs on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: elec-lab-ci-logs
+          path: |
+            analysis.log
+            test.log
+          if-no-files-found: warn
 
       - name: Build installable Release APK
         run: flutter build apk --release
