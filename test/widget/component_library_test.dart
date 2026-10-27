@@ -98,7 +98,7 @@ void main() {
     expect(find.text('1/L1'), findsOneWidget);
     expect(controller.selectedComponentId, 'k1');
 
-    await tester.tap(find.text('A1'));
+    await tester.tap(find.byKey(const Key('terminal-k1-a1')));
     await tester.pump();
     expect(controller.pendingWireStart?.componentId, 'k1');
     expect(controller.pendingWireStart?.terminalId, 'a1');
@@ -106,7 +106,7 @@ void main() {
     controller.resizeComponent('k1', 1.4);
     controller.rotateComponent('k1');
     await tester.pumpAndSettle();
-    expect(find.bySemanticsLabel('طرف A1 في K1'), findsOneWidget);
+    expect(find.byKey(const Key('terminal-k1-a1')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

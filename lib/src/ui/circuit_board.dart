@@ -304,11 +304,14 @@ class _BoardComponentState extends State<BoardComponent> {
     final reading = widget.reading;
     final active = reading?.active ?? false;
     final tripped = reading?.tripped ?? false;
+    // Terminals can sit exactly at x=0/x=width. Extra hit space is enabled
+    // only while wiring/selecting, without changing electrical coordinates.
+    final hitOverflow = showTerminals ? 24.0 : 0.0;
     return Positioned(
-      left: component.position.x,
-      top: component.position.y,
-      width: width,
-      height: height,
+      left: component.position.x - hitOverflow,
+      top: component.position.y - hitOverflow,
+      width: width + hitOverflow * 2,
+      height: height + hitOverflow * 2,
       child: Transform.rotate(
         angle: component.rotation * math.pi / 2,
         child: GestureDetector(
@@ -358,7 +361,11 @@ class _BoardComponentState extends State<BoardComponent> {
           child: Stack(
             clipBehavior: Clip.none,
             children: <Widget>[
-              Positioned.fill(
+              Positioned(
+                left: hitOverflow,
+                top: hitOverflow,
+                width: width,
+                height: height,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 150),
                   decoration: BoxDecoration(
@@ -392,9 +399,13 @@ class _BoardComponentState extends State<BoardComponent> {
               if (showTerminals)
                 for (final terminal in spec.terminals)
                   _TerminalButton(
+                    key: ValueKey<String>(
+                      'terminal-${component.id}-${terminal.id}',
+                    ),
                     terminal: terminal,
                     component: component,
                     scale: scale,
+                    origin: hitOverflow,
                     hitSize: 34 / controller.zoom.clamp(0.35, 3.0),
                     pending: controller.pendingWireStart ==
                         TerminalRef(
@@ -404,9 +415,9 @@ class _BoardComponentState extends State<BoardComponent> {
                     onTap: () => _handleTerminal(terminal),
                   ),
               Positioned(
-                bottom: -18,
-                left: 0,
-                right: 0,
+                bottom: hitOverflow - 18,
+                left: hitOverflow,
+                right: hitOverflow,
                 child: Center(
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
@@ -428,8 +439,8 @@ class _BoardComponentState extends State<BoardComponent> {
               ),
               if (reading != null && (reading.energized || active || tripped))
                 Positioned(
-                  top: 4,
-                  right: 4,
+                  top: hitOverflow + 4,
+                  right: hitOverflow + 4,
                   child: CircleAvatar(
                     radius: 5,
                     backgroundColor: tripped
@@ -462,22 +473,25 @@ class _TerminalButton extends StatelessWidget {
     required this.terminal,
     required this.component,
     required this.scale,
+    required this.origin,
     required this.hitSize,
     required this.pending,
     required this.onTap,
+    super.key,
   });
 
   final TerminalDefinition terminal;
   final CircuitComponent component;
   final double scale;
+  final double origin;
   final double hitSize;
   final bool pending;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final left = terminal.position.x * scale - hitSize / 2;
-    final top = terminal.position.y * scale - hitSize / 2;
+    final left = origin + terminal.position.x * scale - hitSize / 2;
+    final top = origin + terminal.position.y * scale - hitSize / 2;
     final color = pending ? const Color(0xffffb300) : const Color(0xff00b7ff);
     return Positioned(
       left: left,
