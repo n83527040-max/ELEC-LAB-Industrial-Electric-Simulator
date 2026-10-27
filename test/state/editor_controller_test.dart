@@ -161,7 +161,7 @@ void main() {
     expect(controller.zoom, 3);
     expect(controller.viewportOffset, const BoardPoint(20, 30));
     controller.setViewport(scale: 0.01);
-    expect(controller.zoom, 0.35);
+    expect(controller.zoom, 0.08);
     controller.setGrid(visible: false, snap: false, size: 25);
     expect(controller.showGrid, isFalse);
     controller.setIndustrialSurface(false);

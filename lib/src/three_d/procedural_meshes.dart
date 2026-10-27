@@ -31,6 +31,22 @@ abstract final class ProceduralMeshes {
     return _cached(kind, detail, spec.defaultProperties['color']?.toString() ?? '');
   }
 
+  /// Terminal metadata is shared with GLB assets without building a legacy
+  /// procedural mesh. The electrical catalog remains the only source of XY.
+  static List<MeshTerminal> terminalsForKind(ComponentKind kind) {
+    final spec = ComponentCatalog.specOf(kind);
+    final depth = _depthFor(kind);
+    return List<MeshTerminal>.unmodifiable(
+      spec.terminals.map(
+        (terminal) => MeshTerminal(
+          id: terminal.id,
+          label: terminal.label,
+          position: _terminalPosition(terminal, spec, depth),
+        ),
+      ),
+    );
+  }
+
   static DeviceMesh _cached(
     ComponentKind kind,
     MeshDetail detail,
@@ -51,18 +67,7 @@ abstract final class ProceduralMeshes {
     final builder = MeshBuilder();
     final width = spec.size.width / 48;
     final height = spec.size.height / 48;
-    final depth = switch (spec.kind) {
-      ComponentKind.motor3Phase => 1.65,
-      ComponentKind.motor1Phase => 1.45,
-      ComponentKind.indicator ||
-      ComponentKind.pushButtonNO ||
-      ComponentKind.pushButtonNC ||
-      ComponentKind.emergencyStop ||
-      ComponentKind.selectorSwitch ||
-      ComponentKind.rotarySwitch => 1.05,
-      ComponentKind.sensor || ComponentKind.limitSwitch => 0.9,
-      _ => 0.82,
-    };
+    final depth = _depthFor(spec.kind);
     final context = _MeshContext(
       builder,
       spec,
@@ -849,6 +854,19 @@ abstract final class ProceduralMeshes {
           Vector3D(0.022, radius * 1.25, 0.018), c.black);
     }
   }
+
+  static double _depthFor(ComponentKind kind) => switch (kind) {
+        ComponentKind.motor3Phase => 1.65,
+        ComponentKind.motor1Phase => 1.45,
+        ComponentKind.indicator ||
+        ComponentKind.pushButtonNO ||
+        ComponentKind.pushButtonNC ||
+        ComponentKind.emergencyStop ||
+        ComponentKind.selectorSwitch ||
+        ComponentKind.rotarySwitch => 1.05,
+        ComponentKind.sensor || ComponentKind.limitSwitch => 0.9,
+        _ => 0.82,
+      };
 
   static Vector3D _terminalPosition(
     TerminalDefinition terminal,

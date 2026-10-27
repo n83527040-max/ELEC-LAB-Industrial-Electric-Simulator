@@ -161,6 +161,7 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
           body: Stack(
             children: <Widget>[
               Positioned.fill(
+                bottom: 72,
                 child: CircuitBoard(
                   key: _boardKey,
                   controller: _controller,
@@ -214,7 +215,7 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
               if (_controller.selectedComponent == null)
                 Positioned(
                   left: 10,
-                  bottom: 82,
+                  bottom: 10,
                   child: Card(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -243,7 +244,7 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                 Positioned(
                   left: 8,
                   right: 8,
-                  bottom: 78,
+                  bottom: 8,
                   child: _ComponentContextBar(controller: _controller),
                 ),
               if (_busy)

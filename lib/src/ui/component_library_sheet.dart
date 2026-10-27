@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/component.dart';
 import '../models/component_catalog.dart';
 import '../models/terminal.dart';
-import '../three_d/mesh_view.dart';
-import '../three_d/procedural_meshes.dart';
+import '../three_d/asset_mesh_view.dart';
 
 class ComponentLibrarySheet extends StatefulWidget {
   const ComponentLibrarySheet({super.key});
@@ -111,7 +110,7 @@ class _ComponentLibrarySheetState extends State<ComponentLibrarySheet> {
                                     : 2;
                         return GridView.builder(
                           key: const Key('component-grid'),
-                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
+                          padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: columns,
@@ -154,7 +153,6 @@ class _ComponentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final mesh = ProceduralMeshes.forKind(spec.kind);
     return Card(
       key: Key('component-card-${spec.kind.name}'),
       elevation: 0,
@@ -193,8 +191,8 @@ class _ComponentCard extends StatelessWidget {
                         Positioned.fill(
                           child: Padding(
                             padding: const EdgeInsets.all(5),
-                            child: DeviceMeshView(
-                              mesh: mesh,
+                            child: KindMeshView(
+                              kind: spec.kind,
                               fitPadding: 0.88,
                               showShadow: true,
                             ),

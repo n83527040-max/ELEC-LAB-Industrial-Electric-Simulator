@@ -1,0 +1,1914 @@
+{
+  "format": "elec-lab-glb-manifest",
+  "version": 1,
+  "license": "ELEC LAB original assets; see docs/ASSETS_3D.md",
+  "models": [
+    {
+      "kind": "dcSupply",
+      "terminalIds": [
+        "positive",
+        "negative"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/dcSupply.glb",
+          "bytes": 66132,
+          "vertices": 2118,
+          "triangles": 2974,
+          "materials": 12,
+          "sha256": "560df37b5ce95718dec0e03576bbb544cd73695d75449c1fd93efc644c8af224",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.4082,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.3125,
+              0.7225333333333334
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/dcSupply.glb",
+          "bytes": 79200,
+          "vertices": 2494,
+          "triangles": 3686,
+          "materials": 12,
+          "sha256": "49713fe9e98a2b18490b8ecc02ea224721233af07414a4ed17f5ca25fc72469d",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.46925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.3125,
+              0.7225333333333334
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/dcSupply.glb",
+          "bytes": 108680,
+          "vertices": 3378,
+          "triangles": 5258,
+          "materials": 12,
+          "sha256": "1c80d6e29a5f7bc57d4f86bfd0f820bca6d8d5ea5249eeb4b37ca265f30ecd51",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.46925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.3125,
+              0.7225333333333334
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "acSupply",
+      "terminalIds": [
+        "line",
+        "neutral"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/acSupply.glb",
+          "bytes": 66848,
+          "vertices": 2142,
+          "triangles": 3010,
+          "materials": 12,
+          "sha256": "28577b414251b5fdfc0fe137e8f35e7f55a4c8da58b72d903dd4fba8fd3e757c",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.4082,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.3125,
+              0.7225333333333334
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/acSupply.glb",
+          "bytes": 79916,
+          "vertices": 2518,
+          "triangles": 3722,
+          "materials": 12,
+          "sha256": "9d84a15ba699e9df887d6842195578e5adcdd9d815e5c86299eb1560da3e1c1e",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.46925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.3125,
+              0.7225333333333334
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/acSupply.glb",
+          "bytes": 111072,
+          "vertices": 3458,
+          "triangles": 5378,
+          "materials": 12,
+          "sha256": "be82d2c10f7417fb9d39fc5fed504f72c3b83f3ed06edfe43b95423fa8dfd27e",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.46925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.3125,
+              0.7225333333333334
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "threePhaseSupply",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "neutral",
+        "pe"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/threePhaseSupply.glb",
+          "bytes": 77932,
+          "vertices": 2471,
+          "triangles": 3571,
+          "materials": 13,
+          "sha256": "24674614a355bcebfc4a5b79f01b389442e762269784ffafb6afceb6e67be6c5",
+          "bounds": {
+            "min": [
+              -1.4791666666666667,
+              -1.4082,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.5748666666666666,
+              1.3125,
+              0.7475333333333334
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/threePhaseSupply.glb",
+          "bytes": 101080,
+          "vertices": 3135,
+          "triangles": 4835,
+          "materials": 13,
+          "sha256": "1bed216035a550f8c40e89344063a65d33066fed4b34ab6ae763634739a4a708",
+          "bounds": {
+            "min": [
+              -1.4791666666666667,
+              -1.46925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6359166666666667,
+              1.3125,
+              0.7475333333333334
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/threePhaseSupply.glb",
+          "bytes": 145208,
+          "vertices": 4435,
+          "triangles": 7211,
+          "materials": 13,
+          "sha256": "cf70adb07171f7df384b06baaa1bb28e3962e80dbe7cdc44c6b9470cd2b1a211",
+          "bounds": {
+            "min": [
+              -1.4791666666666667,
+              -1.46925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6359166666666667,
+              1.3125,
+              0.7475333333333334
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "circuitBreaker",
+      "terminalIds": [
+        "line",
+        "load"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/circuitBreaker.glb",
+          "bytes": 41784,
+          "vertices": 1253,
+          "triangles": 1841,
+          "materials": 11,
+          "sha256": "e3fc643216abc7ea4188abf9f5d2490cf1438e7e608391e5e1243fae38ff837f",
+          "bounds": {
+            "min": [
+              -0.8125,
+              -1.5123666666666666,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.8125,
+              1.5123666666666666,
+              0.7442
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/circuitBreaker.glb",
+          "bytes": 48512,
+          "vertices": 1445,
+          "triangles": 2209,
+          "materials": 11,
+          "sha256": "7fa8645e9660768c7b7a55a88c11d89b6e6277d147cf1eeef3de9c7197b49a7c",
+          "bounds": {
+            "min": [
+              -0.8125,
+              -1.5734166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.8125,
+              1.5734166666666667,
+              0.7442
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/circuitBreaker.glb",
+          "bytes": 70164,
+          "vertices": 2121,
+          "triangles": 3337,
+          "materials": 11,
+          "sha256": "1833c9b841c5db6ec0b576e92eca8812fe13584902a060a867d3419dafb32b2d",
+          "bounds": {
+            "min": [
+              -0.8125,
+              -1.5734166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.8125,
+              1.5734166666666667,
+              0.7442
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "differentialBreaker",
+      "terminalIds": [
+        "lineIn",
+        "neutralIn",
+        "lineOut",
+        "neutralOut"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/differentialBreaker.glb",
+          "bytes": 52660,
+          "vertices": 1645,
+          "triangles": 2321,
+          "materials": 12,
+          "sha256": "7c6b250bc5ba9c9a424f4f4a94d23fb39e1cf66fd1bf0fdfcc49fe23b86724a2",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.7207,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.7207,
+              0.7442
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/differentialBreaker.glb",
+          "bytes": 66684,
+          "vertices": 2045,
+          "triangles": 3089,
+          "materials": 12,
+          "sha256": "05786370d03da72cc74df3280e7ce3aea2ad953e57252dda86b6272a9501d770",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.78175,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.78175,
+              0.7442
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/differentialBreaker.glb",
+          "bytes": 99236,
+          "vertices": 3029,
+          "triangles": 4817,
+          "materials": 12,
+          "sha256": "791754a6d5a1f2bbcbf9fa423c423d797cf3b8918f436f5770efcdfc2d80b443",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.78175,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.78175,
+              0.7442
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "motorBreaker",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "t1",
+        "t2",
+        "t3",
+        "nc95",
+        "nc96"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/motorBreaker.glb",
+          "bytes": 65476,
+          "vertices": 2072,
+          "triangles": 2992,
+          "materials": 11,
+          "sha256": "6e7b7d7ed048d41fae9615380c1d0da78e87c09f212b160c712f802703b5712d",
+          "bounds": {
+            "min": [
+              -1.5748666666666666,
+              -1.7415333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.5748666666666666,
+              1.7415333333333332,
+              0.8117
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/motorBreaker.glb",
+          "bytes": 93808,
+          "vertices": 2884,
+          "triangles": 4540,
+          "materials": 11,
+          "sha256": "3fa46e40b918e329627e8442a04cce41da52f81e4b323413bbbbf50159f6a12d",
+          "bounds": {
+            "min": [
+              -1.6359166666666667,
+              -1.8025833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6359166666666667,
+              1.8025833333333332,
+              0.8117
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/motorBreaker.glb",
+          "bytes": 142204,
+          "vertices": 4288,
+          "triangles": 7168,
+          "materials": 11,
+          "sha256": "84081690c0261d9c5c5c43d2700880c493a76210ce7bfa050cc8d996a0efb09c",
+          "bounds": {
+            "min": [
+              -1.6359166666666667,
+              -1.8025833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6359166666666667,
+              1.8025833333333332,
+              0.8117
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "contactor",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "t1",
+        "t2",
+        "t3",
+        "a1",
+        "a2",
+        "aux13",
+        "aux14",
+        "aux21",
+        "aux22"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/contactor.glb",
+          "bytes": 88252,
+          "vertices": 2780,
+          "triangles": 4180,
+          "materials": 11,
+          "sha256": "95a916d1af326e7f3c353fb90e5d1e6236933760a9fa7288794c92fc8fff1627",
+          "bounds": {
+            "min": [
+              -1.5748666666666666,
+              -1.7415333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.5748666666666666,
+              1.7415333333333332,
+              0.7767
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/contactor.glb",
+          "bytes": 139148,
+          "vertices": 4252,
+          "triangles": 6948,
+          "materials": 11,
+          "sha256": "b44f3278fc6dcfcd444fbf1bbb524e58629ce9ba526c45ef40c5e506426cd7a6",
+          "bounds": {
+            "min": [
+              -1.6359166666666667,
+              -1.8025833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6359166666666667,
+              1.8025833333333332,
+              0.7767
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/contactor.glb",
+          "bytes": 219072,
+          "vertices": 6580,
+          "triangles": 11280,
+          "materials": 11,
+          "sha256": "bc909c512abb0562580baa24acc91cff849b7e185bbd65830b6519482d167b57",
+          "bounds": {
+            "min": [
+              -1.6359166666666667,
+              -1.8025833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6359166666666667,
+              1.8025833333333332,
+              0.7767
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "thermalRelay",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "t1",
+        "t2",
+        "t3",
+        "nc95",
+        "nc96"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/thermalRelay.glb",
+          "bytes": 75068,
+          "vertices": 2354,
+          "triangles": 3478,
+          "materials": 12,
+          "sha256": "a3ada9bfd3916915f6d39800e00a87645da70cf8d57b0fed1a75c0d9dca464ae",
+          "bounds": {
+            "min": [
+              -1.2623666666666666,
+              -1.4290333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2623666666666666,
+              1.4290333333333332,
+              0.7666999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/thermalRelay.glb",
+          "bytes": 103108,
+          "vertices": 3154,
+          "triangles": 5014,
+          "materials": 12,
+          "sha256": "a3e8996fb795caab721ba4fa1e1b2002e31fe5b472de3e1479e6baed5d6e70a0",
+          "bounds": {
+            "min": [
+              -1.3234166666666667,
+              -1.4900833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.3234166666666667,
+              1.4900833333333332,
+              0.7666999999999999
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/thermalRelay.glb",
+          "bytes": 159092,
+          "vertices": 4818,
+          "triangles": 8014,
+          "materials": 12,
+          "sha256": "624281294496db2a3843960cd91b072e87516dc05f723bd5fce60ac3cceaf63a",
+          "bounds": {
+            "min": [
+              -1.3234166666666667,
+              -1.4900833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.3234166666666667,
+              1.4900833333333332,
+              0.7666999999999999
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "auxiliaryRelay",
+      "terminalIds": [
+        "a1",
+        "a2",
+        "common",
+        "no",
+        "nc"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/auxiliaryRelay.glb",
+          "bytes": 53488,
+          "vertices": 1638,
+          "triangles": 2398,
+          "materials": 12,
+          "sha256": "2ec040bd2d7b0adc0b94adfdd96d51c112a08e21582594c0eeb4944b0b57b98d",
+          "bounds": {
+            "min": [
+              -1.1790333333333332,
+              -1.421875,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1790333333333332,
+              1.3541666666666667,
+              0.9592
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/auxiliaryRelay.glb",
+          "bytes": 71448,
+          "vertices": 2150,
+          "triangles": 3382,
+          "materials": 12,
+          "sha256": "caada87ed891758cc903ed2c59dfcb1eebbf7f52dbbb8cbc770ebbfdf75fac32",
+          "bounds": {
+            "min": [
+              -1.2400833333333332,
+              -1.421875,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2400833333333332,
+              1.3541666666666667,
+              0.9592
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/auxiliaryRelay.glb",
+          "bytes": 112064,
+          "vertices": 3374,
+          "triangles": 5542,
+          "materials": 12,
+          "sha256": "426814bd607d44acd7a86f74ead4029cd6043d29caf632526f0cb54e149fb476",
+          "bounds": {
+            "min": [
+              -1.2400833333333332,
+              -1.421875,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2400833333333332,
+              1.3541666666666667,
+              0.9592
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "pushButtonNO",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/pushButtonNO.glb",
+          "bytes": 23552,
+          "vertices": 656,
+          "triangles": 1040,
+          "materials": 7,
+          "sha256": "6ba66e1ab2922f66762912b1dc84496c52fb0cbaaa343c7918fb7c5ee28043ff",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.0540333333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.0540333333333334,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/pushButtonNO.glb",
+          "bytes": 35000,
+          "vertices": 972,
+          "triangles": 1676,
+          "materials": 7,
+          "sha256": "2f530451ebe3ed16f297a7f35f8595afd102b8d74d4c30e1cbebdfd4a1c02fbb",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.1150833333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.1150833333333334,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/pushButtonNO.glb",
+          "bytes": 50556,
+          "vertices": 1404,
+          "triangles": 2540,
+          "materials": 7,
+          "sha256": "10f267ee163479f7dfa5348c7b733c55b57e76ba3fdddbe1512f57124ef3f876",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.1150833333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.1150833333333334,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "pushButtonNC",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/pushButtonNC.glb",
+          "bytes": 22352,
+          "vertices": 616,
+          "triangles": 980,
+          "materials": 7,
+          "sha256": "22f8d7835ac65cabf367e8c2634793ea5f81d8b362532898dc327a4088ab1e72",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.0540333333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.0540333333333334,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/pushButtonNC.glb",
+          "bytes": 33800,
+          "vertices": 932,
+          "triangles": 1616,
+          "materials": 7,
+          "sha256": "3b7b2f7e4cccde6d0b750e5a4f9eb0df12f1f4a8460ac3b7e5d037614ddaa8ce",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.1150833333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.1150833333333334,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/pushButtonNC.glb",
+          "bytes": 49356,
+          "vertices": 1364,
+          "triangles": 2480,
+          "materials": 7,
+          "sha256": "802eae8545432368569f5a92a0f98a5024436d9d0b4a8c03fef9b1d83a5baf50",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.1150833333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.1150833333333334,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "emergencyStop",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/emergencyStop.glb",
+          "bytes": 28644,
+          "vertices": 840,
+          "triangles": 1252,
+          "materials": 8,
+          "sha256": "c2385f6552bb9e4aca7ca81dc468eef28cc678ef4d39bf9301948bf5cea9bc50",
+          "bounds": {
+            "min": [
+              -0.88,
+              -1.2207,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.88,
+              1.2207,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/emergencyStop.glb",
+          "bytes": 40236,
+          "vertices": 1178,
+          "triangles": 1878,
+          "materials": 8,
+          "sha256": "66fcb737b2f7a97a7420d0ab02f9d2689ff2837461ef0ea401312a580457e887",
+          "bounds": {
+            "min": [
+              -0.88,
+              -1.28175,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.88,
+              1.28175,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/emergencyStop.glb",
+          "bytes": 52480,
+          "vertices": 1496,
+          "triangles": 2580,
+          "materials": 8,
+          "sha256": "e3f35658a44f61712cff4e27d2426b6f75720eca66b7c54468cedae015e1f682",
+          "bounds": {
+            "min": [
+              -0.88,
+              -1.28175,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.88,
+              1.28175,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "selectorSwitch",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/selectorSwitch.glb",
+          "bytes": 16984,
+          "vertices": 436,
+          "triangles": 712,
+          "materials": 7,
+          "sha256": "0e0c1fbc5162156cf1ba4141c5638e7cb4f02a00ad79443728ad59122ce45ad6",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.0540333333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.0540333333333334,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/selectorSwitch.glb",
+          "bytes": 27564,
+          "vertices": 732,
+          "triangles": 1296,
+          "materials": 7,
+          "sha256": "3b7acfcfb89ed20337dc35c36a15874562778f06e17df67f08f5f51b642a0f0b",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.1150833333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.1150833333333334,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/selectorSwitch.glb",
+          "bytes": 41396,
+          "vertices": 1116,
+          "triangles": 2064,
+          "materials": 7,
+          "sha256": "ba2f2925ef0c94fb77fe47d30ec6b9607fea3233908086b95b294f5d50b0cba8",
+          "bounds": {
+            "min": [
+              -0.66625,
+              -1.1150833333333334,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.66625,
+              1.1150833333333334,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "rotarySwitch",
+      "terminalIds": [
+        "common",
+        "out1",
+        "out2"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/rotarySwitch.glb",
+          "bytes": 24064,
+          "vertices": 668,
+          "triangles": 1040,
+          "materials": 8,
+          "sha256": "7fdfc6913e0f664574d8b026bbc8721b389f291dccb3f529da714e0d74bf8e7b",
+          "bounds": {
+            "min": [
+              -0.88,
+              -1.1790333333333332,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.88,
+              1.1790333333333332,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/rotarySwitch.glb",
+          "bytes": 45664,
+          "vertices": 1308,
+          "triangles": 2168,
+          "materials": 9,
+          "sha256": "bc40265bedb89845086fa291c864c298617d7282395b3db35cc32041c0da5e43",
+          "bounds": {
+            "min": [
+              -0.88,
+              -1.2400833333333332,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.88,
+              1.2400833333333332,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/rotarySwitch.glb",
+          "bytes": 62948,
+          "vertices": 1776,
+          "triangles": 3140,
+          "materials": 9,
+          "sha256": "912f3b74c86d1111376a8a925845872a63b09b5423d13600371ef8b2b4f852d8",
+          "bounds": {
+            "min": [
+              -0.88,
+              -1.2400833333333332,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.88,
+              1.2400833333333332,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "timer",
+      "terminalIds": [
+        "a1",
+        "a2",
+        "t15",
+        "t18"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/timer.glb",
+          "bytes": 73588,
+          "vertices": 2357,
+          "triangles": 3357,
+          "materials": 12,
+          "sha256": "233747178447fdd341c73e16f6cff0af0a94aa71bf20e46342e73120724973a0",
+          "bounds": {
+            "min": [
+              -1.1998666666666666,
+              -1.509375,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1998666666666666,
+              1.4375,
+              0.6692
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/timer.glb",
+          "bytes": 89912,
+          "vertices": 2821,
+          "triangles": 4253,
+          "materials": 12,
+          "sha256": "f08a519fc2e68cfb40acd449360174b9f930a1cba30ed5a70a52a1d2db3c5df8",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.509375,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4375,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/timer.glb",
+          "bytes": 135288,
+          "vertices": 4213,
+          "triangles": 6641,
+          "materials": 12,
+          "sha256": "8c8bcb0ca879e82f1354184800f52c7ad6381818d929969184d11072e7070295",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.509375,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4375,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "timerOffDelay",
+      "terminalIds": [
+        "a1",
+        "a2",
+        "t15",
+        "t18"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/timerOffDelay.glb",
+          "bytes": 73372,
+          "vertices": 2349,
+          "triangles": 3345,
+          "materials": 12,
+          "sha256": "edd0d642b56ad21cb6eaf8647994fbd0151c2c0e3ae5d5fffde9648e124056d7",
+          "bounds": {
+            "min": [
+              -1.1998666666666666,
+              -1.509375,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1998666666666666,
+              1.4375,
+              0.6692
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/timerOffDelay.glb",
+          "bytes": 89696,
+          "vertices": 2813,
+          "triangles": 4241,
+          "materials": 12,
+          "sha256": "591501a472f1c3abf0cbc864319ea3d1478cefd7823078b35fd6e131f24f3891",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.509375,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4375,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/timerOffDelay.glb",
+          "bytes": 135072,
+          "vertices": 4205,
+          "triangles": 6629,
+          "materials": 12,
+          "sha256": "d51f071dfae09985469f2ddc3e08a502d1599d779848a5813fcdf5f915fc3ce2",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.509375,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4375,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "sensor",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/sensor.glb",
+          "bytes": 34252,
+          "vertices": 996,
+          "triangles": 1564,
+          "materials": 8,
+          "sha256": "6baf5ee87191f43332fedf666095f5e86ee88775b1499847465711c15c9ac9f6",
+          "bounds": {
+            "min": [
+              -0.56875,
+              -1.0748666666666666,
+              -0.525
+            ],
+            "max": [
+              0.69,
+              1.0748666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/sensor.glb",
+          "bytes": 46272,
+          "vertices": 1316,
+          "triangles": 2244,
+          "materials": 8,
+          "sha256": "14b1273138cf2d5fa46a4857e173db3bcca609cf310afdef94f9a8d07be74346",
+          "bounds": {
+            "min": [
+              -0.56875,
+              -1.1359166666666667,
+              -0.525
+            ],
+            "max": [
+              0.69,
+              1.1359166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/sensor.glb",
+          "bytes": 69748,
+          "vertices": 1976,
+          "triangles": 3540,
+          "materials": 8,
+          "sha256": "91ac1404bff87b39a19e67da5164b16843aed4854ab47fdf2efd60a39eeb9c82",
+          "bounds": {
+            "min": [
+              -0.56875,
+              -1.1359166666666667,
+              -0.525
+            ],
+            "max": [
+              0.69,
+              1.1359166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "limitSwitch",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/limitSwitch.glb",
+          "bytes": 28208,
+          "vertices": 788,
+          "triangles": 1264,
+          "materials": 8,
+          "sha256": "8a41069362be55b983ba087339941631a9bef41e3ad0cdd8d5ff20cc38c0c226",
+          "bounds": {
+            "min": [
+              -0.5822916666666668,
+              -1.2720833333333335,
+              -0.29250000000000004
+            ],
+            "max": [
+              0.6091666666666666,
+              1.5933333333333335,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/limitSwitch.glb",
+          "bytes": 39368,
+          "vertices": 1108,
+          "triangles": 1872,
+          "materials": 8,
+          "sha256": "52ac6578c36e3874e3f9807b3808cf946b615779f84219757bcecece4714d130",
+          "bounds": {
+            "min": [
+              -0.5822916666666668,
+              -1.3234166666666667,
+              -0.29250000000000004
+            ],
+            "max": [
+              0.6091666666666666,
+              1.5933333333333335,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/limitSwitch.glb",
+          "bytes": 64956,
+          "vertices": 1884,
+          "triangles": 3228,
+          "materials": 8,
+          "sha256": "3bc2030c303418833e919adfbb85d206ebc9d04f3d0307a8a03ba25285b79a0a",
+          "bounds": {
+            "min": [
+              -0.5822916666666668,
+              -1.3234166666666667,
+              -0.29250000000000004
+            ],
+            "max": [
+              0.6091666666666666,
+              1.5933333333333335,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "indicator",
+      "terminalIds": [
+        "x1",
+        "x2"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/indicator.glb",
+          "bytes": 18308,
+          "vertices": 500,
+          "triangles": 788,
+          "materials": 6,
+          "sha256": "5c57c80d2f29dba75cc6d916241d51156704f5ed13cde8d4d35b3da3a3591908",
+          "bounds": {
+            "min": [
+              -0.6174999999999999,
+              -1.1373666666666666,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.6174999999999999,
+              1.1373666666666666,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/indicator.glb",
+          "bytes": 33020,
+          "vertices": 916,
+          "triangles": 1596,
+          "materials": 6,
+          "sha256": "29b32246c9480a1cb1b9cab7fad7f8ac447737324c08f9ff9f7474cbb2e4d495",
+          "bounds": {
+            "min": [
+              -0.6174999999999999,
+              -1.1984166666666667,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.6174999999999999,
+              1.1984166666666667,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/indicator.glb",
+          "bytes": 57360,
+          "vertices": 1600,
+          "triangles": 2940,
+          "materials": 6,
+          "sha256": "078f1b0bd8c1381881b3c5d23f528d2fe50711e3911bd2d425a2ea73d10b9881",
+          "bounds": {
+            "min": [
+              -0.6174999999999999,
+              -1.1984166666666667,
+              -0.47400000000000003
+            ],
+            "max": [
+              0.6174999999999999,
+              1.1984166666666667,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "motor3Phase",
+      "terminalIds": [
+        "u",
+        "v",
+        "w",
+        "earth"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/motor3Phase.glb",
+          "bytes": 63648,
+          "vertices": 2056,
+          "triangles": 2948,
+          "materials": 8,
+          "sha256": "feae3fe870240f34b68ea59b1d7a2960665136411e6e1ef613a0c3fdb8e4eed0",
+          "bounds": {
+            "min": [
+              -1.4712500000000002,
+              -1.2466666666666666,
+              -0.9916666666666667
+            ],
+            "max": [
+              3.29375,
+              1.5123666666666666,
+              1.2654999999999998
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/motor3Phase.glb",
+          "bytes": 96164,
+          "vertices": 2876,
+          "triangles": 4808,
+          "materials": 9,
+          "sha256": "8438de3c777bfd8045e032621385f0f83b40b4217809fef5763fde61a270028c",
+          "bounds": {
+            "min": [
+              -1.7833333333333332,
+              -1.2466666666666666,
+              -0.9916666666666667
+            ],
+            "max": [
+              3.29375,
+              1.5734166666666667,
+              1.277
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/motor3Phase.glb",
+          "bytes": 133324,
+          "vertices": 3956,
+          "triangles": 6824,
+          "materials": 9,
+          "sha256": "cfd4e70e1721a6562cf7d6dc0cb6090e45c28fe272c9a0933cf6bf040bd982af",
+          "bounds": {
+            "min": [
+              -1.7833333333333332,
+              -1.2466666666666666,
+              -0.9916666666666667
+            ],
+            "max": [
+              3.29375,
+              1.5734166666666667,
+              1.277
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "motor1Phase",
+      "terminalIds": [
+        "u",
+        "v",
+        "earth"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/motor1Phase.glb",
+          "bytes": 57304,
+          "vertices": 1828,
+          "triangles": 2680,
+          "materials": 7,
+          "sha256": "968571fa9593a6a3d27322fabe4f759e68a408cd87fc73d0a0908015bdf57c47",
+          "bounds": {
+            "min": [
+              -1.30875,
+              -1.1733333333333333,
+              -0.9333333333333332
+            ],
+            "max": [
+              2.90625,
+              1.4290333333333332,
+              1.1215
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/motor1Phase.glb",
+          "bytes": 88484,
+          "vertices": 2636,
+          "triangles": 4440,
+          "materials": 8,
+          "sha256": "b8b26c2fd5bfe4be88dd4b2581e922a60f765a34f7a2b4d47d87d8ab2016b1bb",
+          "bounds": {
+            "min": [
+              -1.575,
+              -1.1733333333333333,
+              -0.9333333333333332
+            ],
+            "max": [
+              2.90625,
+              1.4900833333333332,
+              1.133
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/motor1Phase.glb",
+          "bytes": 120460,
+          "vertices": 3560,
+          "triangles": 6180,
+          "materials": 8,
+          "sha256": "b33c8ba06fead11cac135ac6c11d429a0814daecdfc53ceea59c5ed1d64763f2",
+          "bounds": {
+            "min": [
+              -1.575,
+              -1.1733333333333333,
+              -0.9333333333333332
+            ],
+            "max": [
+              2.90625,
+              1.4900833333333332,
+              1.133
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "transformer",
+      "terminalIds": [
+        "primaryLine",
+        "primaryNeutral",
+        "secondaryLine",
+        "secondaryNeutral"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/transformer.glb",
+          "bytes": 88136,
+          "vertices": 3076,
+          "triangles": 3968,
+          "materials": 8,
+          "sha256": "1d824814b0eeb6fd3c6bd4fb55489e9c9e941f0d5e140097a4c83f44e0a0b450",
+          "bounds": {
+            "min": [
+              -1.40625,
+              -1.6165333333333332,
+              -0.30165
+            ],
+            "max": [
+              1.40625,
+              1.6165333333333332,
+              0.76085
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/transformer.glb",
+          "bytes": 148912,
+          "vertices": 5308,
+          "triangles": 6800,
+          "materials": 8,
+          "sha256": "3c6f17488f1eac9ad31b48f096fe041e49fc5939c96a23aec1b8cf2fee2485b6",
+          "bounds": {
+            "min": [
+              -1.40625,
+              -1.6775833333333332,
+              -0.30165
+            ],
+            "max": [
+              1.40625,
+              1.6775833333333332,
+              0.76085
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/transformer.glb",
+          "bytes": 256496,
+          "vertices": 8292,
+          "triangles": 12780,
+          "materials": 8,
+          "sha256": "d7377613240d7d2867c18a8c58c9b58d7f35cad320b904ffbe48fd516f6aa7c1",
+          "bounds": {
+            "min": [
+              -1.40625,
+              -1.6775833333333332,
+              -0.3329
+            ],
+            "max": [
+              1.40625,
+              1.6775833333333332,
+              0.7921
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "terminalBlock",
+      "terminalIds": [
+        "a",
+        "b"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/terminalBlock.glb",
+          "bytes": 19284,
+          "vertices": 532,
+          "triangles": 808,
+          "materials": 7,
+          "sha256": "1348d00780efc93a645b2f511abf0be97736694a49c5353504fd09b84dd1682a",
+          "bounds": {
+            "min": [
+              -0.58125,
+              -0.9915333333333334,
+              -0.41
+            ],
+            "max": [
+              0.58125,
+              0.9915333333333334,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/terminalBlock.glb",
+          "bytes": 28460,
+          "vertices": 788,
+          "triangles": 1288,
+          "materials": 8,
+          "sha256": "b0b9ea17c322d1db35bf3d3bf51242df70fd5c5fa2aac63e9961c85f28320148",
+          "bounds": {
+            "min": [
+              -0.58125,
+              -1.0525833333333334,
+              -0.41
+            ],
+            "max": [
+              0.58125,
+              1.0525833333333334,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/terminalBlock.glb",
+          "bytes": 38836,
+          "vertices": 1076,
+          "triangles": 1864,
+          "materials": 8,
+          "sha256": "2146786bfccae6bf96fa9e37ed4bcb1adae5b50eeb9378e2f1c242505c52e219",
+          "bounds": {
+            "min": [
+              -0.58125,
+              -1.0525833333333334,
+              -0.41
+            ],
+            "max": [
+              0.58125,
+              1.0525833333333334,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "voltmeter",
+      "terminalIds": [
+        "positive",
+        "negative"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/voltmeter.glb",
+          "bytes": 50740,
+          "vertices": 1556,
+          "triangles": 2312,
+          "materials": 10,
+          "sha256": "7d5861f156aa61fcd942ad4e8ee91a8274c361136cfd867ba0f8530b860b290e",
+          "bounds": {
+            "min": [
+              -0.9791666666666666,
+              -1.0748666666666666,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.9791666666666666,
+              1.0748666666666666,
+              0.6837
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/voltmeter.glb",
+          "bytes": 59192,
+          "vertices": 1796,
+          "triangles": 2776,
+          "materials": 10,
+          "sha256": "87c8d4e5c7d5aeece7f2b57d96fc0db28aa7d26a9a0a424b1e338f4853a0be63",
+          "bounds": {
+            "min": [
+              -0.9791666666666666,
+              -1.1359166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.9791666666666666,
+              1.1359166666666667,
+              0.6837
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/voltmeter.glb",
+          "bytes": 80412,
+          "vertices": 2442,
+          "triangles": 3898,
+          "materials": 10,
+          "sha256": "c535418208de277aa44257f6572b54726d9ca4938058b5ca939cdc0b6019596e",
+          "bounds": {
+            "min": [
+              -0.9791666666666666,
+              -1.1359166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.9791666666666666,
+              1.1359166666666667,
+              0.6837
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "ammeter",
+      "terminalIds": [
+        "positive",
+        "negative"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/ammeter.glb",
+          "bytes": 49532,
+          "vertices": 1516,
+          "triangles": 2252,
+          "materials": 10,
+          "sha256": "628756284c582f20e497c467ba27bca23a3e7d5af8e7a49aee58b842800de583",
+          "bounds": {
+            "min": [
+              -0.9791666666666666,
+              -1.0748666666666666,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.9791666666666666,
+              1.0748666666666666,
+              0.6837
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/ammeter.glb",
+          "bytes": 57984,
+          "vertices": 1756,
+          "triangles": 2716,
+          "materials": 10,
+          "sha256": "921787a0a2d983c1b262184ee5885a469b7b601d373ab927e7d79a702824d79d",
+          "bounds": {
+            "min": [
+              -0.9791666666666666,
+              -1.1359166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.9791666666666666,
+              1.1359166666666667,
+              0.6837
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/ammeter.glb",
+          "bytes": 79208,
+          "vertices": 2402,
+          "triangles": 3838,
+          "materials": 10,
+          "sha256": "88bc90244dec6be0d391c49d4c2c065c7c8d43f6b07fbd7718cc6fd6a2f9e72a",
+          "bounds": {
+            "min": [
+              -0.9791666666666666,
+              -1.1359166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.9791666666666666,
+              1.1359166666666667,
+              0.6837
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "digitalCounter",
+      "terminalIds": [
+        "voltageL",
+        "voltageN",
+        "currentIn",
+        "currentOut"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/digitalCounter.glb",
+          "bytes": 76388,
+          "vertices": 2430,
+          "triangles": 3574,
+          "materials": 10,
+          "sha256": "73d41c0185ec54cd3cd0c0b595ff36f82f465cffd0d7dd1223822766c93dbfc3",
+          "bounds": {
+            "min": [
+              -1.125,
+              -1.1790333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.125,
+              1.1790333333333332,
+              0.6837
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/digitalCounter.glb",
+          "bytes": 91560,
+          "vertices": 2862,
+          "triangles": 4406,
+          "materials": 10,
+          "sha256": "bda86d170e0b105c03af9b3c2028dd4d3fcb6993eb3c7efa4dfde0b39fc4bd2e",
+          "bounds": {
+            "min": [
+              -1.125,
+              -1.2400833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.125,
+              1.2400833333333332,
+              0.6837
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/digitalCounter.glb",
+          "bytes": 121284,
+          "vertices": 3742,
+          "triangles": 6002,
+          "materials": 10,
+          "sha256": "f3bfe86ae39ec9df2416f3d11218cb9d4dbc9e3a7da94f795e6ae9c979e8f9ae",
+          "bounds": {
+            "min": [
+              -1.125,
+              -1.2400833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.125,
+              1.2400833333333332,
+              0.6837
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "fuse",
+      "terminalIds": [
+        "line",
+        "load",
+        "input",
+        "output"
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/fuse.glb",
+          "bytes": 41856,
+          "vertices": 1214,
+          "triangles": 1886,
+          "materials": 11,
+          "sha256": "4ef67c13831f3983c2735ce49ecbac636dab815fd84f51ea5aa236f5db72eb54",
+          "bounds": {
+            "min": [
+              -0.75,
+              -1.1373666666666666,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.75,
+              1.1373666666666666,
+              0.9792000000000001
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/fuse.glb",
+          "bytes": 60584,
+          "vertices": 1750,
+          "triangles": 2910,
+          "materials": 11,
+          "sha256": "ce0289bf26e8587b63473aa0307f2dc89fc364d106d8b162bd93dd66426f38cb",
+          "bounds": {
+            "min": [
+              -0.75,
+              -1.1984166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.75,
+              1.1984166666666667,
+              0.9792000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/fuse.glb",
+          "bytes": 100740,
+          "vertices": 2933,
+          "triangles": 5073,
+          "materials": 11,
+          "sha256": "695c5ef65f4d7715b32ac90c99992de2fa082004c3dc1b4671c816144029555c",
+          "bounds": {
+            "min": [
+              -0.75,
+              -1.1984166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              0.75,
+              1.1984166666666667,
+              0.9792000000000001
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../models/board_geometry.dart';
 import '../models/component.dart';
 import '../models/component_catalog.dart';
 import '../models/geometry.dart';
@@ -11,8 +10,7 @@ import '../models/terminal.dart';
 import '../models/wire.dart';
 import '../simulation/simulation_result.dart';
 import '../state/editor_controller.dart';
-import '../three_d/mesh_model.dart';
-import '../three_d/mesh_view.dart';
+import '../three_d/asset_mesh_view.dart';
 import '../three_d/procedural_meshes.dart';
 import 'board_painter.dart';
 
@@ -33,7 +31,6 @@ class CircuitBoard extends StatefulWidget {
 class CircuitBoardState extends State<CircuitBoard> {
   final TransformationController _transformation = TransformationController();
   Size _viewportSize = Size.zero;
-  bool _initialized = false;
 
   @override
   void dispose() {
@@ -43,7 +40,7 @@ class CircuitBoardState extends State<CircuitBoard> {
 
   BoardPoint get visibleCenter {
     final matrix = _transformation.value;
-    final scale = math.max(0.35, matrix.getMaxScaleOnAxis());
+    final scale = math.max(0.08, matrix.getMaxScaleOnAxis());
     final translation = matrix.getTranslation();
     return BoardPoint(
       (_viewportSize.width / 2 - translation.x) / scale,
@@ -51,45 +48,28 @@ class CircuitBoardState extends State<CircuitBoard> {
     );
   }
 
-  /// Fits existing devices instead of showing an empty corner of the board. An
-  /// empty project includes the supply bay and a useful DIN working area.
+  static const double _frameMargin = 12;
+
+  double get _fitScale {
+    if (_viewportSize.isEmpty) return 1;
+    final project = widget.controller.project;
+    return math.min(
+      (_viewportSize.width - _frameMargin * 2) / project.boardWidth,
+      (_viewportSize.height - _frameMargin * 2) / project.boardHeight,
+    ).clamp(0.08, 2.0).toDouble();
+  }
+
+  double get _maximumScale =>
+      math.max(1.5, _fitScale * 4).clamp(1.5, 3.0).toDouble();
+
+  /// Fits the complete fixed mounting plate, including its frame, DIN rails and
+  /// supply bay. It never focuses on a subset that could crop the enclosure.
   void fitToContent() {
     if (_viewportSize.isEmpty) return;
     final project = widget.controller.project;
-    final hasUserDevices = project.components.any(
-      (component) => !SupplyBay.isFixed(component),
-    );
-    Rect? content = hasUserDevices
-        ? null
-        : Rect.fromLTWH(
-            28,
-            28,
-            math.min(620, project.boardWidth - 56),
-            620,
-          );
-    for (final component in project.components) {
-      if (hasUserDevices && SupplyBay.isFixed(component)) continue;
-      final bounds = BoardGeometry.bounds(component, padding: 36);
-      content = content == null ? bounds : content.expandToInclude(bounds);
-    }
-    final focus = content == null
-        ? BoardPoint(project.boardWidth / 2, project.boardHeight / 2)
-        : BoardPoint(content.center.dx, content.center.dy);
-    final scale = content == null
-        ? math.min(
-            1.0,
-            math.max(
-              0.55,
-              math.min(_viewportSize.width / 700, _viewportSize.height / 550),
-            ),
-          )
-        : math.min(
-            _viewportSize.width / math.max(260, content.width + 150),
-            _viewportSize.height / math.max(220, content.height + 150),
-          ).clamp(0.35, 1.35).toDouble();
     _applyViewport(
-      scale,
-      focus,
+      _fitScale,
+      BoardPoint(project.boardWidth / 2, project.boardHeight / 2),
       Offset(_viewportSize.width / 2, _viewportSize.height / 2),
     );
   }
@@ -97,7 +77,7 @@ class CircuitBoardState extends State<CircuitBoard> {
   void zoomBy(double delta) {
     if (_viewportSize.isEmpty) return;
     final current = _transformation.value.getMaxScaleOnAxis();
-    final next = (current + delta).clamp(0.35, 3.0).toDouble();
+    final next = (current * (1 + delta)).clamp(_fitScale, _maximumScale).toDouble();
     final focal = Offset(_viewportSize.width / 2, _viewportSize.height / 2);
     final translation = _transformation.value.getTranslation();
     final boardFocus = BoardPoint(
@@ -110,11 +90,34 @@ class CircuitBoardState extends State<CircuitBoard> {
   void _applyViewport(double scale, BoardPoint boardFocus, Offset screenFocus) {
     final tx = screenFocus.dx - boardFocus.x * scale;
     final ty = screenFocus.dy - boardFocus.y * scale;
-    _transformation.value = Matrix4.diagonal3Values(scale, scale, 1)
+    _transformation.value = _boundedMatrix(
+      Matrix4.diagonal3Values(scale, scale, 1)..setTranslationRaw(tx, ty, 0),
+    );
+    _syncController();
+  }
+
+  Matrix4 _boundedMatrix(Matrix4 candidate) {
+    final project = widget.controller.project;
+    final scale = candidate.getMaxScaleOnAxis().clamp(_fitScale, _maximumScale).toDouble();
+    final translation = candidate.getTranslation();
+    final width = project.boardWidth * scale;
+    final height = project.boardHeight * scale;
+    double axisTranslation(double viewport, double scaled, double value) {
+      if (scaled <= viewport) return (viewport - scaled) / 2;
+      return value.clamp(viewport - scaled, 0).toDouble();
+    }
+
+    final tx = axisTranslation(_viewportSize.width, width, translation.x);
+    final ty = axisTranslation(_viewportSize.height, height, translation.y);
+    return Matrix4.diagonal3Values(scale, scale, 1)
       ..setTranslationRaw(tx, ty, 0);
+  }
+
+  void _syncController() {
+    final matrix = _transformation.value;
     widget.controller.setViewport(
-      scale: scale,
-      offset: BoardPoint(tx, ty),
+      scale: matrix.getMaxScaleOnAxis(),
+      offset: BoardPoint(matrix.storage[12], matrix.storage[13]),
     );
   }
 
@@ -131,43 +134,29 @@ class CircuitBoardState extends State<CircuitBoard> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           final nextSize = constraints.biggest;
-          BoardPoint? previousCenter;
-          if (_viewportSize != nextSize) {
-            if (_initialized && !_viewportSize.isEmpty) {
-              previousCenter = visibleCenter;
-            }
+          if (_viewportSize != nextSize && !nextSize.isEmpty) {
             _viewportSize = nextSize;
-          }
-          if (!_initialized && !nextSize.isEmpty) {
-            _initialized = true;
+            _transformation.value = _boundedMatrix(Matrix4.identity());
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) fitToContent();
-            });
-          } else if (previousCenter != null) {
-            final scale = _transformation.value.getMaxScaleOnAxis();
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!mounted || _viewportSize != nextSize) return;
-              _applyViewport(
-                scale,
-                previousCenter!,
-                Offset(nextSize.width / 2, nextSize.height / 2),
-              );
+              if (mounted && _viewportSize == nextSize) fitToContent();
             });
           }
           return InteractiveViewer(
             transformationController: _transformation,
             constrained: false,
-            boundaryMargin: const EdgeInsets.all(500),
-            minScale: 0.35,
+            boundaryMargin: EdgeInsets.zero,
+            minScale: 0.08,
             maxScale: 3,
-            panEnabled: true,
+            // One-finger gestures belong to devices and wires, never to the
+            // fixed enclosure. Two-finger zoom remains bounded to the plate.
+            panEnabled: false,
             scaleEnabled: true,
+            onInteractionUpdate: (_) {
+              _transformation.value = _boundedMatrix(_transformation.value);
+            },
             onInteractionEnd: (_) {
-              final matrix = _transformation.value;
-              controller.setViewport(
-                scale: matrix.getMaxScaleOnAxis(),
-                offset: BoardPoint(matrix.storage[12], matrix.storage[13]),
-              );
+              _transformation.value = _boundedMatrix(_transformation.value);
+              _syncController();
             },
             child: SizedBox(
               width: project.boardWidth,
@@ -222,7 +211,7 @@ class CircuitBoardState extends State<CircuitBoard> {
     final wire = controller.selectedWire;
     if (wire == null) return const <Widget>[];
     final points = WireRouter.route(controller.project, wire);
-    final hitSize = 30 / controller.zoom.clamp(0.35, 3.0);
+    final hitSize = 30 / controller.zoom.clamp(0.08, 3.0);
     return <Widget>[
       for (var index = 0; index < wire.waypoints.length; index++)
         Positioned(
@@ -241,8 +230,8 @@ class CircuitBoardState extends State<CircuitBoard> {
                 index,
                 current.waypoints[index] +
                     BoardPoint(
-                      details.delta.dx / math.max(0.35, controller.zoom),
-                      details.delta.dy / math.max(0.35, controller.zoom),
+                      details.delta.dx / math.max(0.08, controller.zoom),
+                      details.delta.dy / math.max(0.08, controller.zoom),
                     ),
                 transient: true,
               );
@@ -311,30 +300,6 @@ class BoardComponent extends StatefulWidget {
 }
 
 class _BoardComponentState extends State<BoardComponent> {
-  late DeviceMesh _mesh;
-
-  @override
-  void initState() {
-    super.initState();
-    _mesh = ProceduralMeshes.forComponent(
-      widget.component,
-      detail: MeshDetail.board,
-    );
-  }
-
-  @override
-  void didUpdateWidget(BoardComponent oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.component.kind != widget.component.kind ||
-        oldWidget.component.properties['color'] !=
-            widget.component.properties['color']) {
-      _mesh = ProceduralMeshes.forComponent(
-        widget.component,
-        detail: MeshDetail.board,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final component = widget.component;
@@ -399,8 +364,8 @@ class _BoardComponentState extends State<BoardComponent> {
                     component.id,
                     component.position +
                         BoardPoint(
-                          details.delta.dx / math.max(0.35, controller.zoom),
-                          details.delta.dy / math.max(0.35, controller.zoom),
+                          details.delta.dx / math.max(0.08, controller.zoom),
+                          details.delta.dy / math.max(0.08, controller.zoom),
                         ),
                     transient: true,
                   )
@@ -438,8 +403,9 @@ class _BoardComponentState extends State<BoardComponent> {
                         : null,
                   ),
                   child: RepaintBoundary(
-                    child: DeviceMeshView(
-                      mesh: _mesh,
+                    child: ComponentMeshView(
+                      component: component,
+                      detail: MeshDetail.board,
                       fixedScale: 48 * scale,
                     ),
                   ),
@@ -468,7 +434,7 @@ class _BoardComponentState extends State<BoardComponent> {
                     component: component,
                     scale: scale,
                     origin: hitOverflow,
-                    hitSize: 34 / controller.zoom.clamp(0.35, 3.0),
+                    hitSize: 34 / controller.zoom.clamp(0.08, 3.0),
                     interactive: !controller.isRunning,
                     pending: controller.pendingWireStart ==
                         TerminalRef(

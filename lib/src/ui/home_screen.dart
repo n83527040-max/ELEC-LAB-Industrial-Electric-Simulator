@@ -494,9 +494,7 @@ class _ProjectCard extends StatelessWidget {
                   child: SizedBox(
                     width: project.boardWidth,
                     height: project.boardHeight,
-                    child: CustomPaint(
-                      painter: SchematicExportPainter(project: project),
-                    ),
+                    child: ProjectThumbnail(project: project),
                   ),
                 ),
               );

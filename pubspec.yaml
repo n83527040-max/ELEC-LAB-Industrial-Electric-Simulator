@@ -29,6 +29,10 @@ flutter:
     - assets/icon/app_icon.png
     - assets/fonts/Amiri-Regular.ttf
     - assets/fonts/OFL.txt
+    - assets/models/manifest.json
+    - assets/models/board/
+    - assets/models/preview/
+    - assets/models/detailed/
   fonts:
     - family: Amiri
       fonts:

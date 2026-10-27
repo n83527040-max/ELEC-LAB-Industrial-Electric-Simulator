@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/component_catalog.dart';
 import '../models/terminal.dart';
 import '../state/editor_controller.dart';
-import '../three_d/mesh_view.dart';
+import '../three_d/asset_mesh_view.dart';
 import '../three_d/procedural_meshes.dart';
 
 class ComponentDetailsSheet extends StatefulWidget {
@@ -78,11 +78,10 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                       Column(
                         children: <Widget>[
                           Expanded(
-                            child: InteractiveMeshViewer(
-                              mesh: ProceduralMeshes.forComponent(
-                                component,
-                                detail: MeshDetail.detailed,
-                              ),
+                            child: ComponentMeshView(
+                              component: component,
+                              detail: MeshDetail.detailed,
+                              interactive: true,
                             ),
                           ),
                           Padding(

@@ -94,7 +94,7 @@ class EditorController extends ChangeNotifier {
   }
 
   void setViewport({double? scale, BoardPoint? offset}) {
-    if (scale != null) zoom = scale.clamp(0.35, 3.0).toDouble();
+    if (scale != null) zoom = scale.clamp(0.08, 3.0).toDouble();
     if (offset != null) viewportOffset = offset;
     notifyListeners();
   }

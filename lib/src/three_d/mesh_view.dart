@@ -130,8 +130,8 @@ class MeshPainter extends CustomPainter {
         path,
         Paint()
           ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.3
-          ..color = Colors.black.withValues(alpha: 0.2),
+          ..strokeWidth = 0.22
+          ..color = Colors.black.withValues(alpha: 0.055),
       );
     }
 

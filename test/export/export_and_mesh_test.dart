@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:elec_lab/src/export/project_exporter.dart';
+import 'package:elec_lab/src/three_d/glb_mesh_loader.dart';
 import 'package:elec_lab/src/models/component_catalog.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
@@ -15,13 +16,13 @@ import '../test_helpers.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('3D devices are real polygon meshes with catalog-matched terminals', () {
+  test('3D devices are real polygon meshes with catalog-matched terminals', () async {
     final project = ProjectTemplates.apply(
       ElectricalProject.empty(id: 'mesh', name: 'Mesh', now: testNow),
       ProjectTemplateKind.selfHolding,
     );
     for (final component in project.components) {
-      final mesh = ProceduralMeshes.forComponent(component);
+      final mesh = await DeviceMeshRepository.forComponent(component);
       expect(mesh.vertices.length, greaterThanOrEqualTo(8));
       expect(mesh.faces, isNotEmpty);
       expect(
@@ -35,17 +36,17 @@ void main() {
     }
   });
 
-  test('every catalog device has distinct lightweight and detailed LOD meshes', () {
+  test('every catalog device has distinct lightweight and detailed LOD meshes', () async {
     for (final kind in ComponentKind.values) {
-      final board = ProceduralMeshes.forKind(kind, detail: MeshDetail.board);
-      final detailed = ProceduralMeshes.forKind(
+      final board = await DeviceMeshRepository.forKind(kind, detail: MeshDetail.board);
+      final detailed = await DeviceMeshRepository.forKind(
         kind,
         detail: MeshDetail.detailed,
       );
       expect(board.vertices, isNotEmpty, reason: kind.name);
       expect(detailed.faces.length, greaterThan(board.faces.length), reason: kind.name);
       expect(
-        identical(board, ProceduralMeshes.forKind(kind, detail: MeshDetail.board)),
+        identical(board, await DeviceMeshRepository.forKind(kind, detail: MeshDetail.board)),
         isTrue,
         reason: 'Board geometry should be lazily cached.',
       );
@@ -58,9 +59,9 @@ void main() {
     }
   });
 
-  test('mesh terminals are generated at exact catalog coordinates', () {
+  test('mesh terminals are generated at exact catalog coordinates', () async {
     for (final spec in ComponentCatalog.byKind.values) {
-      final mesh = ProceduralMeshes.forKind(spec.kind);
+      final mesh = await DeviceMeshRepository.forKind(spec.kind);
       for (final terminal in spec.terminals) {
         final actual = mesh.terminals.singleWhere((item) => item.id == terminal.id);
         final expectedX =
@@ -73,15 +74,18 @@ void main() {
     }
   });
 
-  test('industrial device families differ in geometry, not only labels or colors', () {
+  test('industrial device families differ in geometry, not only labels or colors', () async {
     final kinds = ComponentKind.values;
-    final signatures = kinds.map((kind) {
-      final mesh = ProceduralMeshes.forKind(kind);
-      return mesh.vertices
-          .map((vertex) =>
-              '${vertex.x.toStringAsFixed(4)},${vertex.y.toStringAsFixed(4)},${vertex.z.toStringAsFixed(4)}')
-          .join('|');
-    }).toSet();
+    final signatures = <String>{};
+    for (final kind in kinds) {
+      final mesh = await DeviceMeshRepository.forKind(kind);
+      signatures.add(
+        mesh.vertices
+            .map((vertex) =>
+                '${vertex.x.toStringAsFixed(4)},${vertex.y.toStringAsFixed(4)},${vertex.z.toStringAsFixed(4)}')
+            .join('|'),
+      );
+    }
     expect(signatures.length, kinds.length);
   });
 
@@ -91,7 +95,7 @@ void main() {
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder);
       MeshPainter(
-        mesh: ProceduralMeshes.forKind(kind),
+        mesh: await DeviceMeshRepository.forKind(kind),
         fitPadding: 0.88,
       ).paint(canvas, size);
       final picture = recorder.endRecording();
@@ -129,7 +133,10 @@ void main() {
             width: 400,
             height: 400,
             child: InteractiveMeshViewer(
-              mesh: ProceduralMeshes.forComponent(component),
+              mesh: await DeviceMeshRepository.forComponent(
+                component,
+                detail: MeshDetail.detailed,
+              ),
             ),
           ),
         ),

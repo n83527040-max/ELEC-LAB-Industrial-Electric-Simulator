@@ -9,14 +9,17 @@ import 'package:pdf/widgets.dart' as pw;
 import '../models/component_catalog.dart';
 import '../models/project.dart';
 import '../models/supply_bay.dart';
+import '../three_d/glb_mesh_loader.dart';
+import '../three_d/mesh_model.dart';
 import '../three_d/mesh_view.dart';
 import '../three_d/procedural_meshes.dart';
 import '../ui/board_painter.dart';
 
 class SchematicExportPainter extends CustomPainter {
-  const SchematicExportPainter({required this.project});
+  const SchematicExportPainter({required this.project, required this.meshes});
 
   final ElectricalProject project;
+  final Map<String, DeviceMesh> meshes;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -47,10 +50,7 @@ class SchematicExportPainter extends CustomPainter {
       canvas.rotate(component.rotation * math.pi / 2);
       canvas.scale(component.scale);
       canvas.translate(-spec.size.width / 2, -spec.size.height / 2);
-      final mesh = ProceduralMeshes.forComponent(
-        component,
-        detail: MeshDetail.board,
-      );
+      final mesh = meshes[component.id]!;
       MeshPainter(
         mesh: mesh,
         rotationX: 0,
@@ -98,10 +98,62 @@ class SchematicExportPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(SchematicExportPainter oldDelegate) =>
-      oldDelegate.project != project;
+      oldDelegate.project != project || oldDelegate.meshes != meshes;
+}
+
+class ProjectThumbnail extends StatelessWidget {
+  const ProjectThumbnail({required this.project, super.key});
+
+  final ElectricalProject project;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, DeviceMesh>>(
+      future: ProjectExporter.loadMeshes(project),
+      builder: (context, snapshot) {
+        final meshes = snapshot.data;
+        if (meshes == null) {
+          return ColoredBox(
+            color: const Color(0xff14273b),
+            child: Center(
+              child: snapshot.hasError
+                  ? const Icon(Icons.error_outline, color: Colors.orange)
+                  : const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 1.6),
+                    ),
+            ),
+          );
+        }
+        return CustomPaint(
+          painter: SchematicExportPainter(project: project, meshes: meshes),
+        );
+      },
+    );
+  }
 }
 
 abstract final class ProjectExporter {
+  static Future<Map<String, DeviceMesh>> loadMeshes(
+    ElectricalProject project,
+  ) async {
+    final loaded = await Future.wait(
+      project.components.map(
+        (component) async => MapEntry(
+          component.id,
+          await DeviceMeshRepository.forComponent(
+            component,
+            detail: MeshDetail.board,
+          ),
+        ),
+      ),
+    );
+    return <String, DeviceMesh>{
+      for (final entry in loaded) entry.key: entry.value,
+    };
+  }
+
   static Future<Uint8List> renderPng(
     ElectricalProject project, {
     int maxDimension = 1800,
@@ -109,10 +161,11 @@ abstract final class ProjectExporter {
     final scale = maxDimension / math.max(project.boardWidth, project.boardHeight);
     final width = (project.boardWidth * scale).round();
     final height = (project.boardHeight * scale).round();
+    final meshes = await loadMeshes(project);
     final recorder = ui.PictureRecorder();
     final canvas = Canvas(recorder);
     canvas.scale(scale);
-    SchematicExportPainter(project: project).paint(
+    SchematicExportPainter(project: project, meshes: meshes).paint(
       canvas,
       Size(project.boardWidth, project.boardHeight),
     );
