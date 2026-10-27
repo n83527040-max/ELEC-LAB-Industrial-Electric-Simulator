@@ -1,5 +1,6 @@
 import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/project.dart';
+import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/state/editor_controller.dart';
 import 'package:elec_lab/src/ui/app_theme.dart';
 import 'package:elec_lab/src/ui/circuit_board.dart';

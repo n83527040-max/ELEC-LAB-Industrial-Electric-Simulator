@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/component.dart';
 import '../models/component_catalog.dart';
+import '../models/terminal.dart';
 import '../three_d/mesh_view.dart';
 import '../three_d/procedural_meshes.dart';
 

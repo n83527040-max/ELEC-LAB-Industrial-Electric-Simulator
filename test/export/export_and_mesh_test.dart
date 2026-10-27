@@ -1,6 +1,6 @@
 import 'package:elec_lab/src/export/project_exporter.dart';
-import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/component_catalog.dart';
+import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
 import 'package:elec_lab/src/three_d/mesh_view.dart';
