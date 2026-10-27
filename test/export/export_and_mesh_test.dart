@@ -75,6 +75,6 @@ void main() {
     final bytes = await ProjectExporter.renderPdf(project);
     expect(bytes.length, greaterThan(1500));
     expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
-    expect(String.fromCharCodes(bytes.takeLast(20)), contains('EOF'));
+    expect(String.fromCharCodes(bytes.sublist(bytes.length - 20)), contains('EOF'));
   });
 }

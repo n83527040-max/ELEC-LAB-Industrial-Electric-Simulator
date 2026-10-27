@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../learning/challenges.dart';
 import '../models/component.dart';
 import '../models/component_catalog.dart';
+import '../models/terminal.dart';
 import '../simulation/simulation_result.dart';
 import '../state/editor_controller.dart';
 

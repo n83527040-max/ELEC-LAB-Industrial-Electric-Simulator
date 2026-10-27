@@ -33,7 +33,12 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
   Widget build(BuildContext context) {
     final controller = widget.controller;
     final wire = controller.selectedWire;
-    if (wire == null) return const SizedBox(height: 120, child: Center(child: Text('اختر سلكاً.')));
+    if (wire == null) {
+      return const SizedBox(
+        height: 120,
+        child: Center(child: Text('اختر سلكاً.')),
+      );
+    }
     return AnimatedBuilder(
       animation: controller,
       builder: (context, _) {

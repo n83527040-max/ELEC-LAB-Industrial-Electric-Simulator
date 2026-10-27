@@ -6,10 +6,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../export/project_exporter.dart';
-import '../models/terminal.dart';
 import '../models/component_catalog.dart';
 import '../models/geometry.dart';
 import '../models/project.dart';
+import '../models/terminal.dart';
 import '../state/editor_controller.dart';
 import '../storage/project_repository.dart';
 import 'circuit_board.dart';

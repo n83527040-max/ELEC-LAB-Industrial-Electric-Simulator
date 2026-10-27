@@ -1,6 +1,7 @@
 import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
+import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/models/wire.dart';
 import 'package:elec_lab/src/simulation/electrical_simulator.dart';
 import 'package:flutter_test/flutter_test.dart';
