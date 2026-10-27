@@ -63,7 +63,10 @@ void main() {
       await tester.scrollUntilVisible(
         find.byKey(Key('component-card-${kind.name}')),
         240,
-        scrollable: find.byKey(const Key('component-grid')),
+        scrollable: find.descendant(
+          of: find.byKey(const Key('component-grid')),
+          matching: find.byType(Scrollable),
+        ),
       );
       await tester.pump();
       expect(tester.takeException(), isNull, reason: kind.name);

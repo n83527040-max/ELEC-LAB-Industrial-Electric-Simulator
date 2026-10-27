@@ -32,10 +32,12 @@ void main() {
         device(
           'g1',
           ComponentKind.acSupply,
+          x: 40,
+          y: 100,
           overrides: const <String, Object>{'voltage': 230.0},
         ),
-        device('t1', ComponentKind.transformer),
-        device('h1', ComponentKind.indicator),
+        device('t1', ComponentKind.transformer, x: 280, y: 100),
+        device('h1', ComponentKind.indicator, x: 520, y: 100),
       ],
       <CircuitWire>[
         connection('w1', 'g1', 'line', 't1', 'primaryLine'),

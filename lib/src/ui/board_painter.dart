@@ -129,6 +129,7 @@ class BoardPainter extends CustomPainter {
             Color(0xffe6eaec),
             Color(0xff8b979f),
           ],
+          const <double>[0, 0.5, 1],
         ),
     );
     final lip = Paint()..color = const Color(0xff59666f);
