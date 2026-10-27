@@ -63,6 +63,9 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                   ),
                 ),
                 TabBar(
+                  isScrollable: true,
+                  tabAlignment: TabAlignment.start,
+                  labelPadding: const EdgeInsets.symmetric(horizontal: 14),
                   tabs: const <Tab>[
                     Tab(text: 'مجسم 3D'),
                     Tab(text: 'الخصائص'),
@@ -76,7 +79,10 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                         children: <Widget>[
                           Expanded(
                             child: InteractiveMeshViewer(
-                              mesh: ProceduralMeshes.forComponent(component),
+                              mesh: ProceduralMeshes.forComponent(
+                                component,
+                                detail: MeshDetail.detailed,
+                              ),
                             ),
                           ),
                           Padding(

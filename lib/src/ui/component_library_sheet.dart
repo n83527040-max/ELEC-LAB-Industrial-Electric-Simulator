@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../models/component.dart';
 import '../models/component_catalog.dart';
-import '../models/geometry.dart';
-import '../models/terminal.dart';
 import '../three_d/mesh_view.dart';
 import '../three_d/procedural_meshes.dart';
 
@@ -15,89 +13,133 @@ class ComponentLibrarySheet extends StatefulWidget {
 }
 
 class _ComponentLibrarySheetState extends State<ComponentLibrarySheet> {
+  final TextEditingController _searchController = TextEditingController();
   String _query = '';
   ComponentCategory? _category;
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final items = ComponentCatalog.search(_query, _category);
-    return FractionallySizedBox(
-      heightFactor: 0.88,
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    'إضافة عنصر',
-                    style: Theme.of(context).textTheme.headlineSmall,
+    return SafeArea(
+      top: false,
+      child: FractionallySizedBox(
+        heightFactor: 0.9,
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 18, 0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      'مكتبة العناصر',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.close),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(14),
-            child: TextField(
-              autofocus: false,
-              onChanged: (value) => setState(() => _query = value),
-              decoration: const InputDecoration(
-                hintText: 'ابحث: Contacteur, MCB, Moteur…',
-                prefixIcon: Icon(Icons.search),
+                  Text(
+                    '${items.length} جهاز',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                    tooltip: 'إغلاق المكتبة',
+                  ),
+                ],
               ),
             ),
-          ),
-          SizedBox(
-            height: 42,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 6),
-                  child: ChoiceChip(
-                    label: const Text('الكل'),
-                    selected: _category == null,
-                    onSelected: (_) => setState(() => _category = null),
-                  ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(14, 4, 14, 10),
+              child: TextField(
+                key: const Key('component-search'),
+                controller: _searchController,
+                autofocus: false,
+                onChanged: (value) => setState(() => _query = value),
+                decoration: InputDecoration(
+                  hintText: 'ابحث بالاسم أو Contacteur, MCB…',
+                  prefixIcon: const Icon(Icons.search),
+                  isDense: true,
+                  suffixIcon: _query.isEmpty
+                      ? null
+                      : IconButton(
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _query = '');
+                          },
+                          icon: const Icon(Icons.clear),
+                          tooltip: 'مسح البحث',
+                        ),
                 ),
-                ...ComponentCategory.values.map(
-                  (category) => Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: ChoiceChip(
-                      label: Text(ComponentCatalog.categoryName(category)),
-                      selected: _category == category,
-                      onSelected: (_) => setState(() => _category = category),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: items.isEmpty
-                ? const Center(child: Text('لا توجد عناصر مطابقة.'))
-                : GridView.builder(
-                    padding: const EdgeInsets.fromLTRB(14, 4, 14, 24),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: MediaQuery.sizeOf(context).width > 600 ? 4 : 2,
-                      childAspectRatio: 0.86,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
+            SizedBox(
+              height: 40,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                children: <Widget>[
+                  _categoryChip(null, 'الكل'),
+                  ...ComponentCategory.values.map(
+                    (category) => _categoryChip(
+                      category,
+                      ComponentCatalog.categoryName(category),
                     ),
-                    itemCount: items.length,
-                    itemBuilder: (context, index) =>
-                        _ComponentCard(spec: items[index]),
                   ),
-          ),
-        ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: items.isEmpty
+                  ? const Center(child: Text('لا توجد عناصر مطابقة.'))
+                  : LayoutBuilder(
+                      builder: (context, constraints) {
+                        final width = constraints.maxWidth;
+                        final columns = width >= 920
+                            ? 5
+                            : width >= 680
+                                ? 4
+                                : width >= 470
+                                    ? 3
+                                    : 2;
+                        return GridView.builder(
+                          key: const Key('component-grid'),
+                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 20),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: columns,
+                            childAspectRatio: width < 370 ? 0.76 : 0.82,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemCount: items.length,
+                          itemBuilder: (context, index) => RepaintBoundary(
+                            child: _ComponentCard(spec: items[index]),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _categoryChip(ComponentCategory? category, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 6),
+      child: ChoiceChip(
+        label: Text(label),
+        selected: _category == category,
+        showCheckmark: false,
+        onSelected: (_) => setState(() => _category = category),
       ),
     );
   }
@@ -110,39 +152,96 @@ class _ComponentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final example = CircuitComponent(
-      id: 'preview',
-      kind: spec.kind,
-      label: spec.nameFr,
-      position: BoardPoint.zero,
-      layerId: 'power',
-      properties: spec.defaultProperties,
-    );
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final mesh = ProceduralMeshes.forKind(spec.kind);
     return Card(
+      elevation: 0,
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.18),
+        ),
+      ),
       child: InkWell(
         onTap: () => Navigator.pop(context, spec.kind),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: <Widget>[
-              Expanded(child: DeviceMeshView(mesh: ProceduralMeshes.forComponent(example))),
-              const SizedBox(height: 4),
-              Text(
-                spec.nameAr,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(
-                spec.nameFr,
-                textDirection: TextDirection.ltr,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 11, color: Colors.blueGrey),
-              ),
-              const Icon(Icons.add_circle_outline, size: 18, color: Color(0xff087ff5)),
-            ],
+        child: Semantics(
+          button: true,
+          label: 'إضافة ${spec.nameAr} ${spec.nameFr}',
+          child: Padding(
+            padding: const EdgeInsets.all(7),
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: dark
+                            ? const <Color>[Color(0xff1a2a38), Color(0xff101a24)]
+                            : const <Color>[Color(0xfff4f7f9), Color(0xffe4ebf0)],
+                      ),
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Positioned.fill(
+                          child: Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: DeviceMeshView(
+                              mesh: mesh,
+                              fitPadding: 0.88,
+                              showShadow: true,
+                            ),
+                          ),
+                        ),
+                        const Positioned(
+                          top: 3,
+                          left: 3,
+                          child: Icon(
+                            Icons.add_circle,
+                            size: 19,
+                            color: Color(0xff159bff),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  height: 32,
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      spec.nameAr,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        height: 1.18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+                Text(
+                  spec.nameFr,
+                  textDirection: TextDirection.ltr,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 10,
+                    height: 1.1,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

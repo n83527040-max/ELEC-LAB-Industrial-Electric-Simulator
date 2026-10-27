@@ -17,6 +17,7 @@ class BoardPainter extends CustomPainter {
     required this.visibleLayers,
     this.result,
     this.selectedWireId,
+    this.industrialSurface = true,
   });
 
   final ElectricalProject project;
@@ -25,12 +26,16 @@ class BoardPainter extends CustomPainter {
   final Set<String> visibleLayers;
   final SimulationResult? result;
   final String? selectedWireId;
+  final bool industrialSurface;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final background = Paint()..color = const Color(0xffbcc4cc);
+    final background = Paint()
+      ..color = Color(industrialSurface ? 0xffbcc4cc : 0xffdce3e8);
     canvas.drawRect(Offset.zero & size, background);
-    _paintMetal(canvas, size);
+    if (industrialSurface) {
+      _paintMetal(canvas, size);
+    }
     if (showGrid) _paintGrid(canvas, size);
     for (final wire in project.wires) {
       if (!visibleLayers.contains(wire.layerId)) continue;

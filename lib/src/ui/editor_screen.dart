@@ -36,6 +36,7 @@ class EditorScreen extends StatefulWidget {
 
 class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver {
   late final EditorController _controller;
+  final GlobalKey<CircuitBoardState> _boardKey = GlobalKey<CircuitBoardState>();
   String? _observedWire;
   bool _busy = false;
 
@@ -136,6 +137,16 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                     value: 'snap',
                     child: Text(_controller.snapToGrid ? 'تعطيل Snap' : 'تفعيل Snap'),
                   ),
+                  PopupMenuItem(
+                    value: 'surface',
+                    child: Text(
+                      _controller.industrialSurface
+                          ? 'استعمال شبكة خفيفة'
+                          : 'استعمال لوحة تركيب صناعية',
+                    ),
+                  ),
+                  const PopupMenuItem(value: 'fit', child: Text('ملاءمة الدائرة للشاشة')),
+                  const PopupMenuItem(value: 'results', child: Text('النتائج والتشخيص')),
                   const PopupMenuItem(value: 'png', child: Text('تصدير صورة PNG')),
                   const PopupMenuItem(value: 'pdf', child: Text('تصدير PDF')),
                   const PopupMenuItem(value: 'project', child: Text('مشاركة ملف المشروع')),
@@ -149,7 +160,7 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
             children: <Widget>[
               Positioned.fill(
                 child: CircuitBoard(
-                  key: const Key('circuit-board'),
+                  key: _boardKey,
                   controller: _controller,
                   onShowDetails: (component) => _showDetails(component.id),
                 ),
@@ -198,30 +209,34 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                     ),
                   ),
                 ),
-              Positioned(
-                left: 10,
-                bottom: 86,
-                child: Card(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        onPressed: () => _controller.setViewport(
-                          scale: _controller.zoom - 0.15,
+              if (_controller.selectedComponent == null)
+                Positioned(
+                  left: 10,
+                  bottom: 82,
+                  child: Card(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        IconButton(
+                          onPressed: () => _boardKey.currentState?.zoomBy(-0.15),
+                          icon: const Icon(Icons.remove),
+                          tooltip: 'تصغير',
                         ),
-                        icon: const Icon(Icons.remove),
-                      ),
-                      Text('${(_controller.zoom * 100).round()}%'),
-                      IconButton(
-                        onPressed: () => _controller.setViewport(
-                          scale: _controller.zoom + 0.15,
+                        Text('${(_controller.zoom * 100).round()}%'),
+                        IconButton(
+                          onPressed: () => _boardKey.currentState?.zoomBy(0.15),
+                          icon: const Icon(Icons.add),
+                          tooltip: 'تكبير',
                         ),
-                        icon: const Icon(Icons.add),
-                      ),
-                    ],
+                        IconButton(
+                          onPressed: () => _boardKey.currentState?.fitToContent(),
+                          icon: const Icon(Icons.fit_screen),
+                          tooltip: 'ملاءمة الدائرة',
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
               if (_controller.selectedComponent != null)
                 Positioned(
                   left: 8,
@@ -267,11 +282,6 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                       onPressed: _showLayers,
                       icon: const Icon(Icons.layers),
                       tooltip: 'الطبقات',
-                    ),
-                    IconButton(
-                      onPressed: _showResults,
-                      icon: const Icon(Icons.monitor_heart_outlined),
-                      tooltip: 'النتائج والتشخيص',
                     ),
                   ],
                 ),
@@ -351,6 +361,12 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
         _controller.setGrid(visible: !_controller.showGrid);
       case 'snap':
         _controller.setGrid(snap: !_controller.snapToGrid);
+      case 'surface':
+        _controller.setIndustrialSurface(!_controller.industrialSurface);
+      case 'fit':
+        _boardKey.currentState?.fitToContent();
+      case 'results':
+        _showResults();
       case 'png':
         unawaited(_export('png'));
       case 'pdf':

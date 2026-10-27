@@ -26,16 +26,74 @@ class CircuitBoard extends StatefulWidget {
   final ValueChanged<CircuitComponent> onShowDetails;
 
   @override
-  State<CircuitBoard> createState() => _CircuitBoardState();
+  State<CircuitBoard> createState() => CircuitBoardState();
 }
 
-class _CircuitBoardState extends State<CircuitBoard> {
+class CircuitBoardState extends State<CircuitBoard> {
   final TransformationController _transformation = TransformationController();
+  Size _viewportSize = Size.zero;
+  bool _initialized = false;
 
   @override
   void dispose() {
     _transformation.dispose();
     super.dispose();
+  }
+
+  /// Fits existing devices instead of showing an empty corner of the board. An
+  /// empty project is centred where the first device will be inserted.
+  void fitToContent() {
+    if (_viewportSize.isEmpty) return;
+    final project = widget.controller.project;
+    Rect? content;
+    for (final component in project.components) {
+      final bounds = BoardGeometry.bounds(component, padding: 36);
+      content = content == null ? bounds : content.expandToInclude(bounds);
+    }
+    final focus = content == null
+        ? BoardPoint(project.boardWidth / 2, project.boardHeight / 2)
+        : BoardPoint(content.center.dx, content.center.dy);
+    final scale = content == null
+        ? math.min(
+            1.0,
+            math.max(
+              0.55,
+              math.min(_viewportSize.width / 700, _viewportSize.height / 550),
+            ),
+          )
+        : math.min(
+            _viewportSize.width / math.max(260, content.width + 150),
+            _viewportSize.height / math.max(220, content.height + 150),
+          ).clamp(0.35, 1.35).toDouble();
+    _applyViewport(
+      scale,
+      focus,
+      Offset(_viewportSize.width / 2, _viewportSize.height / 2),
+    );
+  }
+
+  void zoomBy(double delta) {
+    if (_viewportSize.isEmpty) return;
+    final current = _transformation.value.getMaxScaleOnAxis();
+    final next = (current + delta).clamp(0.35, 3.0).toDouble();
+    final focal = Offset(_viewportSize.width / 2, _viewportSize.height / 2);
+    final translation = _transformation.value.getTranslation();
+    final boardFocus = BoardPoint(
+      (focal.dx - translation.x) / current,
+      (focal.dy - translation.y) / current,
+    );
+    _applyViewport(next, boardFocus, focal);
+  }
+
+  void _applyViewport(double scale, BoardPoint boardFocus, Offset screenFocus) {
+    final tx = screenFocus.dx - boardFocus.x * scale;
+    final ty = screenFocus.dy - boardFocus.y * scale;
+    _transformation.value = Matrix4.diagonal3Values(scale, scale, 1)
+      ..setTranslationRaw(tx, ty, 0);
+    widget.controller.setViewport(
+      scale: scale,
+      offset: BoardPoint(tx, ty),
+    );
   }
 
   @override
@@ -46,68 +104,75 @@ class _CircuitBoardState extends State<CircuitBoard> {
         .where((layer) => layer.visible)
         .map((layer) => layer.id)
         .toSet();
-    final currentScale = _transformation.value.getMaxScaleOnAxis();
-    if ((currentScale - controller.zoom).abs() > 0.005) {
-      _transformation.value = Matrix4.diagonal3Values(
-        controller.zoom,
-        controller.zoom,
-        1,
-      );
-    }
     return ColoredBox(
       color: const Color(0xff101923),
-      child: InteractiveViewer(
-        transformationController: _transformation,
-        constrained: false,
-        boundaryMargin: const EdgeInsets.all(500),
-        minScale: 0.35,
-        maxScale: 3,
-        panEnabled: true,
-        scaleEnabled: true,
-        onInteractionEnd: (_) {
-          final matrix = _transformation.value;
-          controller.setViewport(
-            scale: matrix.getMaxScaleOnAxis(),
-            offset: BoardPoint(matrix.storage[12], matrix.storage[13]),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final nextSize = constraints.biggest;
+          if (_viewportSize != nextSize) _viewportSize = nextSize;
+          if (!_initialized && !nextSize.isEmpty) {
+            _initialized = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) fitToContent();
+            });
+          }
+          return InteractiveViewer(
+            transformationController: _transformation,
+            constrained: false,
+            boundaryMargin: const EdgeInsets.all(500),
+            minScale: 0.35,
+            maxScale: 3,
+            panEnabled: true,
+            scaleEnabled: true,
+            onInteractionEnd: (_) {
+              final matrix = _transformation.value;
+              controller.setViewport(
+                scale: matrix.getMaxScaleOnAxis(),
+                offset: BoardPoint(matrix.storage[12], matrix.storage[13]),
+              );
+            },
+            child: SizedBox(
+              width: project.boardWidth,
+              height: project.boardHeight,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTapUp: (details) => _handleBoardTap(details.localPosition),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: <Widget>[
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: BoardPainter(
+                          project: project,
+                          showGrid: controller.showGrid,
+                          gridSize: controller.gridSize,
+                          visibleLayers: visibleLayers,
+                          result: controller.result,
+                          selectedWireId: controller.selectedWireId,
+                          industrialSurface: controller.industrialSurface,
+                        ),
+                      ),
+                    ),
+                    ...project.components
+                        .where(
+                          (component) => visibleLayers.contains(component.layerId),
+                        )
+                        .map(
+                          (component) => BoardComponent(
+                            key: ValueKey<String>(component.id),
+                            component: component,
+                            controller: controller,
+                            reading: controller.result?[component.id],
+                            onShowDetails: () => widget.onShowDetails(component),
+                          ),
+                        ),
+                    ..._buildWaypoints(),
+                  ],
+                ),
+              ),
+            ),
           );
         },
-        child: SizedBox(
-          width: project.boardWidth,
-          height: project.boardHeight,
-          child: GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTapUp: (details) => _handleBoardTap(details.localPosition),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: <Widget>[
-                Positioned.fill(
-                  child: CustomPaint(
-                    painter: BoardPainter(
-                      project: project,
-                      showGrid: controller.showGrid,
-                      gridSize: controller.gridSize,
-                      visibleLayers: visibleLayers,
-                      result: controller.result,
-                      selectedWireId: controller.selectedWireId,
-                    ),
-                  ),
-                ),
-                ...project.components.where(
-                  (component) => visibleLayers.contains(component.layerId),
-                ).map(
-                  (component) => BoardComponent(
-                    key: ValueKey<String>(component.id),
-                    component: component,
-                    controller: controller,
-                    reading: controller.result?[component.id],
-                    onShowDetails: () => widget.onShowDetails(component),
-                  ),
-                ),
-                ..._buildWaypoints(),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -117,11 +182,14 @@ class _CircuitBoardState extends State<CircuitBoard> {
     final wire = controller.selectedWire;
     if (wire == null) return const <Widget>[];
     final points = WireRouter.route(controller.project, wire);
+    final hitSize = 30 / controller.zoom.clamp(0.35, 3.0);
     return <Widget>[
       for (var index = 0; index < wire.waypoints.length; index++)
         Positioned(
-          left: points[index + 1].x - 11,
-          top: points[index + 1].y - 11,
+          left: points[index + 1].x - hitSize / 2,
+          top: points[index + 1].y - hitSize / 2,
+          width: hitSize,
+          height: hitSize,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onPanStart: (_) => controller.beginInteraction(),
@@ -142,13 +210,15 @@ class _CircuitBoardState extends State<CircuitBoard> {
             onPanEnd: (_) => controller.endInteraction(),
             onPanCancel: controller.endInteraction,
             onDoubleTap: () => controller.removeWireWaypoint(wire.id, index),
-            child: Container(
-              width: 22,
-              height: 22,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xff087ff5), width: 3),
+            child: Center(
+              child: Container(
+                width: 18,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xff087ff5), width: 3),
+                ),
               ),
             ),
           ),
@@ -173,7 +243,11 @@ class _CircuitBoardState extends State<CircuitBoard> {
         nearest = wire;
       }
     }
-    controller.selectWire(nearest?.id);
+    if (nearest == null) {
+      controller.selectComponent(null);
+    } else {
+      controller.selectWire(nearest.id);
+    }
   }
 }
 
@@ -201,15 +275,20 @@ class _BoardComponentState extends State<BoardComponent> {
   @override
   void initState() {
     super.initState();
-    _mesh = ProceduralMeshes.forComponent(widget.component);
+    _mesh = ProceduralMeshes.forComponent(
+      widget.component,
+      detail: MeshDetail.board,
+    );
   }
 
   @override
   void didUpdateWidget(BoardComponent oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.component.kind != widget.component.kind ||
-        oldWidget.component.text('color') != widget.component.text('color')) {
-      _mesh = ProceduralMeshes.forComponent(widget.component);
+    if (oldWidget.component.kind != widget.component.kind) {
+      _mesh = ProceduralMeshes.forComponent(
+        widget.component,
+        detail: MeshDetail.board,
+      );
     }
   }
 
@@ -222,7 +301,8 @@ class _BoardComponentState extends State<BoardComponent> {
     final width = spec.size.width * scale;
     final height = spec.size.height * scale;
     final selected = controller.selectedComponentId == component.id;
-    final showLabels = selected || controller.pendingWireStart != null;
+    final showTerminals = !controller.isRunning &&
+        (selected || controller.pendingWireStart != null);
     final reading = widget.reading;
     final active = reading?.active ?? false;
     final tripped = reading?.tripped ?? false;
@@ -303,22 +383,28 @@ class _BoardComponentState extends State<BoardComponent> {
                           ]
                         : null,
                   ),
-                  child: DeviceMeshView(mesh: _mesh),
+                  child: RepaintBoundary(
+                    child: DeviceMeshView(
+                      mesh: _mesh,
+                      fixedScale: 48 * scale,
+                    ),
+                  ),
                 ),
               ),
-              for (final terminal in spec.terminals)
-                _TerminalButton(
-                  terminal: terminal,
-                  component: component,
-                  scale: scale,
-                  showLabel: showLabels,
-                  pending: controller.pendingWireStart ==
-                      TerminalRef(
-                        componentId: component.id,
-                        terminalId: terminal.id,
-                      ),
-                  onTap: () => _handleTerminal(terminal),
-                ),
+              if (showTerminals)
+                for (final terminal in spec.terminals)
+                  _TerminalButton(
+                    terminal: terminal,
+                    component: component,
+                    scale: scale,
+                    hitSize: 34 / controller.zoom.clamp(0.35, 3.0),
+                    pending: controller.pendingWireStart ==
+                        TerminalRef(
+                          componentId: component.id,
+                          terminalId: terminal.id,
+                        ),
+                    onTap: () => _handleTerminal(terminal),
+                  ),
               Positioned(
                 bottom: -18,
                 left: 0,
@@ -378,7 +464,7 @@ class _TerminalButton extends StatelessWidget {
     required this.terminal,
     required this.component,
     required this.scale,
-    required this.showLabel,
+    required this.hitSize,
     required this.pending,
     required this.onTap,
   });
@@ -386,40 +472,41 @@ class _TerminalButton extends StatelessWidget {
   final TerminalDefinition terminal;
   final CircuitComponent component;
   final double scale;
-  final bool showLabel;
+  final double hitSize;
   final bool pending;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final size = 22.0;
-    final left = terminal.position.x * scale - size / 2;
-    final top = terminal.position.y * scale - size / 2;
+    final left = terminal.position.x * scale - hitSize / 2;
+    final top = terminal.position.y * scale - hitSize / 2;
     final color = pending ? const Color(0xffffb300) : const Color(0xff00b7ff);
     return Positioned(
       left: left,
       top: top,
-      width: size,
-      height: size,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.center,
-          children: <Widget>[
-            Container(
-              width: pending ? 15 : 11,
-              height: pending ? 15 : 11,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: color.withValues(alpha: 0.22),
-                border: Border.all(color: color, width: 2),
+      width: hitSize,
+      height: hitSize,
+      child: Semantics(
+        button: true,
+        label: 'طرف ${terminal.label} في ${component.label}',
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: onTap,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: <Widget>[
+              Container(
+                width: pending ? 15 : 11,
+                height: pending ? 15 : 11,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: color.withValues(alpha: 0.28),
+                  border: Border.all(color: color, width: 2),
+                ),
               ),
-            ),
-            if (showLabel)
               Positioned(
-                top: terminal.position.y * scale < 20 ? 11 : -15,
+                top: terminal.position.y * scale < 20 ? hitSize / 2 : -15,
                 child: Container(
                   color: const Color(0xdd07111f),
                   padding: const EdgeInsets.symmetric(horizontal: 2),
@@ -434,7 +521,8 @@ class _TerminalButton extends StatelessWidget {
                   ),
                 ),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );

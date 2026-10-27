@@ -40,8 +40,16 @@ class SchematicExportPainter extends CustomPainter {
       canvas.rotate(component.rotation * math.pi / 2);
       canvas.scale(component.scale);
       canvas.translate(-spec.size.width / 2, -spec.size.height / 2);
-      final mesh = ProceduralMeshes.forComponent(component);
-      MeshPainter(mesh: mesh).paint(canvas, spec.size);
+      final mesh = ProceduralMeshes.forComponent(
+        component,
+        detail: MeshDetail.board,
+      );
+      MeshPainter(
+        mesh: mesh,
+        rotationX: 0,
+        rotationY: 0,
+        fixedScale: 48,
+      ).paint(canvas, spec.size);
       for (final terminal in spec.terminals) {
         final text = TextPainter(
           text: TextSpan(

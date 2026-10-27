@@ -70,7 +70,7 @@ void main() {
 
     await tester.tap(find.byKey(const Key('add-component')));
     await tester.pumpAndSettle();
-    expect(find.text('إضافة عنصر'), findsOneWidget);
+    expect(find.text('مكتبة العناصر'), findsOneWidget);
     await tester.tap(find.text('مصدر تغذية DC'));
     await tester.pumpAndSettle();
     expect(find.text('G1'), findsWidgets);

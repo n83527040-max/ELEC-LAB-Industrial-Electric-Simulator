@@ -11,7 +11,7 @@ abstract final class BoardGeometry {
   static BoardPoint center(CircuitComponent component) {
     final size = ComponentCatalog.specOf(component.kind).size;
     return component.position +
-        BoardPoint(size.width / 2, size.height / 2);
+        BoardPoint(size.width * component.scale / 2, size.height * component.scale / 2);
   }
 
   static BoardPoint terminalPosition(
@@ -82,28 +82,38 @@ abstract final class WireRouter {
 
     final midX = (start.x + end.x) / 2;
     final midY = (start.y + end.y) / 2;
-    final candidates = <List<BoardPoint>>[
-      <BoardPoint>[
-        start,
-        BoardPoint(midX, start.y),
-        BoardPoint(midX, end.y),
-        end,
-      ],
-      <BoardPoint>[
-        start,
-        BoardPoint(start.x, midY),
-        BoardPoint(end.x, midY),
-        end,
-      ],
-      <BoardPoint>[start, BoardPoint(start.x, end.y), end],
-      <BoardPoint>[start, BoardPoint(end.x, start.y), end],
-    ];
     final obstacles = project.components
         .where(
           (item) => item.id != fromComponent.id && item.id != toComponent.id,
         )
-        .map((item) => BoardGeometry.bounds(item, padding: 12))
+        .map((item) => BoardGeometry.bounds(item, padding: 14))
         .toList(growable: false);
+    final channelsX = <double>{midX};
+    final channelsY = <double>{midY};
+    for (final rect in obstacles) {
+      channelsX.add((rect.left - 26).clamp(8.0, project.boardWidth - 8).toDouble());
+      channelsX.add((rect.right + 26).clamp(8.0, project.boardWidth - 8).toDouble());
+      channelsY.add((rect.top - 26).clamp(8.0, project.boardHeight - 8).toDouble());
+      channelsY.add((rect.bottom + 26).clamp(8.0, project.boardHeight - 8).toDouble());
+    }
+    final candidates = <List<BoardPoint>>[
+      <BoardPoint>[start, BoardPoint(start.x, end.y), end],
+      <BoardPoint>[start, BoardPoint(end.x, start.y), end],
+      for (final x in channelsX)
+        <BoardPoint>[
+          start,
+          BoardPoint(x, start.y),
+          BoardPoint(x, end.y),
+          end,
+        ],
+      for (final y in channelsY)
+        <BoardPoint>[
+          start,
+          BoardPoint(start.x, y),
+          BoardPoint(end.x, y),
+          end,
+        ],
+    ];
     candidates.sort(
       (a, b) => _score(a, obstacles).compareTo(_score(b, obstacles)),
     );
@@ -111,7 +121,7 @@ abstract final class WireRouter {
   }
 
   static double _score(List<BoardPoint> points, List<Rect> obstacles) {
-    var score = 0.0;
+    var score = (points.length > 2 ? points.length - 2 : 0) * 9.0;
     for (var index = 0; index < points.length - 1; index++) {
       final a = points[index];
       final b = points[index + 1];

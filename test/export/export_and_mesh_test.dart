@@ -1,4 +1,5 @@
 import 'package:elec_lab/src/export/project_exporter.dart';
+import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/component_catalog.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
@@ -30,6 +31,70 @@ void main() {
       );
       expect(mesh.faces.every((face) => face.indices.length >= 3), isTrue);
     }
+  });
+
+  test('every catalog device has distinct lightweight and detailed LOD meshes', () {
+    for (final kind in ComponentKind.values) {
+      final board = ProceduralMeshes.forKind(kind, detail: MeshDetail.board);
+      final detailed = ProceduralMeshes.forKind(
+        kind,
+        detail: MeshDetail.detailed,
+      );
+      expect(board.vertices, isNotEmpty, reason: kind.name);
+      expect(detailed.faces.length, greaterThan(board.faces.length), reason: kind.name);
+      expect(
+        identical(board, ProceduralMeshes.forKind(kind, detail: MeshDetail.board)),
+        isTrue,
+        reason: 'Board geometry should be lazily cached.',
+      );
+      for (final vertex in detailed.vertices) {
+        expect(vertex.x.isFinite && vertex.y.isFinite && vertex.z.isFinite, isTrue);
+      }
+      for (final face in detailed.faces) {
+        expect(face.indices.every((index) => index >= 0 && index < detailed.vertices.length), isTrue);
+      }
+    }
+  });
+
+  test('mesh terminals are generated at exact catalog coordinates', () {
+    for (final spec in ComponentCatalog.byKind.values) {
+      final mesh = ProceduralMeshes.forKind(spec.kind);
+      for (final terminal in spec.terminals) {
+        final actual = mesh.terminals.singleWhere((item) => item.id == terminal.id);
+        final expectedX =
+            (terminal.position.x / spec.size.width - 0.5) * spec.size.width / 48;
+        final expectedY =
+            (0.5 - terminal.position.y / spec.size.height) * spec.size.height / 48;
+        expect(actual.position.x, closeTo(expectedX, 1e-9), reason: terminal.id);
+        expect(actual.position.y, closeTo(expectedY, 1e-9), reason: terminal.id);
+      }
+    }
+  });
+
+  test('industrial device families differ in geometry, not only labels or colors', () {
+    const kinds = <ComponentKind>[
+      ComponentKind.contactor,
+      ComponentKind.circuitBreaker,
+      ComponentKind.thermalRelay,
+      ComponentKind.motor3Phase,
+      ComponentKind.pushButtonNO,
+      ComponentKind.pushButtonNC,
+      ComponentKind.timer,
+      ComponentKind.sensor,
+      ComponentKind.indicator,
+      ComponentKind.terminalBlock,
+      ComponentKind.dcSupply,
+      ComponentKind.voltmeter,
+      ComponentKind.ammeter,
+    ];
+    final signatures = kinds.map((kind) {
+      final mesh = ProceduralMeshes.forKind(kind);
+      return mesh.vertices
+          .map((vertex) =>
+              '${vertex.x.toStringAsFixed(4)},${vertex.y.toStringAsFixed(4)},${vertex.z.toStringAsFixed(4)}')
+          .join('|');
+    }).toSet();
+    expect(signatures.length, kinds.length);
   });
 
   testWidgets('3D viewer responds to rotation gestures', (tester) async {

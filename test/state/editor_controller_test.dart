@@ -108,6 +108,8 @@ void main() {
     expect(controller.zoom, 0.35);
     controller.setGrid(visible: false, snap: false, size: 25);
     expect(controller.showGrid, isFalse);
+    controller.setIndustrialSurface(false);
+    expect(controller.industrialSurface, isFalse);
     expect(controller.snap(const BoardPoint(31, 32)), const BoardPoint(31, 32));
     controller.setGrid(snap: true);
     expect(controller.snap(const BoardPoint(31, 32)), const BoardPoint(25, 25));

@@ -47,6 +47,7 @@ class EditorController extends ChangeNotifier {
   String? selectedComponentId;
   String? selectedWireId;
   bool showGrid = true;
+  bool industrialSurface = true;
   bool snapToGrid = true;
   double gridSize = 20;
   double zoom = 1;
@@ -94,6 +95,11 @@ class EditorController extends ChangeNotifier {
     showGrid = visible ?? showGrid;
     snapToGrid = snap ?? snapToGrid;
     if (size != null) gridSize = size.clamp(5, 100).toDouble();
+    notifyListeners();
+  }
+
+  void setIndustrialSurface(bool value) {
+    industrialSurface = value;
     notifyListeners();
   }
 
@@ -178,8 +184,17 @@ class EditorController extends ChangeNotifier {
   void resizeComponent(String id, double scale) {
     final component = _project.componentById(id);
     if (component == null || _isLocked(component.layerId)) return;
+    final nextScale = scale.clamp(0.6, 1.8).toDouble();
+    final spec = ComponentCatalog.specOf(component.kind);
     _replaceComponent(
-      component.copyWith(scale: scale.clamp(0.6, 1.8).toDouble()),
+      component.copyWith(
+        scale: nextScale,
+        position: _clampPosition(
+          component.position,
+          spec.size.width * nextScale,
+          spec.size.height * nextScale,
+        ),
+      ),
     );
   }
 
@@ -221,8 +236,8 @@ class EditorController extends ChangeNotifier {
       label: _nextLabel(component.kind),
       position: _clampPosition(
         snap(component.position + const BoardPoint(30, 30)),
-        spec.size.width,
-        spec.size.height,
+        spec.size.width * component.scale,
+        spec.size.height * component.scale,
       ),
       layerId: component.layerId,
       rotation: component.rotation,

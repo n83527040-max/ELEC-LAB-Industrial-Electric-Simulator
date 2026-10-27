@@ -53,6 +53,21 @@ void main() {
       );
       expect(spec.size.width, greaterThan(0));
     });
+
+    test('scaled and rotated terminals use the same centre as board rendering', () {
+      final component = device('k1', ComponentKind.contactor, x: 120, y: 80)
+          .copyWith(scale: 1.4, rotation: 1);
+      final spec = ComponentCatalog.specOf(component.kind);
+      final terminal = spec.terminal('l1');
+      final expectedCenter = component.position +
+          BoardPoint(spec.size.width * 1.4 / 2, spec.size.height * 1.4 / 2);
+      final delta = (terminal.position -
+              BoardPoint(spec.size.width / 2, spec.size.height / 2)) *
+          1.4;
+      final expected = expectedCenter + BoardPoint(-delta.y, delta.x);
+      expect(BoardGeometry.center(component), expectedCenter);
+      expect(BoardGeometry.terminalPosition(component, 'l1'), expected);
+    });
   });
 
   group('Project schema', () {
@@ -170,6 +185,24 @@ void main() {
       expect(points.last, BoardGeometry.terminalPosition(project.components[1], 'a'));
       expect(points.toSet().length, points.length);
       expect(points.length, greaterThanOrEqualTo(2));
+    });
+
+    test('automatic orthogonal routing detours around another device', () {
+      final project = projectOf(
+        <CircuitComponent>[
+          device('g1', ComponentKind.dcSupply, x: 50, y: 100),
+          device('k1', ComponentKind.contactor, x: 300, y: 60),
+          device('x1', ComponentKind.terminalBlock, x: 600, y: 100),
+        ],
+        <CircuitWire>[connection('w1', 'g1', 'positive', 'x1', 'a')],
+      );
+      final points = WireRouter.route(project, project.wires.single);
+      expect(points.length, greaterThanOrEqualTo(4));
+      expect(
+        points.any((point) => point.y < 60 || point.y > 218),
+        isTrue,
+        reason: 'The selected channel should leave the contactor bounding box.',
+      );
     });
 
     test('wire sizing uses declared conditions and exposes disclaimer', () {
