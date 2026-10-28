@@ -65,7 +65,7 @@ Workflow [`.github/workflows/android.yml`](.github/workflows/android.yml) ينف
 
 <https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/actions>
 
-الإصدار الموثق الحالي هو **v0.4.0**؛ نجح في Format وAnalyze و**75/75 اختباراً** وبناء APK وفحص التوقيع والحزمة ونشر Release في [CI run 40618977368](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/actions/runs/40618977368). يمكن تنزيله مباشرة من [GitHub Release](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/releases/download/v0.4.0/app-release.apk). الحجم **69,119,205 bytes (65.92 MiB)** وSHA-256 هو `46ec36fc28f6ba60563f330d3e606d6f61adc0bcbbb4250cfb7718e1469f8859`. روابط CI والأصول المتحقق منها والقيود الكاملة موثقة في [`docs/FINAL_REPORT.md`](docs/FINAL_REPORT.md).
+الإصدار المنشور الحالي هو **v0.5.0**؛ نجح في Format الصارم وAnalyze و**99/99 اختباراً** وبناء APK وفحص التوقيع والحزمة ونشر Release في [CI run 40767439321](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/actions/runs/40767439321). نزّل [APK مباشرة](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/releases/download/v0.5.0/app-release.apk) أو افتح [صفحة Release](https://github.com/n83527040-max/ELEC-LAB-Industrial-Electric-Simulator/releases/tag/v0.5.0). الحجم **72,105,383 bytes (68.77 MiB)** وSHA-256 هو `090a561c6d3b54f77b212d66524e38f658104c973d243a23d0ea62cc405aa9db`. يحتوي Release أيضاً `verification.json` و`apk-sha256.txt`. الروابط والوظائف المكتملة والقيود الصريحة موثقة في [`docs/FINAL_REPORT.md`](docs/FINAL_REPORT.md).
 
 ## بنية المصدر
 
