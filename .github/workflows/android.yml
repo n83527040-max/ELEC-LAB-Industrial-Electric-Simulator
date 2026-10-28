@@ -36,34 +36,6 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Audit published APK signing and archive integrity
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          mkdir -p /tmp/elec-signing-audit
-          for TAG in v0.4.0 v0.5.0; do
-            mkdir -p "/tmp/elec-signing-audit/$TAG"
-            gh release download "$TAG" --pattern app-release.apk --dir "/tmp/elec-signing-audit/$TAG" --clobber
-          done
-          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
-          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -n 1)
-          AAPT=$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)
-          for TAG in v0.4.0 v0.5.0; do
-            APK="/tmp/elec-signing-audit/$TAG/app-release.apk"
-            unzip -tqq "$APK"
-            "$ZIPALIGN" -c 4 "$APK"
-            "$APKSIGNER" verify --verbose --print-certs "$APK" > "/tmp/$TAG-signature.log"
-            "$AAPT" dump badging "$APK" | head -n 4
-            python3 - "$TAG" "/tmp/$TAG-signature.log" <<'PY'
-          import sys
-          tag, path = sys.argv[1:]
-          for line in open(path, encoding='utf-8'):
-              line = line.strip()
-              if 'Verified using' in line or 'certificate SHA-256 digest' in line:
-                  print('::notice::' + tag + ' ' + line)
-          PY
-          done
-
       - name: Install Flutter stable
         uses: subosito/flutter-action@v2
         with:
@@ -168,14 +140,38 @@ jobs:
         run: |
           APK=build/app/outputs/flutter-apk/app-release.apk
           test -s "$APK"
+          unzip -tqq "$APK"
           APKSIGNER=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
-          "$APKSIGNER" verify --verbose "$APK"
+          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -n 1)
+          "$ZIPALIGN" -c 4 "$APK"
+          "$APKSIGNER" verify --min-sdk-version 23 --verbose --print-certs "$APK" | tee signature.log
+          python3 - signature.log <<'PY'
+          import pathlib
+          import re
+          import sys
+          raw = pathlib.Path(sys.argv[1]).read_text(encoding='utf-8')
+          required = (
+              'Verified using v1 scheme (JAR signing): true',
+              'Verified using v2 scheme (APK Signature Scheme v2): true',
+          )
+          missing = [line for line in required if line not in raw]
+          if missing:
+              raise SystemExit('APK signing compatibility check failed: ' + '; '.join(missing))
+          certificates = re.findall(r'certificate SHA-256 digest:\s*([0-9a-fA-F]{64})', raw)
+          if not certificates:
+              raise SystemExit('APK signing certificate digest was not reported.')
+          pathlib.Path('signing-cert-sha256.txt').write_text(certificates[0].lower() + '\n')
+          for line in raw.splitlines():
+              if 'Verified using' in line or 'certificate SHA-256 digest' in line:
+                  print('::notice::APK ' + line.strip())
+          PY
           AAPT=$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)
           "$AAPT" dump badging "$APK" | head -n 8
           stat -c 'APK_SIZE_BYTES=%s' "$APK"
           sha256sum "$APK" | tee apk-sha256.txt
           export APK_SIZE=$(stat -c '%s' "$APK")
           export APK_SHA=$(cut -d' ' -f1 apk-sha256.txt)
+          export CERT_SHA=$(cat signing-cert-sha256.txt)
           export TEST_COUNT=$(cat test-count.txt)
           export APP_VERSION=$(grep '^version:' pubspec.yaml | cut -d' ' -f2)
           python3 - <<'PY'
@@ -200,7 +196,15 @@ jobs:
                   'command': 'flutter test --coverage --timeout=45s --concurrency=1',
               },
               'releaseBuild': 'passed',
-              'apkSignature': 'apksigner verify passed; debug evaluation key',
+              'apkSignature': {
+                  'status': 'passed for minSdk 23',
+                  'v1JarSigning': True,
+                  'v2WholeApkSigning': True,
+                  'certificateSha256': os.environ['CERT_SHA'],
+                  'identity': 'CI debug evaluation key; not a store upload key',
+              },
+              'archiveIntegrity': 'unzip -tqq passed',
+              'zipAlignment': 'zipalign -c 4 passed',
               'packageCheck': 'aapt dump badging passed',
               'apkSizeBytes': int(os.environ['APK_SIZE']),
               'apkSha256': os.environ['APK_SHA'],
@@ -219,6 +223,8 @@ jobs:
           path: |
             build/app/outputs/flutter-apk/app-release.apk
             apk-sha256.txt
+            signing-cert-sha256.txt
+            signature.log
             verification.json
             coverage/lcov.info
           retention-days: 30
@@ -228,17 +234,19 @@ jobs:
         if: success() && ((github.event_name == 'workflow_dispatch' && inputs.publish_release) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[release]')))
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ inputs.release_tag || 'v0.5.0' }}
+          RELEASE_TAG: ${{ inputs.release_tag || 'v0.5.1' }}
         run: |
           APK=build/app/outputs/flutter-apk/app-release.apk
           if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
             gh release create "$RELEASE_TAG" \
               --target "${{ github.sha }}" \
               --title "ELEC LAB $RELEASE_TAG" \
-              --notes "Verified Flutter CI build. Debug-signed evaluation APK; see docs/FINAL_REPORT.md for tests, size and limitations."
+              --notes "Android 6+ installability hotfix: APK Signature Scheme v1 + v2, ZIP and zipalign verified. CI debug-signed evaluation APK; uninstall an older differently-signed build after backing up projects. See docs/FINAL_REPORT.md."
           fi
           gh release upload "$RELEASE_TAG" \
-            "$APK#ELEC-LAB-${RELEASE_TAG#v}-android.apk" \
+            "$APK#app-release.apk" \
             apk-sha256.txt \
+            signing-cert-sha256.txt \
+            signature.log \
             verification.json \
             --clobber

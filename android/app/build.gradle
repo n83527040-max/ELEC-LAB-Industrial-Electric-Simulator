@@ -26,10 +26,22 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        evaluation {
+            // Reuse the CI debug identity for this sideloaded evaluation app.
+            // Explicit v1 is required by Android 6 / API 23; v2 covers Android 7+.
+            initWith(signingConfigs.debug)
+            enableV1Signing = true
+            enableV2Signing = true
+            enableV3Signing = false
+            enableV4Signing = false
+        }
+    }
+
     buildTypes {
         release {
-            // Installable CI build. Replace with a private upload key for store distribution.
-            signingConfig = signingConfigs.debug
+            // Replace the evaluation identity with a private upload key for stores.
+            signingConfig = signingConfigs.evaluation
             minifyEnabled = false
             shrinkResources = false
         }
