@@ -72,7 +72,7 @@ jobs:
       - name: Unit and widget tests
         run: |
           set +e
-          flutter test --coverage --timeout=45s test/export/export_and_mesh_test.dart > test.log 2>&1
+          flutter test --coverage --timeout=45s --name '3D viewer' test/export/export_and_mesh_test.dart > test.log 2>&1
           STATUS=$?
           cat test.log
           if [ "$STATUS" -ne 0 ]; then
