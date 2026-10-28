@@ -34,7 +34,8 @@ void main() {
         (id, reading) => MapEntry(id, reading.toJson()),
       )}');
       print('DOL_WIRES ${result.wireCurrents}');
-      print('DOL_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
+      print(
+          'DOL_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
     }
     expect(result['km1']!.energized, isTrue);
     expect(result['m1']!.active, isTrue);
@@ -64,7 +65,8 @@ void main() {
         (id, reading) => MapEntry(id, reading.toJson()),
       )}');
       print('STAR_WIRES ${result.wireCurrents}');
-      print('STAR_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
+      print(
+          'STAR_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
     }
     expect(result.success, isTrue);
     expect(result['km1']!.energized, isTrue);
