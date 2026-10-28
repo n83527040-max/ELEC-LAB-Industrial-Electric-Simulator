@@ -156,7 +156,7 @@ class _ProjectThumbnailState extends State<ProjectThumbnail> {
           );
         }
         return CustomPaint(
-          painter: SchematicExportPainter(project: widget.project, meshes: meshes!),
+          painter: SchematicExportPainter(project: widget.project, meshes: meshes),
         );
       },
     );
