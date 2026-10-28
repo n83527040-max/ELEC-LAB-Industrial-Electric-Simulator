@@ -50,7 +50,11 @@ class SchematicExportPainter extends CustomPainter {
       canvas.rotate(component.rotation * math.pi / 2);
       canvas.scale(component.scale);
       canvas.translate(-spec.size.width / 2, -spec.size.height / 2);
-      final mesh = meshes[component.id]!;
+      final mesh = meshes[component.id];
+      if (mesh == null) {
+        canvas.restore();
+        continue;
+      }
       MeshPainter(
         mesh: mesh,
         rotationX: 0,
@@ -122,8 +126,7 @@ class _ProjectThumbnailState extends State<ProjectThumbnail> {
   @override
   void didUpdateWidget(ProjectThumbnail oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.project.id != widget.project.id ||
-        oldWidget.project.updatedAt != widget.project.updatedAt) {
+    if (!identical(oldWidget.project, widget.project)) {
       _meshes = ProjectExporter.loadMeshes(widget.project);
     }
   }
@@ -134,7 +137,11 @@ class _ProjectThumbnailState extends State<ProjectThumbnail> {
       future: _meshes,
       builder: (context, snapshot) {
         final meshes = snapshot.data;
-        if (meshes == null) {
+        final ready = meshes != null &&
+            widget.project.components.every(
+              (component) => meshes.containsKey(component.id),
+            );
+        if (!ready) {
           return ColoredBox(
             color: const Color(0xff14273b),
             child: Center(
@@ -149,7 +156,7 @@ class _ProjectThumbnailState extends State<ProjectThumbnail> {
           );
         }
         return CustomPaint(
-          painter: SchematicExportPainter(project: widget.project, meshes: meshes),
+          painter: SchematicExportPainter(project: widget.project, meshes: meshes!),
         );
       },
     );
