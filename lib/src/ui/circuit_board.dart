@@ -90,10 +90,13 @@ class CircuitBoardState extends State<CircuitBoard> {
   }
 
   void _applyViewport(double scale, BoardPoint boardFocus, Offset screenFocus) {
+    debugPrint('APPLY scale=$scale focus=$boardFocus screen=$screenFocus');
     final tx = screenFocus.dx - boardFocus.x * scale;
     final ty = screenFocus.dy - boardFocus.y * scale;
     _transformation.value = _boundedMatrix(
-      Matrix4.diagonal3Values(scale, scale, 1)..setTranslationRaw(tx, ty, 0),
+      Matrix4.identity()
+        ..scale(scale, scale, 1)
+        ..setTranslationRaw(tx, ty, 0),
     );
     _syncController();
   }
@@ -111,7 +114,8 @@ class CircuitBoardState extends State<CircuitBoard> {
 
     final tx = axisTranslation(_viewportSize.width, width, translation.x);
     final ty = axisTranslation(_viewportSize.height, height, translation.y);
-    final bounded = Matrix4.diagonal3Values(scale, scale, 1)
+    final bounded = Matrix4.identity()
+      ..scale(scale, scale, 1)
       ..setTranslationRaw(tx, ty, 0);
     debugPrint('BOUND candidate=${candidate.getMaxScaleOnAxis()} scale=$scale result=${bounded.getMaxScaleOnAxis()} diagonal=${bounded.storage[0]}');
     return bounded;
