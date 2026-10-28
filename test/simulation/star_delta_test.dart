@@ -30,11 +30,11 @@ void main() {
     project = setProperty(project, 's1', 'pressed', true);
     result = simulator.step(project);
     if (!result['km1']!.energized) {
-      print('DOL_DEBUG ${result.devices.map(
+      debugPrint('DOL_DEBUG ${result.devices.map(
         (id, reading) => MapEntry(id, reading.toJson()),
       )}');
-      print('DOL_WIRES ${result.wireCurrents}');
-      print(
+      debugPrint('DOL_WIRES ${result.wireCurrents}');
+      debugPrint(
           'DOL_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
     }
     expect(result['km1']!.energized, isTrue);
@@ -61,11 +61,11 @@ void main() {
     project = setProperty(project, 's1', 'pressed', true);
     var result = simulator.step(project);
     if (!result['km1']!.energized) {
-      print('STAR_DEBUG ${result.devices.map(
+      debugPrint('STAR_DEBUG ${result.devices.map(
         (id, reading) => MapEntry(id, reading.toJson()),
       )}');
-      print('STAR_WIRES ${result.wireCurrents}');
-      print(
+      debugPrint('STAR_WIRES ${result.wireCurrents}');
+      debugPrint(
           'STAR_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
     }
     expect(result.success, isTrue);
