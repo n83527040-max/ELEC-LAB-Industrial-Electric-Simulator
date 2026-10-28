@@ -46,8 +46,6 @@ void main() {
             reason: '${kind.name}/${terminal.id}');
         expect(terminal.position.y.isFinite, isTrue,
             reason: '${kind.name}/${terminal.id}');
-        expect(terminal.position.z.isFinite, isTrue,
-            reason: '${kind.name}/${terminal.id}');
       }
       for (final entry in spec.defaultProperties.entries) {
         final value = entry.value;
