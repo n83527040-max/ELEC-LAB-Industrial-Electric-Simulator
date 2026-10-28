@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
@@ -119,21 +120,42 @@ class MeshPainter extends CustomPainter {
       );
     }
     faces.sort((a, b) => a.depth.compareTo(b.depth));
+    final positions = <Offset>[];
+    final colors = <Color>[];
+    final edges = Path();
     for (final face in faces) {
-      final path = Path()..moveTo(face.points.first.dx, face.points.first.dy);
-      for (final point in face.points.skip(1)) {
-        path.lineTo(point.dx, point.dy);
+      // Duplicate the three vertices per triangle so every face keeps its flat
+      // industrial shading. One Vertices draw replaces two Canvas calls per
+      // triangle, which is essential for detailed phone previews.
+      for (var index = 1; index < face.points.length - 1; index++) {
+        positions.add(face.points.first);
+        positions.add(face.points[index]);
+        positions.add(face.points[index + 1]);
+        colors.add(face.color);
+        colors.add(face.color);
+        colors.add(face.color);
       }
-      path.close();
-      canvas.drawPath(path, Paint()..color = face.color);
-      canvas.drawPath(
-        path,
-        Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.22
-          ..color = Colors.black.withValues(alpha: 0.055),
-      );
+      edges.addPolygon(face.points, true);
     }
+    if (positions.isNotEmpty) {
+      final vertices = ui.Vertices(
+        ui.VertexMode.triangles,
+        positions,
+        colors: colors,
+      );
+      try {
+        canvas.drawVertices(vertices, ui.BlendMode.dst, Paint());
+      } finally {
+        vertices.dispose();
+      }
+    }
+    canvas.drawPath(
+      edges,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.22
+        ..color = Colors.black.withValues(alpha: 0.055),
+    );
 
     if (showTerminals) {
       for (var index = 0; index < mesh.terminals.length; index++) {
