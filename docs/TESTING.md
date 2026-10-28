@@ -10,7 +10,7 @@ flutter test --coverage
 flutter build apk --release
 ```
 
-وعلى Android SDK يمكن التحقق من التوقيع بـ`apksigner verify` ومن الحزمة بـ`aapt dump badging`. هذه الخطوات مؤتمتة في workflow.
+وعلى Android SDK يمكن التحقق من التوقيع بـ`apksigner verify` ومن الحزمة بـ`aapt dump badging`. هذه الخطوات مؤتمتة في workflow. يستعمل CI الأمر `flutter test --coverage --timeout=45s --concurrency=1` لتشغيل كل الحالات مع الحد من ذاكرة Flutter shells المتوازية؛ لا تُحذف أي suites. فحص GLB يجمع صحة مثلثات كل ملف في expectation واحد بدل إنشاء matcher مستقل لكل مثلث، مع بقاء المرور على جميع الفهارس.
 
 ## التغطية الوظيفية للاختبارات
 
