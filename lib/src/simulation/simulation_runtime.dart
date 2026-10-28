@@ -8,6 +8,8 @@ class DeviceRuntime {
     this.overloadTime = 0,
     this.timerOutput = false,
     this.energyKwh = 0,
+    this.latched = false,
+    this.wasEnergized = false,
   });
 
   final bool energized;
@@ -18,6 +20,8 @@ class DeviceRuntime {
   final double overloadTime;
   final bool timerOutput;
   final double energyKwh;
+  final bool latched;
+  final bool wasEnergized;
 
   DeviceRuntime copyWith({
     bool? energized,
@@ -28,6 +32,8 @@ class DeviceRuntime {
     double? overloadTime,
     bool? timerOutput,
     double? energyKwh,
+    bool? latched,
+    bool? wasEnergized,
   }) {
     return DeviceRuntime(
       energized: energized ?? this.energized,
@@ -38,6 +44,8 @@ class DeviceRuntime {
       overloadTime: overloadTime ?? this.overloadTime,
       timerOutput: timerOutput ?? this.timerOutput,
       energyKwh: energyKwh ?? this.energyKwh,
+      latched: latched ?? this.latched,
+      wasEnergized: wasEnergized ?? this.wasEnergized,
     );
   }
 }

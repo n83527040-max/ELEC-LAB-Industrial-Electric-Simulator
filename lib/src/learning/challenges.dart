@@ -219,6 +219,17 @@ abstract final class DiagnosticAdvisor {
       'motor_phase_problem' => const <String>[
           'قِس الجهد بين U/V/W للتأكد من وصول الأطوار الثلاثة.',
           'تحقق من Contacteur وRelais thermique والأسلاك المفتوحة.',
+          'في محرك 6 bornes: نجمة تجمع U2/V2/W2، ومثلث يصل U2 بـV1 وV2 بـW1 وW2 بـU1.',
+        ],
+      'interlock_conflict' => const <String>[
+          'راجع نقاط NC 21/22 بين KM Étoile وKM Triangle ومسار المؤقت 15/16/18.',
+          'التشابك الميكانيكي يفتح نقاط القدرة عند التعارض؛ لا تعطّله ولا توصل الملفين مباشرة معاً.',
+        ],
+      'interlock_config' => const <String>[
+          'استعمل محرر زوج التعشيق: جهازان فقط، أحدهما star والآخر delta، أو افك الربط للطرفين.',
+        ],
+      'phase_relay_fault' => const <String>[
+          'تحقق من وجود L1/L2/L3 ومن تسلسل الأطوار؛ بدّل طورين فقط عند الحاجة بعد الفصل.',
         ],
       'differential_trip' => const <String>[
           'تحقق من تيار التسرب ومن عودة N عبر القاطع التفاضلي.',

@@ -1,0 +1,2089 @@
+[
+  {
+    "kind": "motor6Terminal",
+    "nameAr": "محرك ثلاثي الطور بستة أطراف",
+    "nameFr": "Moteur triphasé 6 bornes",
+    "category": "motors",
+    "size": [
+      184,
+      154
+    ],
+    "terminals": [
+      {
+        "id": "u1",
+        "label": "U1",
+        "x": 46.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "v1",
+        "label": "V1",
+        "x": 92.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "w1",
+        "label": "W1",
+        "x": 138.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "u2",
+        "label": "U2",
+        "x": 46.0,
+        "y": 154.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "v2",
+        "label": "V2",
+        "x": 92.0,
+        "y": 154.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "w2",
+        "label": "W2",
+        "x": 138.0,
+        "y": 154.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "earth",
+        "label": "PE",
+        "x": 172.0,
+        "y": 126.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "nominalVoltage": 400.0,
+      "nominalCurrent": 2.0,
+      "powerFactor": 0.8,
+      "fault": "none"
+    },
+    "description": "ثلاث ملفات مستقلة U1/U2 وV1/V2 وW1/W2 داخل MNA؛ التوصيل الخارجي يحدد نجمة أو مثلث والتيار من الحل.",
+    "model": "motor6",
+    "din": false,
+    "source": "motor_3ph"
+  },
+  {
+    "kind": "mcb2P",
+    "nameAr": "قاطع MCB ثنائي القطب",
+    "nameFr": "Disjoncteur MCB 2P",
+    "category": "protection",
+    "size": [
+      104,
+      146
+    ],
+    "terminals": [
+      {
+        "id": "lineIn",
+        "label": "1/L IN",
+        "x": 34.666666666666664,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "neutralIn",
+        "label": "3/N IN",
+        "x": 69.33333333333333,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "lineOut",
+        "label": "2/L OUT",
+        "x": 34.666666666666664,
+        "y": 146.0,
+        "kind": "power"
+      },
+      {
+        "id": "neutralOut",
+        "label": "4/N OUT",
+        "x": 69.33333333333333,
+        "y": 146.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "ratedCurrent": 16.0,
+      "closed": true,
+      "fault": "none"
+    },
+    "description": "قاطعان L وN مربوطان بحماية حرارية/مغناطيسية مبسطة واحدة.",
+    "model": "mcb2",
+    "din": true
+  },
+  {
+    "kind": "mcb3P",
+    "nameAr": "قاطع MCB ثلاثي الأقطاب",
+    "nameFr": "Disjoncteur MCB 3P",
+    "category": "protection",
+    "size": [
+      132,
+      150
+    ],
+    "terminals": [
+      {
+        "id": "l1",
+        "label": "1/L1",
+        "x": 33.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2",
+        "label": "3/L2",
+        "x": 66.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3",
+        "label": "5/L3",
+        "x": 99.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "t1",
+        "label": "2/T1",
+        "x": 33.0,
+        "y": 150.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "t2",
+        "label": "4/T2",
+        "x": 66.0,
+        "y": 150.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "t3",
+        "label": "6/T3",
+        "x": 99.0,
+        "y": 150.0,
+        "kind": "power",
+        "phase": "L3"
+      }
+    ],
+    "defaults": {
+      "ratedCurrent": 25.0,
+      "closed": true,
+      "fault": "none"
+    },
+    "description": "ثلاثة قواطع قدرة متزامنة مع فصل التيار الزائد والقصر.",
+    "model": "mcb3",
+    "din": true
+  },
+  {
+    "kind": "mcb4P",
+    "nameAr": "قاطع MCB رباعي الأقطاب",
+    "nameFr": "Disjoncteur MCB 4P",
+    "category": "protection",
+    "size": [
+      158,
+      150
+    ],
+    "terminals": [
+      {
+        "id": "l1",
+        "label": "1/L1",
+        "x": 31.6,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2",
+        "label": "3/L2",
+        "x": 63.2,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3",
+        "label": "5/L3",
+        "x": 94.8,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "neutralIn",
+        "label": "N IN",
+        "x": 126.4,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "t1",
+        "label": "2/T1",
+        "x": 31.6,
+        "y": 150.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "t2",
+        "label": "4/T2",
+        "x": 63.2,
+        "y": 150.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "t3",
+        "label": "6/T3",
+        "x": 94.8,
+        "y": 150.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "neutralOut",
+        "label": "N OUT",
+        "x": 126.4,
+        "y": 150.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "ratedCurrent": 32.0,
+      "closed": true,
+      "fault": "none"
+    },
+    "description": "أربعة قواطع متزامنة L1/L2/L3/N؛ المحايد ليس PE.",
+    "model": "mcb4",
+    "din": true
+  },
+  {
+    "kind": "rccb2P",
+    "nameAr": "قاطع تفاضلي RCCB",
+    "nameFr": "Interrupteur différentiel RCCB",
+    "category": "protection",
+    "size": [
+      112,
+      156
+    ],
+    "terminals": [
+      {
+        "id": "lineIn",
+        "label": "L IN",
+        "x": 37.333333333333336,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "neutralIn",
+        "label": "N IN",
+        "x": 74.66666666666667,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "lineOut",
+        "label": "L OUT",
+        "x": 37.333333333333336,
+        "y": 156.0,
+        "kind": "power"
+      },
+      {
+        "id": "neutralOut",
+        "label": "N OUT",
+        "x": 74.66666666666667,
+        "y": 156.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "residualThreshold": 0.03,
+      "closed": true,
+      "fault": "none"
+    },
+    "description": "يقيس مجموع تياري L وN ويفصل التسرب فقط؛ يحتاج حماية مستقلة ضد الحمل الزائد والقصر.",
+    "model": "rccb",
+    "din": true
+  },
+  {
+    "kind": "isolator3P",
+    "nameAr": "عازل رئيسي ثلاثي الأقطاب",
+    "nameFr": "Interrupteur-sectionneur 3P",
+    "category": "protection",
+    "size": [
+      132,
+      146
+    ],
+    "terminals": [
+      {
+        "id": "l1",
+        "label": "L1",
+        "x": 33.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2",
+        "label": "L2",
+        "x": 66.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3",
+        "label": "L3",
+        "x": 99.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "t1",
+        "label": "T1",
+        "x": 33.0,
+        "y": 146.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "t2",
+        "label": "T2",
+        "x": 66.0,
+        "y": 146.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "t3",
+        "label": "T3",
+        "x": 99.0,
+        "y": 146.0,
+        "kind": "power",
+        "phase": "L3"
+      }
+    ],
+    "defaults": {
+      "closed": true,
+      "fault": "none"
+    },
+    "description": "فصل يدوي ثلاثي الأقطاب دون ادعاء حماية من الحمل الزائد.",
+    "model": "isolator",
+    "din": true
+  },
+  {
+    "kind": "mccb3P",
+    "nameAr": "قاطع صندوقي MCCB",
+    "nameFr": "Disjoncteur MCCB 3P",
+    "category": "protection",
+    "size": [
+      158,
+      174
+    ],
+    "terminals": [
+      {
+        "id": "l1",
+        "label": "L1",
+        "x": 39.5,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2",
+        "label": "L2",
+        "x": 79.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3",
+        "label": "L3",
+        "x": 118.5,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "t1",
+        "label": "T1",
+        "x": 39.5,
+        "y": 174.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "t2",
+        "label": "T2",
+        "x": 79.0,
+        "y": 174.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "t3",
+        "label": "T3",
+        "x": 118.5,
+        "y": 174.0,
+        "kind": "power",
+        "phase": "L3"
+      }
+    ],
+    "defaults": {
+      "ratedCurrent": 63.0,
+      "closed": true,
+      "fault": "none"
+    },
+    "description": "قاطع صناعي ثلاثي الأقطاب بحد تيار أعلى ونموذج فصل مبسط.",
+    "model": "mccb",
+    "din": true
+  },
+  {
+    "kind": "contactor4P",
+    "nameAr": "كونتاكتور رباعي الأقطاب",
+    "nameFr": "Contacteur 4P + aux",
+    "category": "contactor",
+    "size": [
+      168,
+      182
+    ],
+    "terminals": [
+      {
+        "id": "l1",
+        "label": "1/L1",
+        "x": 33.6,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2",
+        "label": "3/L2",
+        "x": 67.2,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3",
+        "label": "5/L3",
+        "x": 100.8,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "neutralIn",
+        "label": "N IN",
+        "x": 134.4,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "t1",
+        "label": "2/T1",
+        "x": 33.6,
+        "y": 182.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "t2",
+        "label": "4/T2",
+        "x": 67.2,
+        "y": 182.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "t3",
+        "label": "6/T3",
+        "x": 100.8,
+        "y": 182.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "neutralOut",
+        "label": "N OUT",
+        "x": 134.4,
+        "y": 182.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "a1",
+        "label": "A1",
+        "x": 168.0,
+        "y": 46.0,
+        "kind": "coil"
+      },
+      {
+        "id": "a2",
+        "label": "A2",
+        "x": 168.0,
+        "y": 136.0,
+        "kind": "coil"
+      },
+      {
+        "id": "aux13",
+        "label": "13NO",
+        "x": 0.0,
+        "y": 52.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "aux14",
+        "label": "14NO",
+        "x": 0.0,
+        "y": 86.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "aux21",
+        "label": "21NC",
+        "x": 0.0,
+        "y": 120.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "aux22",
+        "label": "22NC",
+        "x": 0.0,
+        "y": 154.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "coilVoltage": 24.0,
+      "coilResistance": 300.0,
+      "pickupRatio": 0.8,
+      "dropoutRatio": 0.35,
+      "fault": "none",
+      "interlockGroup": "",
+      "interlockRole": ""
+    },
+    "description": "أربع نقاط قدرة NO بما فيها المحايد، مع ملف ونقاط NO/NC مساعدة.",
+    "model": "contactor4",
+    "din": true
+  },
+  {
+    "kind": "lightSwitch",
+    "nameAr": "مفتاح إنارة أحادي",
+    "nameFr": "Interrupteur simple",
+    "category": "control",
+    "size": [
+      82,
+      96
+    ],
+    "terminals": [
+      {
+        "id": "input",
+        "label": "1",
+        "x": 41.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "output",
+        "label": "2",
+        "x": 41.0,
+        "y": 96.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "closed": false,
+      "fault": "none"
+    },
+    "description": "مفتاح maintained يفتح ويغلق مسار الإنارة فعلياً.",
+    "model": "lightSwitch",
+    "din": false
+  },
+  {
+    "kind": "twoWaySwitch",
+    "nameAr": "مفتاح تبادلي",
+    "nameFr": "Va-et-vient",
+    "category": "control",
+    "size": [
+      90,
+      104
+    ],
+    "terminals": [
+      {
+        "id": "common",
+        "label": "COM",
+        "x": 45.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "out1",
+        "label": "L1",
+        "x": 25.0,
+        "y": 104.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "out2",
+        "label": "L2",
+        "x": 65.0,
+        "y": 104.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "position": 1,
+      "fault": "none"
+    },
+    "description": "نقطة تبديل SPDT تصل COM إلى L1 أو L2.",
+    "model": "twoWay",
+    "din": false
+  },
+  {
+    "kind": "intermediateSwitch",
+    "nameAr": "مفتاح وسطي",
+    "nameFr": "Permutateur",
+    "category": "control",
+    "size": [
+      104,
+      112
+    ],
+    "terminals": [
+      {
+        "id": "in1",
+        "label": "1 IN",
+        "x": 34.666666666666664,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "in2",
+        "label": "2 IN",
+        "x": 69.33333333333333,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "out1",
+        "label": "1 OUT",
+        "x": 34.666666666666664,
+        "y": 112.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "out2",
+        "label": "2 OUT",
+        "x": 69.33333333333333,
+        "y": 112.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "crossed": false,
+      "fault": "none"
+    },
+    "description": "أربعة أطراف؛ يبدّل بين التوصيل المستقيم والمتقاطع لدارة الدرج.",
+    "model": "intermediate",
+    "din": false
+  },
+  {
+    "kind": "impulseRelay",
+    "nameAr": "مرحل نبضي",
+    "nameFr": "Télérupteur",
+    "category": "timers",
+    "size": [
+      106,
+      142
+    ],
+    "terminals": [
+      {
+        "id": "a1",
+        "label": "A1",
+        "x": 106.0,
+        "y": 32.0,
+        "kind": "coil"
+      },
+      {
+        "id": "a2",
+        "label": "A2",
+        "x": 106.0,
+        "y": 108.0,
+        "kind": "coil"
+      },
+      {
+        "id": "common",
+        "label": "11",
+        "x": 0.0,
+        "y": 36.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "no",
+        "label": "14NO",
+        "x": 0.0,
+        "y": 72.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "nc",
+        "label": "12NC",
+        "x": 0.0,
+        "y": 110.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "coilVoltage": 24.0,
+      "coilResistance": 300.0,
+      "pickupRatio": 0.8,
+      "dropoutRatio": 0.35,
+      "fault": "none"
+    },
+    "description": "يكتشف الجبهة الصاعدة للملف ويبدّل حالة مخرجات محفوظة بين NO وNC.",
+    "model": "impulse",
+    "din": true
+  },
+  {
+    "kind": "staircaseTimer",
+    "nameAr": "مؤقت سلم الإنارة",
+    "nameFr": "Minuterie d’escalier",
+    "category": "timers",
+    "size": [
+      106,
+      142
+    ],
+    "terminals": [
+      {
+        "id": "a1",
+        "label": "A1",
+        "x": 106.0,
+        "y": 32.0,
+        "kind": "coil"
+      },
+      {
+        "id": "a2",
+        "label": "A2",
+        "x": 106.0,
+        "y": 106.0,
+        "kind": "coil"
+      },
+      {
+        "id": "t15",
+        "label": "15",
+        "x": 0.0,
+        "y": 42.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "t16",
+        "label": "16NC",
+        "x": 0.0,
+        "y": 70.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "t18",
+        "label": "18NO",
+        "x": 0.0,
+        "y": 100.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "coilVoltage": 230.0,
+      "coilResistance": 3000.0,
+      "delaySeconds": 60.0,
+      "fault": "none"
+    },
+    "description": "يغلق مع النبضة ويحافظ على الإنارة لمدة محددة بعد زوالها، مع نقطة تبديل.",
+    "model": "staircase",
+    "din": true
+  },
+  {
+    "kind": "socketOutlet",
+    "nameAr": "مقبس 230V بتغذية عابرة",
+    "nameFr": "Prise 230V traversante",
+    "category": "terminals",
+    "size": [
+      118,
+      126
+    ],
+    "terminals": [
+      {
+        "id": "lineIn",
+        "label": "L IN",
+        "x": 29.5,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "neutralIn",
+        "label": "N IN",
+        "x": 59.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "earthIn",
+        "label": "PE IN",
+        "x": 88.5,
+        "y": 0.0,
+        "kind": "earth"
+      },
+      {
+        "id": "lineOut",
+        "label": "L OUT",
+        "x": 29.5,
+        "y": 126.0,
+        "kind": "power"
+      },
+      {
+        "id": "neutralOut",
+        "label": "N OUT",
+        "x": 59.0,
+        "y": 126.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "earthOut",
+        "label": "PE OUT",
+        "x": 88.5,
+        "y": 126.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "fault": "none"
+    },
+    "description": "ثلاث وصلات مستقلة L وN وPE بين المدخل والمخرج؛ الحمل الخارجي يوصل بالمقبس.",
+    "model": "socket",
+    "din": false
+  },
+  {
+    "kind": "industrialSocket",
+    "nameAr": "مقبس صناعي 5P",
+    "nameFr": "Prise industrielle 3P+N+PE",
+    "category": "terminals",
+    "size": [
+      174,
+      158
+    ],
+    "terminals": [
+      {
+        "id": "l1In",
+        "label": "L1 IN",
+        "x": 29.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2In",
+        "label": "L2 IN",
+        "x": 58.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3In",
+        "label": "L3 IN",
+        "x": 87.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "neutralIn",
+        "label": "N IN",
+        "x": 116.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "earthIn",
+        "label": "PE IN",
+        "x": 145.0,
+        "y": 0.0,
+        "kind": "earth"
+      },
+      {
+        "id": "l1Out",
+        "label": "L1 OUT",
+        "x": 29.0,
+        "y": 158.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2Out",
+        "label": "L2 OUT",
+        "x": 58.0,
+        "y": 158.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3Out",
+        "label": "L3 OUT",
+        "x": 87.0,
+        "y": 158.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "neutralOut",
+        "label": "N OUT",
+        "x": 116.0,
+        "y": 158.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "earthOut",
+        "label": "PE OUT",
+        "x": 145.0,
+        "y": 158.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "fault": "none"
+    },
+    "description": "خمس قنوات تغذية عابرة مستقلة؛ PE لا يحمل تيار الحمل العادي.",
+    "model": "industrialSocket",
+    "din": false
+  },
+  {
+    "kind": "ledLamp",
+    "nameAr": "مصباح LED للبناء",
+    "nameFr": "Luminaire LED",
+    "category": "signals",
+    "size": [
+      116,
+      108
+    ],
+    "terminals": [
+      {
+        "id": "line",
+        "label": "L",
+        "x": 34.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "neutral",
+        "label": "N",
+        "x": 82.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "earth",
+        "label": "PE",
+        "x": 108.0,
+        "y": 82.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "ratedVoltage": 230.0,
+      "powerWatts": 12.0,
+      "fault": "none"
+    },
+    "description": "حمل إنارة 230V محسوب من الجهد والقدرة مع طرف تأريض مستقل.",
+    "model": "lamp",
+    "din": false
+  },
+  {
+    "kind": "bellTransformer",
+    "nameAr": "محول جرس",
+    "nameFr": "Transformateur de sonnette",
+    "category": "sources",
+    "size": [
+      140,
+      142
+    ],
+    "terminals": [
+      {
+        "id": "primaryLine",
+        "label": "L PRI",
+        "x": 46.666666666666664,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "primaryNeutral",
+        "label": "N PRI",
+        "x": 93.33333333333333,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "secondaryLine",
+        "label": "L SEC",
+        "x": 46.666666666666664,
+        "y": 142.0,
+        "kind": "power"
+      },
+      {
+        "id": "secondaryNeutral",
+        "label": "N SEC",
+        "x": 93.33333333333333,
+        "y": 142.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "primaryVoltage": 230.0,
+      "secondaryVoltage": 12.0,
+      "primaryResistance": 0.5,
+      "secondaryResistance": 0.2,
+      "fault": "none"
+    },
+    "description": "محول مثالي مقترن داخل MNA بنسبة 230/12V ومقاومات الملفات.",
+    "model": "bellTransformer",
+    "din": true
+  },
+  {
+    "kind": "bell",
+    "nameAr": "جرس كهربائي",
+    "nameFr": "Sonnette",
+    "category": "signals",
+    "size": [
+      92,
+      96
+    ],
+    "terminals": [
+      {
+        "id": "x1",
+        "label": "X1",
+        "x": 46.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "x2",
+        "label": "X2",
+        "x": 46.0,
+        "y": 96.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "ratedVoltage": 12.0,
+      "powerWatts": 5.0,
+      "fault": "none"
+    },
+    "description": "حمل جرس مقاوم يعمل فقط ضمن مجال الجهد المقنن.",
+    "model": "bell",
+    "din": false
+  },
+  {
+    "kind": "buzzer",
+    "nameAr": "طنان إنذار",
+    "nameFr": "Avertisseur sonore",
+    "category": "signals",
+    "size": [
+      92,
+      96
+    ],
+    "terminals": [
+      {
+        "id": "x1",
+        "label": "X1",
+        "x": 46.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "x2",
+        "label": "X2",
+        "x": 46.0,
+        "y": 96.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "ratedVoltage": 24.0,
+      "powerWatts": 3.0,
+      "fault": "none"
+    },
+    "description": "حمل طنان محسوب كهربائياً مع حالة صوت مفهومة من الجهد.",
+    "model": "buzzer",
+    "din": false
+  },
+  {
+    "kind": "thermostat",
+    "nameAr": "ثرموستات بتماس",
+    "nameFr": "Thermostat à contact",
+    "category": "sensors",
+    "size": [
+      104,
+      116
+    ],
+    "terminals": [
+      {
+        "id": "input",
+        "label": "1",
+        "x": 52.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "output",
+        "label": "2",
+        "x": 52.0,
+        "y": 116.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "temperature": 20.0,
+      "setpoint": 22.0,
+      "hysteresis": 1.0,
+      "heating": true,
+      "fault": "none"
+    },
+    "description": "منطق حرارة/تبريد مع histérésis وحالة تماس حقيقية من الحرارة ونقطة الضبط.",
+    "model": "thermostat",
+    "din": true
+  },
+  {
+    "kind": "motionSensor",
+    "nameAr": "كاشف حركة",
+    "nameFr": "Détecteur de mouvement",
+    "category": "sensors",
+    "size": [
+      94,
+      112
+    ],
+    "terminals": [
+      {
+        "id": "input",
+        "label": "COM",
+        "x": 47.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "output",
+        "label": "NO",
+        "x": 47.0,
+        "y": 112.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "fault": "none"
+    },
+    "description": "نقطة NO تتغير كهربائياً عند تنشيط الحساس أثناء المحاكاة.",
+    "model": "motion",
+    "din": false
+  },
+  {
+    "kind": "lightSensor",
+    "nameAr": "حساس ضوء",
+    "nameFr": "Capteur de lumière",
+    "category": "sensors",
+    "size": [
+      94,
+      112
+    ],
+    "terminals": [
+      {
+        "id": "input",
+        "label": "COM",
+        "x": 47.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "output",
+        "label": "NO",
+        "x": 47.0,
+        "y": 112.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "fault": "none"
+    },
+    "description": "نقطة NO تتغير كهربائياً عند تنشيط الحساس أثناء المحاكاة.",
+    "model": "lightSensor",
+    "din": false
+  },
+  {
+    "kind": "floatSwitch",
+    "nameAr": "عوامة مستوى",
+    "nameFr": "Contacteur à flotteur",
+    "category": "sensors",
+    "size": [
+      94,
+      112
+    ],
+    "terminals": [
+      {
+        "id": "input",
+        "label": "COM",
+        "x": 47.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "output",
+        "label": "NO",
+        "x": 47.0,
+        "y": 112.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "fault": "none"
+    },
+    "description": "نقطة NO تتغير كهربائياً عند تنشيط الحساس أثناء المحاكاة.",
+    "model": "float",
+    "din": false
+  },
+  {
+    "kind": "pressureSwitch",
+    "nameAr": "مفتاح ضغط",
+    "nameFr": "Pressostat",
+    "category": "sensors",
+    "size": [
+      94,
+      112
+    ],
+    "terminals": [
+      {
+        "id": "input",
+        "label": "COM",
+        "x": 47.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "output",
+        "label": "NO",
+        "x": 47.0,
+        "y": 112.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "fault": "none"
+    },
+    "description": "نقطة NO تتغير كهربائياً عند تنشيط الحساس أثناء المحاكاة.",
+    "model": "pressure",
+    "din": false
+  },
+  {
+    "kind": "flowSwitch",
+    "nameAr": "مفتاح تدفق",
+    "nameFr": "Contrôleur de débit",
+    "category": "sensors",
+    "size": [
+      94,
+      112
+    ],
+    "terminals": [
+      {
+        "id": "input",
+        "label": "COM",
+        "x": 47.0,
+        "y": 0.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "output",
+        "label": "NO",
+        "x": 47.0,
+        "y": 112.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "fault": "none"
+    },
+    "description": "نقطة NO تتغير كهربائياً عند تنشيط الحساس أثناء المحاكاة.",
+    "model": "flow",
+    "din": false
+  },
+  {
+    "kind": "proximitySensor",
+    "nameAr": "حساس قرب حثي 3 أسلاك",
+    "nameFr": "Capteur inductif 3 fils",
+    "category": "sensors",
+    "size": [
+      98,
+      118
+    ],
+    "terminals": [
+      {
+        "id": "positive",
+        "label": "BN +24V",
+        "x": 49.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "negative",
+        "label": "BU 0V",
+        "x": 49.0,
+        "y": 118.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "output",
+        "label": "BK OUT",
+        "x": 98.0,
+        "y": 58.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "ratedVoltage": 24.0,
+      "powerWatts": 0.5,
+      "fault": "none"
+    },
+    "description": "حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.",
+    "model": "proximity",
+    "din": false
+  },
+  {
+    "kind": "capacitiveSensor",
+    "nameAr": "حساس قرب سعوي 3 أسلاك",
+    "nameFr": "Capteur capacitif 3 fils",
+    "category": "sensors",
+    "size": [
+      98,
+      118
+    ],
+    "terminals": [
+      {
+        "id": "positive",
+        "label": "BN +24V",
+        "x": 49.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "negative",
+        "label": "BU 0V",
+        "x": 49.0,
+        "y": 118.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "output",
+        "label": "BK OUT",
+        "x": 98.0,
+        "y": 58.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "ratedVoltage": 24.0,
+      "powerWatts": 0.5,
+      "fault": "none"
+    },
+    "description": "حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.",
+    "model": "capacitive",
+    "din": false
+  },
+  {
+    "kind": "photoelectricSensor",
+    "nameAr": "حساس ضوئي 3 أسلاك",
+    "nameFr": "Capteur photoélectrique 3 fils",
+    "category": "sensors",
+    "size": [
+      98,
+      118
+    ],
+    "terminals": [
+      {
+        "id": "positive",
+        "label": "BN +24V",
+        "x": 49.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "negative",
+        "label": "BU 0V",
+        "x": 49.0,
+        "y": 118.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "output",
+        "label": "BK OUT",
+        "x": 98.0,
+        "y": 58.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "active": false,
+      "ratedVoltage": 24.0,
+      "powerWatts": 0.5,
+      "fault": "none"
+    },
+    "description": "حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.",
+    "model": "photoelectric",
+    "din": false
+  },
+  {
+    "kind": "phaseRelay",
+    "nameAr": "مرحل مراقبة الأطوار",
+    "nameFr": "Relais de contrôle des phases",
+    "category": "protection",
+    "size": [
+      132,
+      150
+    ],
+    "terminals": [
+      {
+        "id": "l1",
+        "label": "L1",
+        "x": 30.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "l2",
+        "label": "L2",
+        "x": 66.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "l3",
+        "label": "L3",
+        "x": 102.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "common",
+        "label": "11",
+        "x": 0.0,
+        "y": 46.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "no",
+        "label": "14NO",
+        "x": 0.0,
+        "y": 82.0,
+        "kind": "auxiliary"
+      },
+      {
+        "id": "nc",
+        "label": "12NC",
+        "x": 0.0,
+        "y": 118.0,
+        "kind": "auxiliary"
+      }
+    ],
+    "defaults": {
+      "minVoltage": 320.0,
+      "fault": "none"
+    },
+    "description": "يفحص وجود الجهود الثلاثة وتسلسلها ويحرّك NO/NC؛ يكشف فقدان طور أو عكس التسلسل.",
+    "model": "phaseRelay",
+    "din": true
+  },
+  {
+    "kind": "currentTransformer",
+    "nameAr": "محول تيار CT",
+    "nameFr": "Transformateur de courant CT",
+    "category": "measurement",
+    "size": [
+      124,
+      130
+    ],
+    "terminals": [
+      {
+        "id": "p1",
+        "label": "P1",
+        "x": 32.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "p2",
+        "label": "P2",
+        "x": 32.0,
+        "y": 130.0,
+        "kind": "power"
+      },
+      {
+        "id": "s1",
+        "label": "S1",
+        "x": 92.0,
+        "y": 0.0,
+        "kind": "measurement"
+      },
+      {
+        "id": "s2",
+        "label": "S2",
+        "x": 92.0,
+        "y": 130.0,
+        "kind": "measurement"
+      }
+    ],
+    "defaults": {
+      "turnsRatio": 0.05,
+      "primaryResistance": 0.01,
+      "secondaryResistance": 0.1,
+      "burdenResistance": 2.0,
+      "maxSecondaryVoltage": 30.0,
+      "fault": "none"
+    },
+    "description": "CT 100/5A افتراضي: علاقة تيار مثالية داخل MNA مع عبء ثانوي 2Ω وتحذير الجهد الزائد.",
+    "model": "ct",
+    "din": false,
+    "source": "current_transformer"
+  },
+  {
+    "kind": "voltageTransformer",
+    "nameAr": "محول جهد VT/PT",
+    "nameFr": "Transformateur de tension VT",
+    "category": "measurement",
+    "size": [
+      138,
+      142
+    ],
+    "terminals": [
+      {
+        "id": "primaryLine",
+        "label": "L PRI",
+        "x": 46.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "primaryNeutral",
+        "label": "N PRI",
+        "x": 92.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "secondaryLine",
+        "label": "L SEC",
+        "x": 46.0,
+        "y": 142.0,
+        "kind": "power"
+      },
+      {
+        "id": "secondaryNeutral",
+        "label": "N SEC",
+        "x": 92.0,
+        "y": 142.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "primaryVoltage": 230.0,
+      "secondaryVoltage": 100.0,
+      "primaryResistance": 0.5,
+      "secondaryResistance": 0.2,
+      "fault": "none"
+    },
+    "description": "محول قياس بنسبة جهد حقيقية داخل MNA ومعزول كهربائياً بين الملفين.",
+    "model": "vt",
+    "din": true
+  },
+  {
+    "kind": "wattmeter",
+    "nameAr": "واطمتر",
+    "nameFr": "Wattmètre",
+    "category": "measurement",
+    "size": [
+      112,
+      108
+    ],
+    "terminals": [
+      {
+        "id": "voltageL",
+        "label": "V L",
+        "x": 32.0,
+        "y": 0.0,
+        "kind": "measurement"
+      },
+      {
+        "id": "voltageN",
+        "label": "V N",
+        "x": 80.0,
+        "y": 0.0,
+        "kind": "measurement"
+      },
+      {
+        "id": "currentIn",
+        "label": "I IN",
+        "x": 32.0,
+        "y": 108.0,
+        "kind": "measurement"
+      },
+      {
+        "id": "currentOut",
+        "label": "I OUT",
+        "x": 80.0,
+        "y": 108.0,
+        "kind": "measurement"
+      }
+    ],
+    "defaults": {
+      "maxVoltage": 600.0,
+      "maxCurrent": 20.0
+    },
+    "description": "قياس رباعي الأطراف يحسب القدرة الفعالة من الجهد والتيار وطورهما.",
+    "model": "wattmeter",
+    "din": false
+  },
+  {
+    "kind": "frequencyMeter",
+    "nameAr": "مقياس تردد",
+    "nameFr": "Fréquencemètre",
+    "category": "measurement",
+    "size": [
+      100,
+      100
+    ],
+    "terminals": [
+      {
+        "id": "positive",
+        "label": "V+",
+        "x": 50.0,
+        "y": 0.0,
+        "kind": "measurement"
+      },
+      {
+        "id": "negative",
+        "label": "V−",
+        "x": 50.0,
+        "y": 100.0,
+        "kind": "measurement"
+      }
+    ],
+    "defaults": {
+      "maxVoltage": 600.0
+    },
+    "description": "مقاومة دخل 1MΩ وقراءة تردد المصدر الفعلي عند وجود جهد صالح.",
+    "model": "frequencyMeter",
+    "din": false
+  },
+  {
+    "kind": "neutralBar",
+    "nameAr": "قضيب المحايد N",
+    "nameFr": "Barrette de neutre N",
+    "category": "terminals",
+    "size": [
+      112,
+      72
+    ],
+    "terminals": [
+      {
+        "id": "a",
+        "label": "A",
+        "x": 22.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "b",
+        "label": "B",
+        "x": 52.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "c",
+        "label": "C",
+        "x": 82.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "d",
+        "label": "D",
+        "x": 112.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "return",
+        "label": "BUS",
+        "x": 56.0,
+        "y": 72.0,
+        "kind": "neutral"
+      }
+    ],
+    "defaults": {
+      "fault": "none"
+    },
+    "description": "نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.",
+    "model": "neutralBar",
+    "din": true
+  },
+  {
+    "kind": "earthBar",
+    "nameAr": "قضيب التأريض PE",
+    "nameFr": "Barrette de terre PE",
+    "category": "terminals",
+    "size": [
+      112,
+      72
+    ],
+    "terminals": [
+      {
+        "id": "a",
+        "label": "A",
+        "x": 22.0,
+        "y": 0.0,
+        "kind": "earth"
+      },
+      {
+        "id": "b",
+        "label": "B",
+        "x": 52.0,
+        "y": 0.0,
+        "kind": "earth"
+      },
+      {
+        "id": "c",
+        "label": "C",
+        "x": 82.0,
+        "y": 0.0,
+        "kind": "earth"
+      },
+      {
+        "id": "d",
+        "label": "D",
+        "x": 112.0,
+        "y": 0.0,
+        "kind": "earth"
+      },
+      {
+        "id": "return",
+        "label": "BUS",
+        "x": 56.0,
+        "y": 72.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "fault": "none"
+    },
+    "description": "نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.",
+    "model": "earthBar",
+    "din": true
+  },
+  {
+    "kind": "distributionBlock",
+    "nameAr": "كتلة توزيع",
+    "nameFr": "Bloc de distribution",
+    "category": "terminals",
+    "size": [
+      112,
+      72
+    ],
+    "terminals": [
+      {
+        "id": "a",
+        "label": "A",
+        "x": 22.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "b",
+        "label": "B",
+        "x": 52.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "c",
+        "label": "C",
+        "x": 82.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "d",
+        "label": "D",
+        "x": 112.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "return",
+        "label": "BUS",
+        "x": 56.0,
+        "y": 72.0,
+        "kind": "power"
+      }
+    ],
+    "defaults": {
+      "fault": "none"
+    },
+    "description": "نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.",
+    "model": "distributionBlock",
+    "din": true
+  },
+  {
+    "kind": "fan",
+    "nameAr": "مروحة كهربائية",
+    "nameFr": "Ventilateur électrique",
+    "category": "motors",
+    "size": [
+      148,
+      126
+    ],
+    "terminals": [
+      {
+        "id": "u",
+        "label": "L",
+        "x": 40.0,
+        "y": 0.0,
+        "kind": "power"
+      },
+      {
+        "id": "v",
+        "label": "N",
+        "x": 98.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "earth",
+        "label": "PE",
+        "x": 138.0,
+        "y": 96.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "nominalVoltage": 230.0,
+      "nominalCurrent": 1.2,
+      "powerFactor": 0.8,
+      "fault": "none"
+    },
+    "description": "حمل محرك أحادي الطور بمعاوقة steady-state وحالة دوران من الجهد.",
+    "model": "fan",
+    "din": false
+  },
+  {
+    "kind": "pump",
+    "nameAr": "مضخة ثلاثية الطور",
+    "nameFr": "Pompe triphasée",
+    "category": "motors",
+    "size": [
+      174,
+      142
+    ],
+    "terminals": [
+      {
+        "id": "u",
+        "label": "U1",
+        "x": 40.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "v",
+        "label": "V1",
+        "x": 86.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "w",
+        "label": "W1",
+        "x": 132.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "earth",
+        "label": "PE",
+        "x": 164.0,
+        "y": 110.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "nominalVoltage": 400.0,
+      "nominalCurrent": 3.0,
+      "powerFactor": 0.82,
+      "fault": "none"
+    },
+    "description": "حمل مضخة ثلاثي الطور بنموذج واي متوازن وتسلسل طور وتيار من MNA.",
+    "model": "pump",
+    "din": false
+  },
+  {
+    "kind": "heater3Phase",
+    "nameAr": "سخان ثلاثي الطور",
+    "nameFr": "Chauffage triphasé",
+    "category": "motors",
+    "size": [
+      164,
+      132
+    ],
+    "terminals": [
+      {
+        "id": "u",
+        "label": "L1",
+        "x": 38.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L1"
+      },
+      {
+        "id": "v",
+        "label": "L2",
+        "x": 82.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L2"
+      },
+      {
+        "id": "w",
+        "label": "L3",
+        "x": 126.0,
+        "y": 0.0,
+        "kind": "power",
+        "phase": "L3"
+      },
+      {
+        "id": "earth",
+        "label": "PE",
+        "x": 154.0,
+        "y": 102.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "nominalVoltage": 400.0,
+      "nominalCurrent": 6.0,
+      "powerFactor": 1.0,
+      "fault": "none"
+    },
+    "description": "ثلاث مقاومات تسخين واي؛ القدرة الحرارية الكهربائية محسوبة من الحل.",
+    "model": "heater",
+    "din": false
+  },
+  {
+    "kind": "solenoidValve",
+    "nameAr": "صمام كهربائي",
+    "nameFr": "Électrovanne",
+    "category": "motors",
+    "size": [
+      128,
+      124
+    ],
+    "terminals": [
+      {
+        "id": "u",
+        "label": "A1",
+        "x": 38.0,
+        "y": 0.0,
+        "kind": "coil"
+      },
+      {
+        "id": "v",
+        "label": "A2",
+        "x": 90.0,
+        "y": 0.0,
+        "kind": "neutral"
+      },
+      {
+        "id": "earth",
+        "label": "PE",
+        "x": 118.0,
+        "y": 94.0,
+        "kind": "earth"
+      }
+    ],
+    "defaults": {
+      "nominalVoltage": 230.0,
+      "nominalCurrent": 0.15,
+      "powerFactor": 0.7,
+      "fault": "none"
+    },
+    "description": "ملف صمام أحادي الطور بمعاوقة حقيقية؛ الجهد المناسب يفتح الصمام افتراضياً.",
+    "model": "solenoid",
+    "din": false
+  },
+  {
+    "kind": "cableSegment",
+    "nameAr": "كابل بمقاومة محسوبة",
+    "nameFr": "Câble avec résistance calculée",
+    "category": "terminals",
+    "size": [
+      154,
+      84
+    ],
+    "terminals": [
+      {
+        "id": "a",
+        "label": "A",
+        "x": 0.0,
+        "y": 42.0,
+        "kind": "power"
+      },
+      {
+        "id": "b",
+        "label": "B",
+        "x": 154.0,
+        "y": 42.0,
+        "kind": "power"
+      }
+    ],
+    "defaults": {
+      "lengthMeters": 10.0,
+      "crossSectionMm2": 2.5,
+      "resistivity": 0.0175,
+      "fault": "none"
+    },
+    "description": "مقاومة R=ρL/S من الطول والمقطع؛ مستقل عن سلك الرسم المنطقي.",
+    "model": "cable",
+    "din": false,
+    "source": "wire_bundle"
+  }
+]

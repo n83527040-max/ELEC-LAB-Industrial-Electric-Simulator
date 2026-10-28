@@ -247,9 +247,137 @@ class EditorController extends ChangeNotifier {
   void updateComponentProperties(String id, Map<String, Object> properties) {
     final component = _project.componentById(id);
     if (component == null) return;
+    final nextGroup = (properties['interlockGroup'] ??
+            component.properties['interlockGroup'] ??
+            '')
+        .toString()
+        .trim();
+    final nextRole = (properties['interlockRole'] ??
+            component.properties['interlockRole'] ??
+            '')
+        .toString()
+        .trim();
+    if (nextGroup != component.text('interlockGroup').trim() ||
+        nextRole != component.text('interlockRole').trim()) {
+      lastError =
+          'استعمل محرر زوج التعشيق لحفظ الكونتاكتورين معاً دون مجموعة ناقصة.';
+      notifyListeners();
+      return;
+    }
     _replaceComponent(
       component.copyWith(properties: Map<String, Object>.from(properties)),
     );
+  }
+
+  /// Assigns both sides of a mechanical interlock in one undoable commit.
+  /// Any old partners are detached in the same commit, so no dangling group
+  /// can be saved while moving a contactor from one pair to another.
+  String? configureInterlockPair(
+    String componentId,
+    String peerId,
+    String group,
+    String role,
+  ) {
+    final component = _project.componentById(componentId);
+    final peer = _project.componentById(peerId);
+    final normalizedGroup = group.trim();
+    final normalizedRole = role.trim();
+    if (component == null || peer == null || componentId == peerId) {
+      return _interlockError('اختر كونتاكتورين مختلفين.');
+    }
+    const supported = <ComponentKind>{
+      ComponentKind.contactor,
+      ComponentKind.contactor4P,
+    };
+    if (!supported.contains(component.kind) || !supported.contains(peer.kind)) {
+      return _interlockError('التعشيق النجمي/المثلثي متاح للكونتاكتورات فقط.');
+    }
+    if (normalizedGroup.isEmpty ||
+        !const <String>{'star', 'delta'}.contains(normalizedRole)) {
+      return _interlockError(
+        'أدخل مجموعة غير فارغة ودور star أو delta قبل الحفظ.',
+      );
+    }
+    final affected = <String>{componentId, peerId};
+    for (final anchor in <CircuitComponent>[component, peer]) {
+      final oldGroup = anchor.text('interlockGroup').trim();
+      if (oldGroup.isEmpty) continue;
+      final members = _project.components
+          .where((item) => item.text('interlockGroup').trim() == oldGroup)
+          .toList(growable: false);
+      if (members.length != 2) {
+        return _interlockError('المجموعة القديمة $oldGroup غير مكتملة.');
+      }
+      affected.addAll(members.map((item) => item.id));
+    }
+    final occupied = _project.components.any(
+      (item) =>
+          item.text('interlockGroup').trim() == normalizedGroup &&
+          !affected.contains(item.id),
+    );
+    if (occupied) {
+      return _interlockError('المجموعة $normalizedGroup مستعملة من زوج آخر.');
+    }
+    final next = _project.copyWith(
+      components: _project.components.map((item) {
+        if (!affected.contains(item.id)) return item;
+        final assignedRole = item.id == componentId
+            ? normalizedRole
+            : item.id == peerId
+                ? normalizedRole == 'star'
+                    ? 'delta'
+                    : 'star'
+                : '';
+        return item.copyWith(
+          properties: <String, Object>{
+            ...item.properties,
+            'interlockGroup': assignedRole.isEmpty ? '' : normalizedGroup,
+            'interlockRole': assignedRole,
+          },
+        );
+      }).toList(growable: false),
+    );
+    lastError = null;
+    _commit(next);
+    return null;
+  }
+
+  String? clearInterlockPair(String componentId) {
+    final component = _project.componentById(componentId);
+    if (component == null) return _interlockError('الجهاز غير موجود.');
+    final group = component.text('interlockGroup').trim();
+    final affected = <String>{componentId};
+    if (group.isNotEmpty) {
+      final members = _project.components
+          .where((item) => item.text('interlockGroup').trim() == group)
+          .toList(growable: false);
+      if (members.length != 2) {
+        return _interlockError('لا يمكن فك مجموعة غير مكتملة؛ راجع المشروع.');
+      }
+      affected.addAll(members.map((item) => item.id));
+    }
+    lastError = null;
+    _commit(
+      _project.copyWith(
+        components: _project.components.map((item) {
+          if (!affected.contains(item.id)) return item;
+          return item.copyWith(
+            properties: <String, Object>{
+              ...item.properties,
+              'interlockGroup': '',
+              'interlockRole': '',
+            },
+          );
+        }).toList(growable: false),
+      ),
+    );
+    return null;
+  }
+
+  String? _interlockError(String message) {
+    lastError = message;
+    notifyListeners();
+    return message;
   }
 
   void injectFault(String id, String fault) {
@@ -278,6 +406,11 @@ class EditorController extends ChangeNotifier {
         spec.size.height * component.scale,
       );
     }
+    final duplicateProperties = Map<String, Object>.from(component.properties);
+    if (duplicateProperties.containsKey('interlockGroup')) {
+      duplicateProperties['interlockGroup'] = '';
+      duplicateProperties['interlockRole'] = '';
+    }
     final duplicate = CircuitComponent(
       id: newId,
       kind: component.kind,
@@ -290,7 +423,7 @@ class EditorController extends ChangeNotifier {
       layerId: component.layerId,
       rotation: component.rotation,
       scale: component.scale,
-      properties: Map<String, Object>.from(component.properties),
+      properties: duplicateProperties,
     );
     _commit(
       _project.copyWith(
@@ -305,10 +438,24 @@ class EditorController extends ChangeNotifier {
   void deleteComponent(String id) {
     final component = _project.componentById(id);
     if (component == null || SupplyBay.isFixed(component)) return;
+    final interlockGroup = component.text('interlockGroup').trim();
     _commit(
       _project.copyWith(
         components: _project.components
             .where((item) => item.id != id)
+            .map((item) {
+              if (interlockGroup.isEmpty ||
+                  item.text('interlockGroup').trim() != interlockGroup) {
+                return item;
+              }
+              return item.copyWith(
+                properties: <String, Object>{
+                  ...item.properties,
+                  'interlockGroup': '',
+                  'interlockRole': '',
+                },
+              );
+            })
             .toList(growable: false),
         wires: _project.wires
             .where(
@@ -617,18 +764,34 @@ class EditorController extends ChangeNotifier {
     if (!isRunning) return;
     final component = _project.componentById(id);
     if (component == null) return;
-    if (component.kind == ComponentKind.rotarySwitch) {
+    if (component.kind == ComponentKind.rotarySwitch ||
+        component.kind == ComponentKind.twoWaySwitch) {
       final position = component.number('position').round();
+      final next = component.kind == ComponentKind.twoWaySwitch
+          ? position % 2 + 1
+          : (position + 1) % 3;
       _updateOperationalProperties(
         id,
-        <String, Object>{'position': (position + 1) % 3},
+        <String, Object>{'position': next},
       );
       simulateOnce();
       return;
     }
     final key = switch (component.kind) {
-      ComponentKind.selectorSwitch || ComponentKind.emergencyStop => 'closed',
-      ComponentKind.sensor || ComponentKind.limitSwitch => 'active',
+      ComponentKind.selectorSwitch ||
+      ComponentKind.emergencyStop ||
+      ComponentKind.lightSwitch => 'closed',
+      ComponentKind.intermediateSwitch => 'crossed',
+      ComponentKind.sensor ||
+      ComponentKind.limitSwitch ||
+      ComponentKind.motionSensor ||
+      ComponentKind.lightSensor ||
+      ComponentKind.floatSwitch ||
+      ComponentKind.pressureSwitch ||
+      ComponentKind.flowSwitch ||
+      ComponentKind.proximitySensor ||
+      ComponentKind.capacitiveSensor ||
+      ComponentKind.photoelectricSensor => 'active',
       _ => null,
     };
     if (key == null) return;
@@ -811,6 +974,18 @@ class EditorController extends ChangeNotifier {
       ComponentKind.ammeter => 'A',
       ComponentKind.digitalCounter => 'P',
       ComponentKind.fuse => 'FU',
+      _ => switch (ComponentCatalog.specOf(kind).category) {
+        ComponentCategory.sources => 'T',
+        ComponentCategory.protection => 'Q',
+        ComponentCategory.contactors => 'K',
+        ComponentCategory.control => 'S',
+        ComponentCategory.timers => 'KT',
+        ComponentCategory.sensors => 'B',
+        ComponentCategory.motors => 'M',
+        ComponentCategory.signals => 'H',
+        ComponentCategory.measurement => 'P',
+        ComponentCategory.terminals => 'X',
+      },
     };
     final count = _project.components.where((item) => item.kind == kind).length + 1;
     return '$prefix$count';

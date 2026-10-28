@@ -187,6 +187,92 @@ void main() {
     savingController.dispose();
   });
 
+  test('interlock pair is validated and committed atomically with undo/redo', () {
+    final first = controller.addComponent(
+      ComponentKind.contactor,
+      const BoardPoint(250, 261),
+    );
+    final second = controller.addComponent(
+      ComponentKind.contactor,
+      const BoardPoint(450, 261),
+    );
+    expect(
+      controller.configureInterlockPair(first, '', 'motor_1', 'star'),
+      isNotNull,
+    );
+    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
+
+    final before = controller.undoCount;
+    expect(
+      controller.configureInterlockPair(first, second, 'motor_1', 'star'),
+      isNull,
+    );
+    controller.project.validate();
+    expect(controller.undoCount, before + 1);
+    expect(controller.project.componentById(first)!.text('interlockRole'), 'star');
+    expect(controller.project.componentById(second)!.text('interlockRole'), 'delta');
+    expect(
+      controller.project.componentById(first)!.text('interlockGroup'),
+      controller.project.componentById(second)!.text('interlockGroup'),
+    );
+
+    controller.undo();
+    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(second)!.text('interlockGroup'), isEmpty);
+    controller.redo();
+    expect(controller.project.componentById(first)!.text('interlockGroup'), 'motor_1');
+
+    controller.updateComponentProperties(first, <String, Object>{
+      ...controller.project.componentById(first)!.properties,
+      'interlockGroup': 'dangling',
+    });
+    expect(controller.project.componentById(first)!.text('interlockGroup'), 'motor_1');
+    expect(controller.lastError, contains('زوج التعشيق'));
+
+    expect(controller.clearInterlockPair(first), isNull);
+    controller.project.validate();
+    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(second)!.text('interlockGroup'), isEmpty);
+  });
+
+  test('pair reassignment duplication and deletion never leave dangling groups', () {
+    final first = controller.addComponent(
+      ComponentKind.contactor,
+      const BoardPoint(250, 261),
+    );
+    final second = controller.addComponent(
+      ComponentKind.contactor,
+      const BoardPoint(450, 261),
+    );
+    final third = controller.addComponent(
+      ComponentKind.contactor4P,
+      const BoardPoint(650, 261),
+    );
+    final fourth = controller.addComponent(
+      ComponentKind.contactor,
+      const BoardPoint(850, 261),
+    );
+    expect(controller.configureInterlockPair(first, second, 'pair_a', 'star'), isNull);
+    expect(controller.configureInterlockPair(third, fourth, 'pair_a', 'star'), isNotNull);
+    expect(controller.project.componentById(third)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(fourth)!.text('interlockGroup'), isEmpty);
+
+    expect(controller.configureInterlockPair(first, third, 'pair_b', 'delta'), isNull);
+    controller.project.validate();
+    expect(controller.project.componentById(first)!.text('interlockRole'), 'delta');
+    expect(controller.project.componentById(third)!.text('interlockRole'), 'star');
+    expect(controller.project.componentById(second)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(second)!.text('interlockRole'), isEmpty);
+
+    final duplicate = controller.duplicateComponent(first)!;
+    expect(controller.project.componentById(duplicate)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(duplicate)!.text('interlockRole'), isEmpty);
+    controller.deleteComponent(third);
+    controller.project.validate();
+    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(first)!.text('interlockRole'), isEmpty);
+  });
+
   test('controller stores the last calculated result when simulation stops', () {
     final project = ProjectTemplates.apply(empty, ProjectTemplateKind.dcLamp);
     final simulationController = EditorController(project: project);

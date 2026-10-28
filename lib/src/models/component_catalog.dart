@@ -1,6 +1,7 @@
 import 'dart:ui' show Size;
 
 import 'component.dart';
+import 'component_catalog_extensions.dart';
 import 'geometry.dart';
 import 'terminal.dart';
 
@@ -345,6 +346,8 @@ abstract final class ComponentCatalog {
         'coilResistance': 300.0,
         'pickupRatio': 0.8,
         'dropoutRatio': 0.35,
+        'interlockGroup': '',
+        'interlockRole': '',
         'fault': 'none',
       },
       description: 'ثلاث نقاط قدرة NO وملف ونقطة NO ونقطة NC مساعدتان.',
@@ -587,9 +590,15 @@ abstract final class ComponentCatalog {
           kind: TerminalKind.auxiliary,
         ),
         TerminalDefinition(
+          id: 't16',
+          label: '16NC',
+          position: BoardPoint(0, 70),
+          kind: TerminalKind.auxiliary,
+        ),
+        TerminalDefinition(
           id: 't18',
           label: '18NO',
-          position: BoardPoint(0, 96),
+          position: BoardPoint(0, 102),
           kind: TerminalKind.auxiliary,
         ),
       ],
@@ -599,7 +608,7 @@ abstract final class ComponentCatalog {
         'delaySeconds': 3.0,
         'fault': 'none',
       },
-      description: 'يغلق 15/18 بعد استمرار تغذية الملف طوال الزمن المحدد.',
+      description: 'نقطة تبديل: 15/16 مغلقة قبل التأخير و15/18 تغلق بعده.',
     ),
     ComponentKind.timerOffDelay: ComponentSpec(
       kind: ComponentKind.timerOffDelay,
@@ -627,9 +636,15 @@ abstract final class ComponentCatalog {
           kind: TerminalKind.auxiliary,
         ),
         TerminalDefinition(
+          id: 't16',
+          label: '16NC',
+          position: BoardPoint(0, 70),
+          kind: TerminalKind.auxiliary,
+        ),
+        TerminalDefinition(
           id: 't18',
           label: '18NO',
-          position: BoardPoint(0, 96),
+          position: BoardPoint(0, 102),
           kind: TerminalKind.auxiliary,
         ),
       ],
@@ -640,7 +655,7 @@ abstract final class ComponentCatalog {
         'fault': 'none',
       },
       description:
-          'تغلق النقطة مع الملف فوراً وتبقى مغلقة لمدة التأخير بعد فقدان تغذيته.',
+          'نقطة تبديل: تغلق 15/18 مع الملف وتبقى لمدة التأخير بعد فصله، بينما 15/16 عكسها.',
     ),
     ComponentKind.sensor: ComponentSpec(
       kind: ComponentKind.sensor,
@@ -976,6 +991,7 @@ abstract final class ComponentCatalog {
       },
       description: 'ينصهر عند تجاوز مستمر للتيار ويحتاج استبدالاً افتراضياً.',
     ),
+    ...ExtendedComponentCatalog.byKind,
   };
 
   static ComponentSpec specOf(ComponentKind kind) => byKind[kind]!;

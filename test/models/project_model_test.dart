@@ -202,6 +202,81 @@ void main() {
     });
   });
 
+  group('Mechanical interlock documents', () {
+    ElectricalProject pairProject() => projectOf(
+          <CircuitComponent>[
+            device(
+              'km2',
+              ComponentKind.contactor,
+              overrides: const <String, Object>{
+                'interlockGroup': 'motor_pair',
+                'interlockRole': 'star',
+              },
+            ),
+            device(
+              'km3',
+              ComponentKind.contactor,
+              overrides: const <String, Object>{
+                'interlockGroup': 'motor_pair',
+                'interlockRole': 'delta',
+              },
+            ),
+          ],
+          const <CircuitWire>[],
+        );
+
+    test('exactly two complementary roles are required', () {
+      final valid = pairProject();
+      expect(valid.validate, returnsNormally);
+      final dangling = valid.copyWith(
+        components: <CircuitComponent>[valid.components.first],
+      );
+      expect(dangling.validate, throwsFormatException);
+      final sameRoles = valid.copyWith(
+        components: <CircuitComponent>[
+          valid.components.first,
+          valid.components.last.copyWith(
+            properties: <String, Object>{
+              ...valid.components.last.properties,
+              'interlockRole': 'star',
+            },
+          ),
+        ],
+      );
+      expect(sameRoles.validate, throwsFormatException);
+      final third = device(
+        'km4',
+        ComponentKind.contactor,
+        overrides: const <String, Object>{
+          'interlockGroup': 'motor_pair',
+          'interlockRole': 'star',
+        },
+      );
+      expect(
+        valid.copyWith(
+          components: <CircuitComponent>[...valid.components, third],
+        ).validate,
+        throwsFormatException,
+      );
+    });
+
+    test('six-lead motor bridges are allowed only between distinct terminals', () {
+      final motor = device('m1', ComponentKind.motor6Terminal);
+      final bridge = connection('bridge', 'm1', 'u2', 'm1', 'v2');
+      expect(
+        projectOf(<CircuitComponent>[motor], <CircuitWire>[bridge]).validate,
+        returnsNormally,
+      );
+      expect(
+        () => projectOf(
+          <CircuitComponent>[motor],
+          <CircuitWire>[connection('bad', 'm1', 'u2', 'm1', 'u2')],
+        ),
+        throwsFormatException,
+      );
+    });
+  });
+
   group('Connections and routing', () {
     test('duplicate and PE mismatch are explained and rejected', () {
       final project = projectOf(

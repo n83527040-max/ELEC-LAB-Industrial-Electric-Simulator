@@ -10,12 +10,21 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('all 81 bundled GLB assets decode and match manifest and terminals', () async {
+  test('all bundled GLB assets decode and match manifest and terminals', () async {
     final manifest = jsonDecode(
       await rootBundle.loadString('assets/models/manifest.json'),
     ) as Map<String, dynamic>;
     final models = manifest['models'] as List;
     expect(models, hasLength(ComponentKind.values.length));
+    expect(manifest['sourcePack'], <String, Object>{
+      'files': 30,
+      'allUsed': true,
+    });
+    final sourceAssets = models
+        .expand((dynamic model) => (model as Map<String, dynamic>)['sourceAssets'] as List)
+        .map((dynamic source) => (source as Map<String, dynamic>)['file'])
+        .toSet();
+    expect(sourceAssets, hasLength(30));
     var files = 0;
     for (final rawModel in models) {
       final model = rawModel as Map<String, dynamic>;
@@ -51,7 +60,7 @@ void main() {
         expect(validTriangles, isTrue, reason: path);
       }
     }
-    expect(files, 81);
+    expect(files, ComponentKind.values.length * 3);
   });
 
   test('GLB indicator material follows real component color property', () async {

@@ -18,6 +18,27 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "assets" / "models"
+SOURCE_ROOT = ROOT / "tool" / "asset_pack" / "models"
+
+# User-supplied starter GLBs are real geometry inputs for preview/detailed LODs.
+# Board LOD stays lighter and is generated from the same calibrated catalog.
+SOURCE_MAP = {
+    "dcSupply": ["psu_dc"], "acSupply": ["psu_single"],
+    "threePhaseSupply": ["psu_three"], "circuitBreaker": ["mcb"],
+    "differentialBreaker": ["rcd"], "motorBreaker": ["motor_breaker"],
+    "contactor": ["contactor"], "thermalRelay": ["thermal_relay"],
+    "auxiliaryRelay": ["aux_relay"], "motor3Phase": ["motor_3ph"],
+    "motor1Phase": ["motor_1ph"], "pushButtonNO": ["pushbutton_green"],
+    "pushButtonNC": ["pushbutton_red"], "emergencyStop": ["emergency_stop"],
+    "selectorSwitch": ["selector"], "indicator": ["pilot_red", "pilot_green", "pilot_amber"],
+    "timer": ["timer_on"], "timerOffDelay": ["timer_off"],
+    "terminalBlock": ["terminal_block"], "fuse": ["fuse_holder"],
+    "transformer": ["transformer"], "limitSwitch": ["limit_switch"],
+    "sensor": ["sensor"], "voltmeter": ["voltmeter"], "ammeter": ["ammeter"],
+    "digitalCounter": ["digital_meter"],
+}
+CURRENT_SOURCE_INFO = []
+CURRENT_SOURCE_STEMS = []
 
 C = {
     "ivory": 0xFFE2E4DF, "polymer": 0xFFC5CBD0, "white": 0xFFF2F3EF,
@@ -192,11 +213,121 @@ class Mesh:
         self.screw(x,y,z+.055,r*.72)
 
 
+def read_source_glb(stem):
+    """Read the pack's indexed triangle geometry and PBR material names.
+
+    The supplied pack intentionally uses untransformed nodes. Strict bounds and
+    component checks here fail generation instead of silently misplacing a mesh.
+    """
+    path=SOURCE_ROOT/f"{stem}.glb"
+    raw=path.read_bytes()
+    magic,version,total=struct.unpack_from("<III",raw,0)
+    if magic!=0x46546C67 or version!=2 or total!=len(raw):
+        raise RuntimeError(f"Invalid source GLB: {path}")
+    json_length,json_type=struct.unpack_from("<II",raw,12)
+    if json_type!=0x4E4F534A: raise RuntimeError(f"Missing JSON chunk: {path}")
+    document=json.loads(raw[20:20+json_length])
+    bin_header=20+json_length
+    bin_length,bin_type=struct.unpack_from("<II",raw,bin_header)
+    if bin_type!=0x004E4942: raise RuntimeError(f"Missing BIN chunk: {path}")
+    binary=raw[bin_header+8:bin_header+8+bin_length]
+    if len(binary)!=document["buffers"][0]["byteLength"]:
+        raise RuntimeError(f"Source buffer mismatch: {path}")
+
+    def accessor(index):
+        item=document["accessors"][index]
+        view=document["bufferViews"][item["bufferView"]]
+        component=item["componentType"]
+        fmt,size={5121:("<B",1),5123:("<H",2),5125:("<I",4),5126:("<f",4)}[component]
+        dimensions={"SCALAR":1,"VEC3":3}[item["type"]]
+        stride=view.get("byteStride",size*dimensions)
+        start=view.get("byteOffset",0)+item.get("byteOffset",0)
+        values=[]
+        for i in range(item["count"]):
+            offset=start+i*stride
+            values.append(struct.unpack_from("<"+fmt[1]*dimensions,binary,offset))
+        return values
+
+    vertices=[]; faces=[]
+    for node in document.get("nodes",[]):
+        if any(key in node for key in ("matrix","translation","rotation","scale")):
+            raise RuntimeError(f"Unexpected source node transform: {path}")
+        if "mesh" not in node: continue
+        mesh=document["meshes"][node["mesh"]]
+        for primitive in mesh["primitives"]:
+            if primitive.get("mode",4)!=4: raise RuntimeError(f"Non-triangle source: {path}")
+            positions=accessor(primitive["attributes"]["POSITION"])
+            indices=accessor(primitive["indices"])
+            material=document["materials"][primitive["material"]]
+            material_name=material.get("name","polymer")
+            offset=len(vertices)
+            vertices.extend(tuple(float(v) for v in point) for point in positions)
+            for i in range(0,len(indices),3):
+                faces.append(([offset+int(indices[i+j][0]) for j in range(3)],material_name))
+    if not vertices or not faces: raise RuntimeError(f"Empty source GLB: {path}")
+    info={"file":f"models/{stem}.glb","sha256":hashlib.sha256(raw).hexdigest(),"bytes":len(raw)}
+    return vertices,faces,info
+
+
+def append_source_geometry(mesh,stem,kind,w,h,d):
+    vertices,faces,info=read_source_glb(stem)
+    lo=[min(v[i] for v in vertices) for i in range(3)]
+    hi=[max(v[i] for v in vertices) for i in range(3)]
+    spans=[max(1e-9,hi[i]-lo[i]) for i in range(3)]
+    scale=min(w/spans[0],h/spans[1],d/spans[2])*.94
+    center=[(lo[i]+hi[i])/2 for i in range(3)]
+    offset=len(mesh.vertices)
+    mesh.vertices.extend(tuple((v[i]-center[i])*scale-(d*.06 if i==2 else 0) for i in range(3)) for v in vertices)
+    material_map={"light":"ivory","body":"polymer","amber":"yellow"}
+    for indices,material in faces:
+        mapped=material_map.get(material,material if material in C else "polymer")
+        if kind=="indicator" and material in {"red","green","amber","yellow"}:
+            mapped="statusLens"
+        mesh.faces.append(([offset+i for i in indices],mapped))
+    return info
+
+
+def source_refinements(mesh,kind,spec,w,h,d,detail):
+    """Add calibrated connection hardware and brand-free technical details."""
+    front=d*.55
+    if kind in {"motor3Phase","motor1Phase","motor6Terminal"}:
+        # Additional cooling fins and a six-screw terminal box on the new motor.
+        fins=8 if detail=="preview" else 14
+        for i in range(fins):
+            a=2*math.pi*i/fins
+            mesh.box((0,math.cos(a)*h*.31,math.sin(a)*h*.31),(w*.5,.035,.035),"motorBlue" if kind!="motor1Phase" else "polymer",.008)
+        mesh.box((0,h*.34,d*.22),(w*.43,h*.28,d*.45),"dark",.03)
+        if kind=="motor6Terminal":
+            labels(mesh,"U1 V1 W1","U2 V2 W2",h*.34,d*.48,w*.4,detail)
+    elif kind=="cableSegment":
+        for side in [-1,1]:
+            mesh.cylinder((side*w*.46,0,d*.12),h*.13,w*.08,"copper",axis="x")
+            mesh.ring((side*w*.5,0,d*.12),h*.16,h*.1,w*.04,"brass",axis="x")
+    elif kind=="currentTransformer":
+        labels(mesh,"CT 100/5","S1 S2 2 OHM",-h*.3,front+.12,w*.72,detail)
+        for x in [-w*.3,w*.3]: mesh.screw(x,h*.34,front+.1,.06)
+    else:
+        # Source bodies remain visible; only small vents, screws and a label
+        # plate are added instead of hiding them under a duplicate enclosure.
+        if detail=="detailed":
+            for side in [-1,1]:
+                for j in range(4):
+                    mesh.box((side*w*.43,(j-1.5)*h*.07,front*.35),(.025,h*.025,d*.28),"dark")
+        text={"dcSupply":"DC 24V","acSupply":"1~ 230V","threePhaseSupply":"3~ 400V",
+              "circuitBreaker":"MCB","differentialBreaker":"RCBO","motorBreaker":"MPCB",
+              "contactor":"K 3P","thermalRelay":"THERMAL","auxiliaryRelay":"RELAY",
+              "timer":"ON DELAY","timerOffDelay":"OFF DELAY","digitalCounter":"ENERGY"}.get(kind,kind.upper()[:12])
+        labels(mesh,text,"CALIBRATED TERMINALS",-h*.34,front+.08,w*.7,detail)
+
+
 def depth_for(kind):
-    if kind=="motor3Phase": return 1.65
-    if kind=="motor1Phase": return 1.45
-    if kind in {"indicator","pushButtonNO","pushButtonNC","emergencyStop","selectorSwitch","rotarySwitch"}: return 1.05
-    if kind in {"sensor","limitSwitch"}: return .9
+    if kind in {"motor3Phase","motor6Terminal","pump","heater3Phase"}: return 1.65
+    if kind in {"motor1Phase","fan","solenoidValve"}: return 1.45
+    if kind in {"indicator","pushButtonNO","pushButtonNC","emergencyStop","selectorSwitch","rotarySwitch",
+                "lightSwitch","twoWaySwitch","intermediateSwitch","bell","buzzer","ledLamp"}: return 1.05
+    if kind in {"sensor","limitSwitch","motionSensor","lightSensor","floatSwitch","pressureSwitch","flowSwitch",
+                "proximitySensor","capacitiveSensor","photoelectricSensor"}: return .9
+    if kind=="cableSegment": return .55
     return .82
 
 
@@ -233,9 +364,196 @@ def labels(m,primary,secondary,y,z,w,detail):
         m.text(secondary,y-.19,z+.012,w*.82,.09,"ink")
 
 
+def build_extended(mesh,kind,spec,detail):
+    w,h=[v/48 for v in spec["size"]]; d=depth_for(kind); front=d*.56
+    model=spec.get("model",kind)
+    if model=="motor6":
+        mesh.cylinder((0,0,0),h*.3,w*.6,"motorBlue",axis="x")
+        for x in [-w*.3,w*.3]: mesh.cylinder((x,0,0),h*.34,.15,"motorBlue",axis="x")
+        for i in range(10 if detail=="board" else 18):
+            a=2*math.pi*i/(10 if detail=="board" else 18)
+            mesh.box((0,math.cos(a)*h*.315,math.sin(a)*h*.315),(w*.56,.045,.045),"motorBlue",.01)
+        mesh.cylinder((w*.45,0,0),h*.1,w*.23,"chrome",axis="x")
+        mesh.box((0,h*.34,d*.2),(w*.48,h*.32,d*.52),"dark",.035)
+        mesh.box((0,h*.34,d*.49),(w*.43,h*.26,.06),"polymer",.02)
+        for ix in range(3):
+            for iy in [-1,1]: mesh.screw((ix-1)*w*.13,h*.34+iy*h*.07,d*.55,.06,"brass")
+        for x in [-w*.22,w*.22]: mesh.box((x,-h*.36,0),(w*.2,h*.15,d*.45),"motorBlue",.02)
+        labels(mesh,"M 3~ 6B","U1 V1 W1 / U2 V2 W2",h*.34,d*.55,w*.4,detail)
+    elif model in {"mcb2","mcb3","mcb4","rccb","isolator","mccb"}:
+        din_shell(mesh,w,h,d,"dark" if model=="mccb" else "ivory","polymer")
+        poles={"mcb2":2,"mcb3":3,"mcb4":4,"rccb":2,"isolator":3,"mccb":3}[model]
+        if model in {"isolator","mccb"}:
+            mesh.box((0,0,front+.1),(w*.75,h*.52,.2),"dark",.04)
+            mesh.cylinder((0,0,front+.25),min(w,h)*.23,.16,"red" if model=="isolator" else "black")
+            mesh.box((0,min(w,h)*.08,front+.36),(min(w,h)*.11,min(w,h)*.42,.12),"red" if model=="isolator" else "polymer",.02)
+        else:
+            for p in range(poles):
+                x=(p-(poles-1)/2)*w/(poles+1)
+                mesh.box((x,h*.03,front+.1),(w/(poles+1)*.72,h*.42,.15),"dark",.025)
+                mesh.box((x,h*.04,front+.21),(w/(poles+1)*.4,h*.25,.15),"blue",.025)
+            if model=="rccb": mesh.cylinder((w*.32,-h*.25,front+.18),w*.06,.07,"yellow")
+        labels(mesh,model.upper(),"SYNCHRONIZED POLES",-h*.34,front+.15,w*.78,detail)
+    elif model=="contactor4":
+        din_shell(mesh,w,h,d,"dark","ivory")
+        for yy in [-h*.37,h*.37]:
+            mesh.box((0,yy,front+.06),(w*.98,h*.18,.22),"dark",.03)
+            for i in range(4): mesh.screw((i-1.5)*w*.2,yy,front+.2,.07,"brass")
+        mesh.box((0,0,front+.18),(w*.68,h*.35,.22),"black",.04)
+        mesh.box((0,h*.02,front+.31),(w*.42,h*.12,.05),"glass",.015)
+        labels(mesh,"K 4P","A1 A2 13 14 21 22",-h*.24,front+.23,w*.65,detail)
+    elif model in {"lightSwitch","twoWay","intermediate"}:
+        mesh.box((0,0,-.08),(w*.88,h*.92,d*.68),"ivory",.08)
+        mesh.box((0,0,d*.36),(w*.76,h*.78,.16),"white",.05)
+        count=2 if model!="lightSwitch" else 1
+        for i in range(count):
+            x=(i-(count-1)/2)*w*.28
+            mesh.box((x,0,d*.52),(w*.2,h*.46,.16),"polymer",.025)
+            mesh.box((x,h*.08,d*.63),(w*.12,h*.28,.1),"white",.02)
+        for x in [-w*.31,w*.31]: mesh.screw(x,h*.34,d*.47,.05)
+        labels(mesh,"I" if model=="lightSwitch" else "2 WAY" if model=="twoWay" else "CROSS",model.upper(),-h*.32,d*.52,w*.65,detail)
+    elif model in {"impulse","staircase","phaseRelay","thermostat"}:
+        din_shell(mesh,w,h,d)
+        if model=="impulse":
+            mesh.box((0,h*.08,front+.12),(w*.68,h*.4,.15),"glass",.03)
+            mesh.cylinder((0,h*.08,front+.24),w*.15,h*.32,"copper",axis="y")
+            mesh.sphere((w*.25,-h*.22,front+.18),w*.055,"green")
+        elif model=="staircase":
+            mesh.box((0,h*.12,front+.12),(w*.7,h*.25,.08),"screen",.02)
+            mesh.text("60 S",h*.12,front+.18,w*.55,h*.14,"screenInk")
+            for i in range(3): mesh.box(((i-1)*w*.15,-h*.15+i*h*.04,front+.15),(w*.12,.035,.04),"dark")
+            mesh.cylinder((0,-h*.3,front+.15),w*.11,.08,"blue")
+        elif model=="phaseRelay":
+            for i,color in enumerate(["red","yellow","blue"]):
+                mesh.sphere(((i-1)*w*.22,h*.15,front+.16),w*.07,color)
+            mesh.cylinder((0,-h*.12,front+.15),w*.16,.1,"dark")
+            mesh.box((0,-h*.12,front+.23),(w*.035,w*.22,.03),"white")
+        else:
+            mesh.cylinder((0,h*.05,front+.15),w*.24,.12,"chrome")
+            for i in range(9):
+                a=-math.pi*.8+i*math.pi*.2
+                mesh.box((math.cos(a)*w*.29,h*.05+math.sin(a)*w*.29,front+.15),(.025,.04,.025),"ink")
+            mesh.box((0,h*.12,front+.25),(w*.035,w*.28,.03),"blue")
+        labels(mesh,model.upper(),"REAL CONTACT LOGIC",-h*.36,front+.15,w*.78,detail)
+    elif model in {"socket","industrialSocket"}:
+        mesh.box((0,0,-.04),(w*.9,h*.9,d*.72),"dark" if model=="industrialSocket" else "ivory",.08)
+        mesh.cylinder((0,0,d*.38),min(w,h)*.36,.16,"blue" if model=="industrialSocket" else "white")
+        count=5 if model=="industrialSocket" else 3
+        for i in range(count):
+            a=2*math.pi*i/count-math.pi/2
+            x=math.cos(a)*min(w,h)*.2; y=math.sin(a)*min(w,h)*.2
+            mesh.ring((x,y,d*.49),min(w,h)*.055,min(w,h)*.032,.06,"brass")
+        mesh.screw(0,0,d*.5,.06)
+        labels(mesh,"3P+N+PE" if model=="industrialSocket" else "L N PE","FEED THROUGH",-h*.39,d*.4,w*.72,detail)
+    elif model in {"lamp","bell","buzzer"}:
+        mesh.box((0,0,-.12),(w*.78,h*.82,d*.55),"dark",.05)
+        if model=="lamp":
+            mesh.cylinder((0,0,d*.25),min(w,h)*.34,.22,"chrome")
+            mesh.sphere((0,0,d*.43),min(w,h)*.3,"white",scale=(1,1,.55))
+            for i in range(8):
+                a=2*math.pi*i/8
+                mesh.sphere((math.cos(a)*min(w,h)*.18,math.sin(a)*min(w,h)*.18,d*.52),min(w,h)*.035,"yellow")
+        elif model=="bell":
+            mesh.sphere((0,0,d*.28),min(w,h)*.36,"brass",scale=(1,1,.55))
+            mesh.cylinder((0,0,d*.52),min(w,h)*.08,.12,"dark")
+            mesh.box((w*.28,-h*.15,d*.32),(w*.12,h*.36,.12),"metal",.02)
+        else:
+            mesh.cylinder((0,0,d*.3),min(w,h)*.34,.28,"red")
+            for r in [.12,.22,.3]: mesh.ring((0,0,d*.46),min(w,h)*r,min(w,h)*(r-.025),.035,"dark")
+        labels(mesh,model.upper(),"RATED LOAD",-h*.36,d*.44,w*.62,detail)
+    elif model in {"motion","lightSensor","proximity","capacitive","photoelectric","float","pressure","flow"}:
+        if model in {"proximity","capacitive"}:
+            mesh.cylinder((0,0,0),min(w,h)*.25,d*.9,"metal",axis="x")
+            for x in [-w*.2,w*.2]: mesh.ring((x,0,0),min(w,h)*.3,min(w,h)*.24,.12,"brass",axis="x")
+            mesh.cylinder((w*.36,0,0),min(w,h)*.24,.12,"dark",axis="x")
+        elif model=="photoelectric":
+            mesh.box((0,0,0),(w*.62,h*.68,d*.68),"dark",.06)
+            mesh.sphere((0,h*.1,d*.4),min(w,h)*.22,"glass",scale=(1,1,.45))
+            mesh.sphere((0,-h*.22,d*.38),w*.05,"red")
+        elif model=="float":
+            mesh.box((0,h*.15,0),(w*.55,h*.45,d*.55),"polymer",.05)
+            mesh.cylinder((0,-h*.15,0),w*.08,h*.5,"chrome",axis="y")
+            mesh.sphere((0,-h*.38,0),w*.25,"orange",scale=(1,.7,1))
+        elif model=="pressure":
+            mesh.box((0,-h*.15,0),(w*.58,h*.45,d*.55),"metal",.05)
+            mesh.cylinder((0,h*.18,d*.15),w*.28,.18,"chrome")
+            mesh.cylinder((0,h*.18,d*.26),w*.22,.04,"white")
+            mesh.box((0,h*.25,d*.3),(w*.025,w*.2,.02),"red")
+        elif model=="flow":
+            mesh.cylinder((0,0,0),w*.18,w*.75,"metal",axis="x")
+            for x in [-w*.34,w*.34]: mesh.ring((x,0,0),w*.24,w*.16,.12,"brass",axis="x")
+            mesh.box((0,h*.22,0),(w*.36,h*.38,d*.48),"dark",.04)
+        else:
+            mesh.box((0,0,0),(w*.72,h*.72,d*.62),"ivory",.08)
+            mesh.sphere((0,0,d*.4),min(w,h)*.28,"white" if model=="motion" else "glass",scale=(1,1,.55))
+            if model=="lightSensor": mesh.ring((0,0,d*.4),min(w,h)*.32,min(w,h)*.28,.08,"dark")
+        mesh.sphere((w*.25,-h*.25,d*.35),w*.045,"green")
+        labels(mesh,model.upper(),"NO / PNP",-h*.36,d*.4,w*.68,detail)
+    elif model in {"ct","vt","bellTransformer"}:
+        if model=="ct":
+            mesh.box((0,0,0),(w*.84,h*.82,d*.72),"dark",.06)
+            mesh.ring((0,0,d*.4),min(w,h)*.3,min(w,h)*.17,d*.28,"black")
+            for x in [-w*.3,w*.3]: mesh.screw(x,-h*.32,d*.42,.06,"brass")
+        else:
+            for i in range(8 if detail=="board" else 14):
+                z=(i-(7 if detail=="board" else 13)/2)*d*.045
+                mesh.box((0,0,z),(w*.84,h*.76,d*.035),"metal",.02)
+            for x in [-w*.22,w*.22]: mesh.cylinder((x,0,d*.25),w*.16,h*.62,"copper",axis="y")
+            for y in [-h*.43,h*.43]: mesh.box((0,y,d*.15),(w*.88,h*.12,d*.4),"dark",.02)
+        labels(mesh,"CT 100/5" if model=="ct" else "230/100V" if model=="vt" else "230/12V",model.upper(),-h*.35,d*.48,w*.68,detail)
+    elif model in {"wattmeter","frequencyMeter"}:
+        din_shell(mesh,w,h,d,"dark","polymer")
+        mesh.box((0,h*.12,front+.12),(w*.8,h*.4,.12),"black",.03)
+        mesh.box((0,h*.12,front+.2),(w*.68,h*.27,.04),"screen",.015)
+        mesh.text("50.0 HZ" if model=="frequencyMeter" else "0000 W",h*.12,front+.23,w*.6,h*.15,"screenInk")
+        for x in [-w*.22,0,w*.22]: mesh.cylinder((x,-h*.2,front+.15),w*.05,.06,"dark")
+        labels(mesh,"FREQ" if model=="frequencyMeter" else "POWER","V I COS PHI",-h*.35,front+.15,w*.72,detail)
+    elif model in {"neutralBar","earthBar","distributionBlock"}:
+        color="blue" if model=="neutralBar" else "earth" if model=="earthBar" else "orange"
+        mesh.box((0,0,-.08),(w*.94,h*.8,d*.5),"dark",.035)
+        mesh.box((0,0,d*.28),(w*.88,h*.38,.16),color,.025)
+        for i in range(5): mesh.screw((i-2)*w*.18,0,d*.41,.065,"brass")
+        labels(mesh,"N" if model=="neutralBar" else "PE" if model=="earthBar" else "DIST",model.upper(),-h*.28,d*.34,w*.7,detail)
+    elif model in {"fan","pump","heater","solenoid"}:
+        if model=="fan":
+            mesh.cylinder((0,0,0),h*.34,w*.3,"polymer",axis="x")
+            mesh.cylinder((w*.22,0,0),h*.12,w*.28,"chrome",axis="x")
+            for i in range(7):
+                a=2*math.pi*i/7
+                mesh.box((w*.36,math.cos(a)*h*.16,math.sin(a)*h*.16),(w*.06,h*.28,.07),"blue",.02)
+            for r in [.18,.28,.36]: mesh.ring((w*.4,0,0),h*r,h*(r-.015),.025,"metal",axis="x")
+        elif model=="pump":
+            mesh.cylinder((-w*.15,0,0),h*.3,w*.45,"motorBlue",axis="x")
+            mesh.sphere((w*.25,0,0),h*.32,"blue",scale=(.7,1,1))
+            mesh.cylinder((w*.42,0,0),h*.15,w*.24,"chrome",axis="x")
+            mesh.box((0,-h*.35,0),(w*.7,h*.14,d*.5),"dark",.025)
+        elif model=="heater":
+            for i in range(3): mesh.cylinder(((i-1)*w*.25,0,0),w*.09,h*.68,"copper",axis="y")
+            for y in [-h*.36,h*.36]: mesh.box((0,y,0),(w*.84,h*.12,d*.55),"metal",.025)
+            for i in range(8): mesh.box((0,(i-3.5)*h*.08,d*.15),(w*.78,.025,.05),"chrome")
+        else:
+            mesh.cylinder((0,-h*.15,0),w*.22,w*.55,"brass",axis="x")
+            mesh.box((0,h*.18,0),(w*.55,h*.48,d*.62),"dark",.04)
+            mesh.cylinder((0,h*.18,d*.36),w*.19,h*.35,"copper",axis="y")
+        labels(mesh,model.upper(),"SOLVED LOAD",-h*.36,d*.42,w*.68,detail)
+    elif model=="cable":
+        for i,color in enumerate(["red","yellow","blue","black","earth"]):
+            mesh.cylinder((0,(i-2)*h*.12,0),h*.055,w*.84,color,axis="x")
+            for side in [-1,1]: mesh.cylinder((side*w*.46,(i-2)*h*.12,0),h*.035,w*.1,"copper",axis="x")
+    terminal_layout(mesh,kind,spec,d,detail)
+    return mesh
+
+
 def build(kind,spec,detail):
     m=Mesh(detail); w,h=[v/48 for v in spec["size"]]; d=depth_for(kind)
     front=d*.56
+    if detail!="board" and CURRENT_SOURCE_STEMS:
+        append_source_geometry(m,CURRENT_SOURCE_STEMS[0],kind,w,h,d)
+        source_refinements(m,kind,spec,w,h,d,detail)
+        terminal_layout(m,kind,spec,d,detail)
+        return m
+    if spec.get("extended"):
+        return build_extended(m,kind,spec,detail)
     if kind in {"circuitBreaker","differentialBreaker","motorBreaker"}:
         din_shell(m,w,h,d)
         poles=1 if kind=="circuitBreaker" else 2 if kind=="differentialBreaker" else 3
@@ -422,11 +740,19 @@ def parse_catalog():
             continue
         if not size or not terms: raise RuntimeError(f"Cannot parse {kind}: size={size}, terminals={len(terms)}")
         specs[kind]={"size":(float(size.group(1)),float(size.group(2))),"terminals":terms}
+    extensions=json.loads((ROOT/"tool/component_catalog_extensions.json").read_text())
+    for entry in extensions:
+        kind=entry["kind"]
+        if kind in specs: raise RuntimeError(f"Duplicate extended spec: {kind}")
+        specs[kind]={"size":tuple(entry["size"]),"terminals":entry["terminals"],
+                     "model":entry.get("model",kind),"din":entry.get("din",False),
+                     "source":entry.get("source"),"extended":True}
     enum=(ROOT/"lib/src/models/terminal.dart").read_text()
     body=re.search(r"enum ComponentKind\s*\{([^}]+)\}",enum,re.S).group(1)
     order=re.findall(r"\b(\w+)\s*(?:,|$)",body)
     missing=set(order)-set(specs)
-    if missing: raise RuntimeError(f"Missing specs: {missing}")
+    extra=set(specs)-set(order)
+    if missing or extra: raise RuntimeError(f"Catalog mismatch: missing={missing}, extra={extra}")
     return [(kind,specs[kind]) for kind in order]
 
 
@@ -489,8 +815,8 @@ def export_glb(mesh,path,kind,detail):
             "baseColorFactor":[((value>>16)&255)/255,((value>>8)&255)/255,(value&255)/255,1],
             "metallicFactor":.75 if name in {"metal","chrome","brass","copper"} else .05,
             "roughnessFactor":.28 if name in {"metal","chrome","brass","copper"} else .62}})
-    document={"asset":{"version":"2.0","generator":"ELEC LAB original industrial mesh generator","copyright":"ELEC LAB project; original geometry"},
-              "scene":0,"scenes":[{"nodes":[0]}],"nodes":[{"name":f"{kind}-{detail}","mesh":0,"extras":{"componentKind":kind,"lod":detail,"terminalIds":[t["id"] for t in CURRENT_SPEC["terminals"]]}}],
+    document={"asset":{"version":"2.0","generator":"ELEC LAB calibrated GLB generator","copyright":"ELEC LAB project; original geometry and user-supplied starter pack"},
+              "scene":0,"scenes":[{"nodes":[0]}],"nodes":[{"name":f"{kind}-{detail}","mesh":0,"extras":{"componentKind":kind,"lod":detail,"terminalIds":[t["id"] for t in CURRENT_SPEC["terminals"]],"terminalsCalibrated":True,"sourceAssets":[f"models/{stem}.glb" for stem in CURRENT_SOURCE_STEMS]}}],
               "meshes":[{"name":kind,"primitives":primitives}],"materials":materials,
               "bufferViews":views,"accessors":accessors,"buffers":[{"byteLength":len(binary)}]}
     raw_json=json.dumps(document,separators=(",",":"),ensure_ascii=False).encode()
@@ -505,18 +831,28 @@ def export_glb(mesh,path,kind,detail):
 
 
 def main():
-    global CURRENT_SPEC
+    global CURRENT_SPEC,CURRENT_SOURCE_INFO,CURRENT_SOURCE_STEMS
     parser=argparse.ArgumentParser(); parser.parse_args()
-    manifest={"format":"elec-lab-glb-manifest","version":1,"license":"ELEC LAB original assets; see docs/ASSETS_3D.md","models":[]}
+    manifest={"format":"elec-lab-glb-manifest","version":2,"license":"ELEC LAB original assets and user-supplied starter pack; see docs/ASSETS_3D.md","models":[]}
+    used_sources=set()
     for kind,spec in parse_catalog():
         CURRENT_SPEC=spec
-        entry={"kind":kind,"terminalIds":[t["id"] for t in spec["terminals"]],"lods":{}}
+        CURRENT_SOURCE_STEMS=list(SOURCE_MAP.get(kind,[]))
+        if spec.get("source"): CURRENT_SOURCE_STEMS=[spec["source"]]
+        CURRENT_SOURCE_INFO=[read_source_glb(stem)[2] for stem in CURRENT_SOURCE_STEMS]
+        used_sources.update(CURRENT_SOURCE_STEMS)
+        entry={"kind":kind,"terminalIds":[t["id"] for t in spec["terminals"]],
+               "sourceAssets":CURRENT_SOURCE_INFO,"lods":{}}
         for detail in ["board","preview","detailed"]:
             mesh=build(kind,spec,detail)
             entry["lods"][detail]=export_glb(mesh,OUT/detail/f"{kind}.glb",kind,detail)
         manifest["models"].append(entry)
         print(f"{kind:24} " + " ".join(f"{d}:{entry['lods'][d]['triangles']}tri" for d in entry["lods"]))
-    (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
-    print(f"Generated {len(manifest['models'])*3} GLB files in {OUT}")
+    available={path.stem for path in SOURCE_ROOT.glob("*.glb")}
+    if used_sources!=available:
+        raise RuntimeError(f"Source pack usage mismatch: unused={available-used_sources}, missing={used_sources-available}")
+    manifest["sourcePack"]={"files":len(available),"allUsed":True}
+    (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+"\n")
+    print(f"Generated {len(manifest['models'])*3} GLB files in {OUT}; all {len(available)} source GLBs used")
 
 if __name__=="__main__": main()

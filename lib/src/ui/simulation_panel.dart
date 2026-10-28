@@ -103,31 +103,60 @@ class SimulationPanel extends StatelessWidget {
       kind == ComponentKind.voltmeter ||
       kind == ComponentKind.ammeter ||
       kind == ComponentKind.digitalCounter ||
+      kind == ComponentKind.wattmeter ||
+      kind == ComponentKind.frequencyMeter ||
+      kind == ComponentKind.currentTransformer ||
       kind == ComponentKind.differentialBreaker ||
+      kind == ComponentKind.rccb2P ||
       kind == ComponentKind.motor3Phase ||
+      kind == ComponentKind.motor6Terminal ||
       kind == ComponentKind.motor1Phase ||
+      kind == ComponentKind.fan ||
+      kind == ComponentKind.pump ||
+      kind == ComponentKind.solenoidValve ||
       kind == ComponentKind.transformer ||
+      kind == ComponentKind.bellTransformer ||
+      kind == ComponentKind.voltageTransformer ||
       kind == ComponentKind.indicator ||
+      kind == ComponentKind.ledLamp ||
+      kind == ComponentKind.bell ||
+      kind == ComponentKind.buzzer ||
       kind == ComponentKind.timer ||
+      kind == ComponentKind.staircaseTimer ||
       kind == ComponentKind.timerOffDelay;
 
   static String _readingText(ComponentKind kind, DeviceReading reading) {
     return switch (kind) {
       ComponentKind.voltmeter =>
         '${reading.voltage.toStringAsFixed(2)} V ${reading.measurementValid ? '' : '• قياس غير صالح'}',
+      ComponentKind.frequencyMeter =>
+        '${reading.frequency.toStringAsFixed(2)} Hz • ${reading.voltage.toStringAsFixed(1)} V ${reading.measurementValid ? '' : '• قياس غير صالح'}',
+      ComponentKind.currentTransformer =>
+        'Ip ${reading.current.toStringAsFixed(2)} A • Is ${reading.secondaryCurrent.toStringAsFixed(3)} A • Vs ${reading.voltage.toStringAsFixed(2)} V ${reading.measurementValid ? '' : '• مراجعة العبء'}',
+      ComponentKind.wattmeter =>
+        '${reading.activePower.toStringAsFixed(2)} W • ${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A ${reading.measurementValid ? '' : '• قياس غير صالح'}',
       ComponentKind.ammeter =>
         '${reading.current.toStringAsFixed(3)} A ${reading.measurementValid ? '' : '• قياس غير صالح'}',
       ComponentKind.digitalCounter =>
         '${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A • ${reading.energyKwh.toStringAsFixed(6)} kWh ${reading.measurementValid ? '' : '• قياس غير صالح'}',
-      ComponentKind.differentialBreaker =>
+      ComponentKind.differentialBreaker ||
+      ComponentKind.rccb2P =>
         'ΔI ${(reading.residualCurrent * 1000).toStringAsFixed(1)} mA • ${reading.current.toStringAsFixed(2)} A',
-      ComponentKind.transformer =>
+      ComponentKind.transformer ||
+      ComponentKind.bellTransformer ||
+      ComponentKind.voltageTransformer =>
         'ثانوي ${reading.voltage.toStringAsFixed(2)} V • ${reading.current.toStringAsFixed(3)} A • مدخل ${reading.activePower.toStringAsFixed(2)} W',
-      ComponentKind.motor3Phase =>
+      ComponentKind.motor3Phase ||
+      ComponentKind.pump =>
         '${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A • ${reading.direction == 0 ? 'متوقف' : reading.direction > 0 ? 'أمامي' : 'عكسي'}',
-      ComponentKind.motor1Phase =>
+      ComponentKind.motor6Terminal =>
+        '${reading.connectionMode == 'star' ? 'Étoile' : reading.connectionMode == 'delta' ? 'Triangle' : 'Open'} • ${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A',
+      ComponentKind.motor1Phase ||
+      ComponentKind.fan ||
+      ComponentKind.solenoidValve =>
         '${reading.voltage.toStringAsFixed(1)} V • ${reading.current.toStringAsFixed(2)} A • ${reading.active ? 'يدور' : 'متوقف'}',
       ComponentKind.timer ||
+      ComponentKind.staircaseTimer ||
       ComponentKind.timerOffDelay =>
         reading.active ? 'النقطة مغلقة • المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s' : 'المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s',
       _ => '${reading.voltage.toStringAsFixed(1)} V • ${reading.activePower.toStringAsFixed(2)} W',

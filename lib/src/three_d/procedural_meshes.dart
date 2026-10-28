@@ -128,6 +128,8 @@ abstract final class ProceduralMeshes {
         _digitalCounter(context);
       case ComponentKind.terminalBlock:
         _terminalBlock(context);
+      default:
+        _extendedDevice(context);
     }
 
     final terminals = <MeshTerminal>[];
@@ -829,6 +831,56 @@ abstract final class ProceduralMeshes {
       Vector3D(w * 0.55, h * 0.08, 0.04),
       c.label,
     );
+  }
+
+  /// Lightweight fallback for extended catalog devices. Bundled GLBs remain the
+  /// normal renderer; this path keeps direct procedural previews functional.
+  static void _extendedDevice(_MeshContext c) {
+    final b = c.builder;
+    final w = c.width;
+    final h = c.height;
+    final d = c.depth;
+    final variant = c.spec.kind.index % 5;
+    switch (c.spec.category) {
+      case ComponentCategory.motors:
+        b.addCylinder(const Vector3D(0, 0, 0), h * 0.3, w * 0.62, c.motorBlue,
+            axis: MeshAxis.x, segments: c.segments);
+        for (var index = 0; index < 6 + variant; index++) {
+          final angle = index * math.pi / (6 + variant);
+          b.addBox(
+            Vector3D(0, math.cos(angle) * h * 0.31, math.sin(angle) * h * 0.31),
+            Vector3D(w * 0.55, 0.045, 0.045),
+            c.motorDark,
+          );
+        }
+        b.addCylinder(Vector3D(w * 0.42, 0, 0), h * 0.1, w * 0.22,
+            c.metal, axis: MeshAxis.x, segments: c.segments);
+      case ComponentCategory.signals:
+        b.addBeveledBox(Vector3D(0, 0, -0.1), Vector3D(w * 0.8, h * 0.85, d * 0.6),
+            c.graphite, bevel: 0.05);
+        b.addSphere(Vector3D(0, 0, d * 0.35), math.min(w, h) * 0.3,
+            variant.isEven ? c.red : c.green, segments: c.segments, rings: c.rings);
+      case ComponentCategory.sensors:
+        b.addBeveledBox(const Vector3D(0, 0, 0), Vector3D(w * 0.65, h * 0.7, d * 0.7),
+            c.midGrey, bevel: 0.06);
+        b.addCylinder(Vector3D(0, h * 0.12, d * 0.4), math.min(w, h) * 0.2,
+            0.14, variant.isEven ? c.glass : c.brass, segments: c.segments);
+      default:
+        b.addBeveledBox(const Vector3D(0, 0, 0), Vector3D(w, h, d), c.white, bevel: 0.08);
+        b.addBox(Vector3D(0, 0, -d * 0.56), Vector3D(w * 0.7, h * 0.14, 0.14),
+            c.graphite);
+        b.addBeveledBox(Vector3D(0, h * 0.05, d * 0.45),
+            Vector3D(w * 0.76, h * 0.56, 0.16), c.lightGrey, bevel: 0.035);
+        for (var index = 0; index <= variant; index++) {
+          b.addBox(
+            Vector3D((index - variant / 2) * w * 0.12, h * 0.06, d * 0.58),
+            Vector3D(w * 0.055, h * 0.28, 0.08),
+            c.blue,
+          );
+        }
+        b.addBox(Vector3D(0, -h * 0.31, d * 0.48),
+            Vector3D(w * 0.64, h * 0.08, 0.035), c.label);
+    }
   }
 
   static void _terminalHardware(

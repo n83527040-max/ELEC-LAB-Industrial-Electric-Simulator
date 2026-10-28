@@ -70,8 +70,19 @@ class ElectricalSimulator {
       if (!network.solve()) return network;
       var changed = false;
       for (final component in project.components) {
-        if (!_hasCoil(component.kind)) continue;
         final state = runtime[component.id];
+        if (component.kind == ComponentKind.phaseRelay) {
+          final desired = _phaseRelayHealthy(network, component);
+          if (desired != state.energized) {
+            runtime.update(
+              component.id,
+              state.copyWith(energized: desired),
+            );
+            changed = true;
+          }
+          continue;
+        }
+        if (!_hasCoil(component.kind)) continue;
         final voltage = _coilVoltage(network, component);
         final rated = _coilRatedVoltage(component);
         final pickup = rated * _number(component, 'pickupRatio', 0.8);
@@ -116,6 +127,7 @@ class ElectricalSimulator {
           runtime.update(component.id, state.copyWith(timerElapsed: elapsed));
           if (wasClosed != isClosed) changed = true;
         case ComponentKind.timerOffDelay:
+        case ComponentKind.staircaseTimer:
           final delay = math.max(0.05, component.number('delaySeconds'));
           if (state.energized) {
             if (!state.timerOutput || state.timerElapsed != 0) {
@@ -135,6 +147,10 @@ class ElectricalSimulator {
             if (!output) changed = true;
           }
         case ComponentKind.circuitBreaker:
+        case ComponentKind.mcb2P:
+        case ComponentKind.mcb3P:
+        case ComponentKind.mcb4P:
+        case ComponentKind.mccb3P:
           if (state.tripped || !component.flag('closed')) break;
           final current = reading?.current ?? 0;
           final rated = math.max(0.1, component.number('ratedCurrent'));
@@ -170,22 +186,27 @@ class ElectricalSimulator {
             );
           }
         case ComponentKind.differentialBreaker:
+        case ComponentKind.rccb2P:
           if (state.tripped || !component.flag('closed')) break;
           final current = reading?.current ?? 0;
           final residual = reading?.residualCurrent ?? 0;
-          final rated = math.max(0.1, component.number('ratedCurrent'));
+          final isRcbo = component.kind == ComponentKind.differentialBreaker;
+          final rated = isRcbo
+              ? math.max(0.1, component.number('ratedCurrent'))
+              : double.infinity;
           final threshold = math.max(
             0.001,
             component.number('residualThreshold'),
           );
           var overload = state.overloadTime;
-          if (current > rated * 1.2) {
+          if (isRcbo && current > rated * 1.2) {
             overload += dt * math.pow(current / rated, 2).toDouble();
           } else {
             overload = math.max(0, overload - dt * 0.5);
           }
           final residualTrip = residual > threshold;
-          final overcurrentTrip = current > rated * 6 || overload >= 2;
+          final overcurrentTrip = isRcbo &&
+              (current > rated * 6 || overload >= 2);
           if (residualTrip || overcurrentTrip) {
             runtime.update(
               component.id,
@@ -281,6 +302,38 @@ class ElectricalSimulator {
               state.copyWith(overloadTime: overload),
             );
           }
+        case ComponentKind.impulseRelay:
+          var latched = state.latched;
+          if (state.energized && !state.wasEnergized) {
+            latched = !latched;
+            changed = true;
+          }
+          if (latched != state.latched ||
+              state.wasEnergized != state.energized) {
+            runtime.update(
+              component.id,
+              state.copyWith(
+                latched: latched,
+                wasEnergized: state.energized,
+              ),
+            );
+          }
+        case ComponentKind.thermostat:
+          final temperature = component.number('temperature');
+          final setpoint = component.number('setpoint');
+          final hysteresis = math.max(0.05, component.number('hysteresis'));
+          final heating = component.flag('heating');
+          final desired = heating
+              ? (state.latched
+                  ? temperature < setpoint
+                  : temperature <= setpoint - hysteresis)
+              : (state.latched
+                  ? temperature > setpoint
+                  : temperature >= setpoint + hysteresis);
+          if (desired != state.latched) {
+            runtime.update(component.id, state.copyWith(latched: desired));
+            changed = true;
+          }
         case ComponentKind.digitalCounter:
           if (reading != null && reading.measurementValid) {
             final energy = state.energyKwh +
@@ -326,6 +379,9 @@ class ElectricalSimulator {
       var direction = 0;
       var timerRemaining = 0.0;
       var residualCurrent = 0.0;
+      var secondaryCurrent = 0.0;
+      var frequency = 0.0;
+      var connectionMode = '';
 
       if (coil.isNotEmpty) {
         voltage = network.voltage(coil.first.a, coil.first.b).magnitude;
@@ -377,28 +433,48 @@ class ElectricalSimulator {
             return value + v.real * i.real + v.imaginary * i.imaginary;
           });
         case ComponentKind.differentialBreaker:
+        case ComponentKind.rccb2P:
           var sum = ComplexNumber.zero;
           for (final branch in main) {
             sum = sum + network.current(branch);
           }
           residualCurrent = sum.magnitude;
         case ComponentKind.contactor:
+        case ComponentKind.contactor4P:
         case ComponentKind.auxiliaryRelay:
+        case ComponentKind.phaseRelay:
           active = state.energized;
+          if (component.kind == ComponentKind.phaseRelay) {
+            final l1 = network.nodeVoltage(_key(component.id, 'l1'));
+            final l2 = network.nodeVoltage(_key(component.id, 'l2'));
+            final l3 = network.nodeVoltage(_key(component.id, 'l3'));
+            voltage = ((l1 - l2).magnitude +
+                    (l2 - l3).magnitude +
+                    (l3 - l1).magnitude) /
+                3;
+          }
+        case ComponentKind.impulseRelay:
+          active = state.latched;
         case ComponentKind.timer:
           final delay = math.max(0.05, component.number('delaySeconds'));
           timerRemaining = math.max(0, delay - state.timerElapsed);
           active = state.energized && state.timerElapsed >= delay;
         case ComponentKind.timerOffDelay:
+        case ComponentKind.staircaseTimer:
           final delay = math.max(0.05, component.number('delaySeconds'));
           timerRemaining = !state.energized && state.timerOutput
               ? math.max(0, delay - state.timerElapsed)
               : 0;
           active = state.timerOutput;
         case ComponentKind.indicator:
+        case ComponentKind.ledLamp:
+        case ComponentKind.bell:
+        case ComponentKind.buzzer:
           final rated = math.max(0.1, component.number('ratedVoltage'));
           active = voltage >= rated * 0.5 && voltage <= rated * 1.5;
         case ComponentKind.motor3Phase:
+        case ComponentKind.pump:
+        case ComponentKind.heater3Phase:
           final u = network.nodeVoltage(_key(component.id, 'u'));
           final v = network.nodeVoltage(_key(component.id, 'v'));
           final w = network.nodeVoltage(_key(component.id, 'w'));
@@ -421,7 +497,53 @@ class ElectricalSimulator {
             final phaseDifference = _wrapAngle((v - neutral).angle - (u - neutral).angle);
             direction = math.sin(phaseDifference) < 0 ? 1 : -1;
           }
+        case ComponentKind.motor6Terminal:
+          final windingVoltages = motor
+              .map((branch) => network.voltage(branch.a, branch.b).magnitude)
+              .toList(growable: false);
+          final u = network.nodeVoltage(_key(component.id, 'u1'));
+          final v = network.nodeVoltage(_key(component.id, 'v1'));
+          final w = network.nodeVoltage(_key(component.id, 'w1'));
+          voltage = ((u - v).magnitude +
+                  (v - w).magnitude +
+                  (w - u).magnitude) /
+              3;
+          if (windingVoltages.length == 3) {
+            final average = windingVoltages.fold<double>(
+                  0,
+                  (sum, value) => sum + value,
+                ) /
+                3;
+            final maximum = windingVoltages.fold<double>(
+              0,
+              (value, item) => math.max(value, item),
+            );
+            final minimum = windingVoltages.fold<double>(
+              double.infinity,
+              (value, item) => math.min(value, item),
+            );
+            final nominal = math.max(1, component.number('nominalVoltage'));
+            final balanced =
+                average > 0 && (maximum - minimum) / average < 0.25;
+            active = balanced &&
+                minimum >= nominal * 0.45 &&
+                average <= nominal * 1.35;
+            connectionMode = !active
+                ? 'open'
+                : average < nominal * 0.75
+                    ? 'star'
+                    : 'delta';
+            final windingCurrent = maximumCurrent(motor);
+            current = windingCurrent *
+                (connectionMode == 'delta' ? math.sqrt(3) : 1);
+            if (active && u.magnitude > 1 && v.magnitude > 1) {
+              final phaseDifference = _wrapAngle(v.angle - u.angle);
+              direction = math.sin(phaseDifference) < 0 ? 1 : -1;
+            }
+          }
         case ComponentKind.motor1Phase:
+        case ComponentKind.fan:
+        case ComponentKind.solenoidValve:
           if (motor.isNotEmpty) {
             voltage = network
                 .voltage(motor.first.a, motor.first.b)
@@ -431,6 +553,8 @@ class ElectricalSimulator {
             active = voltage >= nominal * 0.55 && voltage <= nominal * 1.5;
           }
         case ComponentKind.transformer:
+        case ComponentKind.bellTransformer:
+        case ComponentKind.voltageTransformer:
           final primary = branches
               .where((item) => item.role == 'primary')
               .firstOrNull;
@@ -453,7 +577,30 @@ class ElectricalSimulator {
                 primaryVoltage.imaginary * primaryCurrent.imaginary;
             active = primaryVoltage.magnitude > 1 && voltage > 1;
           }
+        case ComponentKind.currentTransformer:
+          final primary = branches
+              .where((item) => item.role == 'primary')
+              .firstOrNull;
+          final secondary = branches
+              .where((item) => item.role == 'secondaryWinding')
+              .firstOrNull;
+          if (primary != null && secondary != null) {
+            current = network.current(primary).magnitude;
+            secondaryCurrent = network.current(secondary).magnitude;
+            voltage = network
+                .voltage(
+                  _key(component.id, 's1'),
+                  _key(component.id, 's2'),
+                )
+                .magnitude;
+            final ratio = math.max(0.000001, component.number('turnsRatio'));
+            active = current > 0.000001;
+            validMeasurement =
+                voltage <= component.number('maxSecondaryVoltage') * 1.1 &&
+                    (!active || secondaryCurrent >= current * ratio * 0.5);
+          }
         case ComponentKind.voltmeter:
+        case ComponentKind.frequencyMeter:
           if (measurement.isNotEmpty) {
             voltage = network
                 .voltage(measurement.first.a, measurement.first.b)
@@ -466,6 +613,11 @@ class ElectricalSimulator {
                   measurement.first.b,
                   component.id,
                 );
+            if (component.kind == ComponentKind.frequencyMeter &&
+                validMeasurement &&
+                voltage > 1) {
+              frequency = network._supplyFrequency();
+            }
           }
         case ComponentKind.ammeter:
           if (measurement.isNotEmpty) {
@@ -478,6 +630,7 @@ class ElectricalSimulator {
                     voltage < math.max(1.0, component.number('maxCurrent') * 0.02);
           }
         case ComponentKind.digitalCounter:
+        case ComponentKind.wattmeter:
           final voltageBranch = branches
               .where((item) => item.role == 'voltageMeasurement')
               .firstOrNull;
@@ -510,11 +663,26 @@ class ElectricalSimulator {
         case ComponentKind.emergencyStop:
           active = !component.flag('closed');
         case ComponentKind.selectorSwitch:
+        case ComponentKind.lightSwitch:
           active = component.flag('closed');
+        case ComponentKind.intermediateSwitch:
+          active = component.flag('crossed');
+        case ComponentKind.thermostat:
+          active = state.latched;
         case ComponentKind.rotarySwitch:
           active = component.number('position').round() != 0;
+        case ComponentKind.twoWaySwitch:
+          active = component.number('position').round() == 2;
         case ComponentKind.sensor:
         case ComponentKind.limitSwitch:
+        case ComponentKind.motionSensor:
+        case ComponentKind.lightSensor:
+        case ComponentKind.floatSwitch:
+        case ComponentKind.pressureSwitch:
+        case ComponentKind.flowSwitch:
+        case ComponentKind.proximitySensor:
+        case ComponentKind.capacitiveSensor:
+        case ComponentKind.photoelectricSensor:
           active = component.flag('active');
         default:
           break;
@@ -534,6 +702,9 @@ class ElectricalSimulator {
         measurementValid: validMeasurement,
         residualCurrent: residualCurrent,
         energyKwh: state.energyKwh,
+        secondaryCurrent: secondaryCurrent,
+        frequency: frequency,
+        connectionMode: connectionMode,
       );
     }
     return result;
@@ -553,6 +724,46 @@ class ElectricalSimulator {
           messageAr: 'لم تستقر حالة الملفات؛ راجع التعشيق أو نقاط NC المتعارضة.',
         ),
       );
+    }
+    for (final component in project.components) {
+      if (_interlockGroup(component).isNotEmpty &&
+          !_hasValidInterlockPair(component)) {
+        diagnostics.add(
+          SimulationDiagnostic(
+            code: 'interlock_config',
+            componentId: component.id,
+            severity: DiagnosticSeverity.error,
+            messageAr:
+                'مجموعة التعشيق في ${component.label} غير مكتملة: يلزم جهازان فقط بدورَي star وdelta. أبقيت نقاط القدرة مفتوحة.',
+          ),
+        );
+      }
+    }
+    for (final star in project.components) {
+      if (_interlockRole(star) != 'star' ||
+          !_hasValidInterlockPair(star) ||
+          !runtime[star.id].energized) {
+        continue;
+      }
+      final group = _interlockGroup(star);
+      if (group.isEmpty) continue;
+      for (final delta in project.components) {
+        if (delta.id == star.id ||
+            _interlockGroup(delta) != group ||
+            _interlockRole(delta) != 'delta' ||
+            !runtime[delta.id].energized) {
+          continue;
+        }
+        diagnostics.add(
+          SimulationDiagnostic(
+            code: 'interlock_conflict',
+            componentId: star.id,
+            severity: DiagnosticSeverity.error,
+            messageAr:
+                'تعارض التشابك: ملفا ${star.label} (Étoile) و${delta.label} (Triangle) مُغذّيان معاً. فُصلت نقاط القدرة ميكانيكياً لمنع القصر؛ راجع NC 21/22 والمؤقت.',
+          ),
+        );
+      }
     }
     final supplies = project.components.where(
       (item) =>
@@ -632,7 +843,10 @@ class ElectricalSimulator {
           );
         }
       }
-      if (component.kind == ComponentKind.indicator) {
+      if (component.kind == ComponentKind.indicator ||
+          component.kind == ComponentKind.ledLamp ||
+          component.kind == ComponentKind.bell ||
+          component.kind == ComponentKind.buzzer) {
         final rated = component.number('ratedVoltage');
         if (reading.voltage > rated * 1.5) {
           diagnostics.add(
@@ -645,7 +859,10 @@ class ElectricalSimulator {
           );
         }
       }
-      if (component.kind == ComponentKind.motor3Phase && !reading.active) {
+      final isRotatingMachine = component.kind == ComponentKind.motor3Phase ||
+          component.kind == ComponentKind.motor6Terminal ||
+          component.kind == ComponentKind.pump;
+      if (isRotatingMachine && !reading.active) {
         final hasVoltage = reading.voltage > 10;
         if (hasVoltage) {
           diagnostics.add(
@@ -657,27 +874,57 @@ class ElectricalSimulator {
             ),
           );
         }
-      } else if (component.kind == ComponentKind.motor3Phase && reading.active) {
+      } else if (isRotatingMachine && reading.active) {
+        final mode = switch (reading.connectionMode) {
+          'star' => ' Étoile',
+          'delta' => ' Triangle',
+          _ => '',
+        };
         diagnostics.add(
           SimulationDiagnostic(
             code: 'motor_running',
             componentId: component.id,
             severity: DiagnosticSeverity.success,
             messageAr:
-                'المحرك يعمل؛ الاتجاه ${reading.direction >= 0 ? 'أمامي' : 'عكسي'} والتيار ${reading.current.toStringAsFixed(2)}A.',
+                'المحرك يعمل$mode؛ الاتجاه ${reading.direction >= 0 ? 'أمامي' : 'عكسي'} والتيار ${reading.current.toStringAsFixed(2)}A.',
           ),
         );
       }
+      if (component.kind == ComponentKind.phaseRelay) {
+        if (!reading.energized && reading.voltage > 10) {
+          diagnostics.add(
+            SimulationDiagnostic(
+              code: 'phase_relay_fault',
+              componentId: component.id,
+              severity: DiagnosticSeverity.error,
+              messageAr: 'Relais de phases: طور مفقود أو تسلسل الأطوار معكوس؛ افحص L1/L2/L3.',
+            ),
+          );
+        } else if (reading.energized) {
+          diagnostics.add(
+            SimulationDiagnostic(
+              code: 'phase_sequence_ok',
+              componentId: component.id,
+              severity: DiagnosticSeverity.success,
+              messageAr: 'جهود الأطوار وتسلسلها صحيحة في نطاق النموذج.',
+            ),
+          );
+        }
+      }
       if (!reading.measurementValid) {
-        final isVolt = component.kind == ComponentKind.voltmeter;
+        final isVolt = component.kind == ComponentKind.voltmeter ||
+            component.kind == ComponentKind.frequencyMeter;
         diagnostics.add(
           SimulationDiagnostic(
             code: 'invalid_measurement',
             componentId: component.id,
             severity: DiagnosticSeverity.error,
-            messageAr: component.kind == ComponentKind.digitalCounter
-                ? 'Compteur: راجع توصيل الجهد على التوازي والتيار على التسلسل ومدى القياس.'
-                : isVolt
+            messageAr: component.kind == ComponentKind.currentTransformer
+                ? 'CT: جهد الثانوي تجاوز الحد أو العبء غير صالح؛ راجع S1/S2 وقيمة Burden.'
+                : component.kind == ComponentKind.digitalCounter ||
+                        component.kind == ComponentKind.wattmeter
+                    ? 'Mesure: راجع توصيل الجهد على التوازي والتيار على التسلسل ومدى القياس.'
+                    : isVolt
                     ? 'Voltmètre في وضع قياس غير صالح؛ وصله على التوازي مع نقطتين من الدائرة.'
                     : 'Ampèremètre في وضع غير صالح أو تجاوز المدى؛ وصله على التسلسل وليس على التوازي.',
           ),
@@ -731,6 +978,25 @@ class ElectricalSimulator {
           branch.ownerId: network.current(branch).magnitude,
       };
 
+  bool _phaseRelayHealthy(
+    _Network network,
+    CircuitComponent component,
+  ) {
+    final l1 = network.nodeVoltage(_key(component.id, 'l1'));
+    final l2 = network.nodeVoltage(_key(component.id, 'l2'));
+    final l3 = network.nodeVoltage(_key(component.id, 'l3'));
+    final v12 = l1 - l2;
+    final v23 = l2 - l3;
+    final v31 = l3 - l1;
+    final minimum = component.number('minVoltage');
+    final present = v12.magnitude >= minimum &&
+        v23.magnitude >= minimum &&
+        v31.magnitude >= minimum;
+    if (!present) return false;
+    final sequence = _wrapAngle(v23.angle - v12.angle);
+    return math.sin(sequence) < 0;
+  }
+
   double _coilVoltage(_Network network, CircuitComponent component) {
     final branches = network.branches[component.id]
         ?.where((item) => item.role == 'coil');
@@ -740,7 +1006,10 @@ class ElectricalSimulator {
 
   static bool _hasCoil(ComponentKind kind) =>
       kind == ComponentKind.contactor ||
+      kind == ComponentKind.contactor4P ||
       kind == ComponentKind.auxiliaryRelay ||
+      kind == ComponentKind.impulseRelay ||
+      kind == ComponentKind.staircaseTimer ||
       kind == ComponentKind.timer ||
       kind == ComponentKind.timerOffDelay;
 
@@ -769,6 +1038,34 @@ class ElectricalSimulator {
 
   static String _key(String componentId, String terminalId) =>
       '$componentId::$terminalId';
+}
+
+// Interlock assignment belongs to each placed instance, never to ComponentKind.
+// Two contactors of the same model therefore cannot inherit a false conflict.
+String _interlockGroup(CircuitComponent component) =>
+    component.text('interlockGroup').trim();
+
+String _interlockRole(CircuitComponent component) =>
+    component.text('interlockRole').trim();
+
+bool _hasValidInterlockPair(CircuitComponent component) {
+  final group = _interlockGroup(component);
+  final role = _interlockRole(component);
+  if (group.isEmpty || !const <String>{'star', 'delta'}.contains(role)) {
+    return false;
+  }
+  final members = project.components
+      .where((item) => _interlockGroup(item) == group)
+      .toList(growable: false);
+  return members.length == 2 &&
+      members.every(
+        (item) =>
+            item.kind == ComponentKind.contactor ||
+            item.kind == ComponentKind.contactor4P,
+      ) &&
+      members.map(_interlockRole).toSet().containsAll(
+        const <String>{'star', 'delta'},
+      );
 }
 
 class _Branch {
@@ -826,12 +1123,20 @@ class _Network {
       for (final terminal in ComponentCatalog.specOf(component.kind).terminals) {
         allNodes.add('${component.id}::${terminal.id}');
       }
-      if (component.kind == ComponentKind.motor3Phase) {
+      if (component.kind == ComponentKind.motor3Phase ||
+          component.kind == ComponentKind.pump ||
+          component.kind == ComponentKind.heater3Phase) {
         allNodes.add('${component.id}::__neutral');
       }
-      if (component.kind == ComponentKind.transformer) {
+      if (component.kind == ComponentKind.transformer ||
+          component.kind == ComponentKind.bellTransformer ||
+          component.kind == ComponentKind.voltageTransformer) {
         allNodes.add('${component.id}::__primary');
         allNodes.add('${component.id}::__secondary');
+      }
+      if (component.kind == ComponentKind.currentTransformer) {
+        allNodes.add('${component.id}::__ct_primary');
+        allNodes.add('${component.id}::__ct_secondary');
       }
       if (component.kind == ComponentKind.dcSupply ||
           component.kind == ComponentKind.acSupply) {
@@ -881,6 +1186,25 @@ class _Network {
     network._stampWires();
     network._buildAdjacency();
     return network;
+  }
+
+  bool _powerContactsClosed(CircuitComponent component) {
+    final state = runtime[component.id];
+    if (!state.energized) return false;
+    final group = _interlockGroup(component);
+    final role = _interlockRole(component);
+    if (group.isEmpty) return true;
+    if (!_hasValidInterlockPair(component)) return false;
+    for (final peer in project.components) {
+      if (peer.id == component.id || _interlockGroup(peer) != group) {
+        continue;
+      }
+      final peerRole = _interlockRole(peer);
+      final opposite = (role == 'star' && peerRole == 'delta') ||
+          (role == 'delta' && peerRole == 'star');
+      if (opposite && runtime[peer.id].energized) return false;
+    }
+    return true;
   }
 
   void _stampComponents() {
@@ -1010,7 +1334,24 @@ class _Network {
           );
         case ComponentKind.circuitBreaker:
           contact('line', 'load', component.flag('closed') && !state.tripped);
+        case ComponentKind.mcb2P:
+          final closed2P = component.flag('closed') && !state.tripped;
+          contact('lineIn', 'lineOut', closed2P);
+          contact('neutralIn', 'neutralOut', closed2P);
+        case ComponentKind.mcb3P:
+        case ComponentKind.mcb4P:
+        case ComponentKind.mccb3P:
+        case ComponentKind.isolator3P:
+          final closedMulti = component.flag('closed') &&
+              (component.kind == ComponentKind.isolator3P || !state.tripped);
+          contact('l1', 't1', closedMulti);
+          contact('l2', 't2', closedMulti);
+          contact('l3', 't3', closedMulti);
+          if (component.kind == ComponentKind.mcb4P) {
+            contact('neutralIn', 'neutralOut', closedMulti);
+          }
         case ComponentKind.differentialBreaker:
+        case ComponentKind.rccb2P:
           final closed = component.flag('closed') && !state.tripped;
           contact('lineIn', 'lineOut', closed);
           contact('neutralIn', 'neutralOut', closed);
@@ -1021,9 +1362,14 @@ class _Network {
           contact('l3', 't3', closed);
           contact('nc95', 'nc96', closed, role: 'auxiliary');
         case ComponentKind.contactor:
-          contact('l1', 't1', state.energized);
-          contact('l2', 't2', state.energized);
-          contact('l3', 't3', state.energized);
+        case ComponentKind.contactor4P:
+          final powerClosed = _powerContactsClosed(component);
+          contact('l1', 't1', powerClosed);
+          contact('l2', 't2', powerClosed);
+          contact('l3', 't3', powerClosed);
+          if (component.kind == ComponentKind.contactor4P) {
+            contact('neutralIn', 'neutralOut', powerClosed);
+          }
           contact('aux13', 'aux14', state.energized, role: 'auxiliary');
           contact('aux21', 'aux22', !state.energized, role: 'auxiliary');
           coil();
@@ -1036,6 +1382,13 @@ class _Network {
           contact('common', 'no', state.energized, role: 'auxiliary');
           contact('common', 'nc', !state.energized, role: 'auxiliary');
           coil();
+        case ComponentKind.impulseRelay:
+          contact('common', 'no', state.latched, role: 'auxiliary');
+          contact('common', 'nc', !state.latched, role: 'auxiliary');
+          coil();
+        case ComponentKind.phaseRelay:
+          contact('common', 'no', state.energized, role: 'auxiliary');
+          contact('common', 'nc', !state.energized, role: 'auxiliary');
         case ComponentKind.pushButtonNO:
           contact('input', 'output', component.flag('pressed'), role: 'auxiliary');
         case ComponentKind.pushButtonNC:
@@ -1043,38 +1396,78 @@ class _Network {
         case ComponentKind.emergencyStop:
           contact('input', 'output', component.flag('closed'), role: 'auxiliary');
         case ComponentKind.selectorSwitch:
+        case ComponentKind.lightSwitch:
           contact('input', 'output', component.flag('closed'), role: 'auxiliary');
+        case ComponentKind.thermostat:
+          contact('input', 'output', state.latched, role: 'auxiliary');
+        case ComponentKind.twoWaySwitch:
+          final twoWayPosition = component.number('position').round();
+          contact('common', 'out1', twoWayPosition == 1, role: 'auxiliary');
+          contact('common', 'out2', twoWayPosition == 2, role: 'auxiliary');
+        case ComponentKind.intermediateSwitch:
+          final crossed = component.flag('crossed');
+          contact('in1', crossed ? 'out2' : 'out1', true, role: 'auxiliary');
+          contact('in2', crossed ? 'out1' : 'out2', true, role: 'auxiliary');
         case ComponentKind.rotarySwitch:
           final position = component.number('position').round();
           contact('common', 'out1', position == 1, role: 'auxiliary');
           contact('common', 'out2', position == 2, role: 'auxiliary');
         case ComponentKind.sensor:
         case ComponentKind.limitSwitch:
+        case ComponentKind.motionSensor:
+        case ComponentKind.lightSensor:
+        case ComponentKind.floatSwitch:
+        case ComponentKind.pressureSwitch:
+        case ComponentKind.flowSwitch:
           contact('input', 'output', component.flag('active'), role: 'auxiliary');
+        case ComponentKind.proximitySensor:
+        case ComponentKind.capacitiveSensor:
+        case ComponentKind.photoelectricSensor:
+          if (!openFault) {
+            final rated = math.max(1, component.number('ratedVoltage'));
+            final watts = math.max(0.01, component.number('powerWatts'));
+            resistor('positive', 'negative', rated * rated / watts, 'main');
+            resistor(
+              'output',
+              component.flag('active') ? 'positive' : 'negative',
+              shortFault ? 0.001 : 10,
+              'auxiliary',
+            );
+          }
         case ComponentKind.timer:
-          contact(
-            't15',
-            't18',
-            state.energized &&
-                state.timerElapsed >= math.max(0.05, component.number('delaySeconds')),
-            role: 'auxiliary',
-          );
+          final onDelayClosed = state.energized &&
+              state.timerElapsed >=
+                  math.max(0.05, component.number('delaySeconds'));
+          contact('t15', 't18', onDelayClosed, role: 'auxiliary');
+          contact('t15', 't16', !onDelayClosed, role: 'auxiliary');
           coil();
         case ComponentKind.timerOffDelay:
-          contact(
-            't15',
-            't18',
-            state.timerOutput,
-            role: 'auxiliary',
-          );
+        case ComponentKind.staircaseTimer:
+          contact('t15', 't18', state.timerOutput, role: 'auxiliary');
+          contact('t15', 't16', !state.timerOutput, role: 'auxiliary');
           coil();
         case ComponentKind.indicator:
+        case ComponentKind.bell:
+        case ComponentKind.buzzer:
           if (!openFault) {
             final rated = math.max(0.1, component.number('ratedVoltage'));
             final watts = math.max(0.01, component.number('powerWatts'));
             resistor('x1', 'x2', shortFault ? 0.001 : rated * rated / watts, 'main');
           }
+        case ComponentKind.ledLamp:
+          if (!openFault) {
+            final rated = math.max(0.1, component.number('ratedVoltage'));
+            final watts = math.max(0.01, component.number('powerWatts'));
+            resistor(
+              'line',
+              'neutral',
+              shortFault ? 0.001 : rated * rated / watts,
+              'main',
+            );
+          }
         case ComponentKind.motor3Phase:
+        case ComponentKind.pump:
+        case ComponentKind.heater3Phase:
           final nominalPhase = component.number('nominalVoltage') / math.sqrt(3);
           final nominalCurrent = math.max(0.05, component.number('nominalCurrent'));
           final pf = component.number('powerFactor').clamp(0.2, 1.0).toDouble();
@@ -1097,7 +1490,41 @@ class _Network {
             );
             _addBranch(branch);
           }
+        case ComponentKind.motor6Terminal:
+          final nominalWinding = math.max(1, component.number('nominalVoltage'));
+          final nominalLineCurrent = math.max(
+            0.05,
+            component.number('nominalCurrent'),
+          );
+          final pf6 = component.number('powerFactor').clamp(0.2, 1.0).toDouble();
+          final magnitude6 = math.sqrt(3) * nominalWinding / nominalLineCurrent;
+          final resistance6 = magnitude6 * pf6;
+          final reactance6 = magnitude6 * math.sqrt(1 - pf6 * pf6);
+          final impedance6 = _supplyFrequency() == 0
+              ? ComplexNumber(resistance6)
+              : ComplexNumber(resistance6, reactance6);
+          final windings = <List<String>>[
+            <String>['u1', 'u2'],
+            <String>['v1', 'v2'],
+            <String>['w1', 'w2'],
+          ];
+          for (final winding in windings) {
+            if (openFault && winding.first == 'u1') continue;
+            _addBranch(
+              _Branch(
+                component.id,
+                key(winding.first),
+                key(winding.last),
+                shortFault && winding.first == 'u1'
+                    ? const ComplexNumber(0.001)
+                    : impedance6,
+                'motor',
+              ),
+            );
+          }
         case ComponentKind.motor1Phase:
+        case ComponentKind.fan:
+        case ComponentKind.solenoidValve:
           if (!openFault) {
             final nominal = math.max(1, component.number('nominalVoltage'));
             final nominalCurrent = math.max(
@@ -1122,6 +1549,8 @@ class _Network {
             );
           }
         case ComponentKind.transformer:
+        case ComponentKind.bellTransformer:
+        case ComponentKind.voltageTransformer:
           if (!openFault) {
             resistor(
               'primaryLine',
@@ -1154,13 +1583,70 @@ class _Network {
               resistor('secondaryLine', 'secondaryNeutral', 0.001, 'secondary');
             }
           }
+        case ComponentKind.currentTransformer:
+          if (!openFault) {
+            resistor(
+              'p1',
+              '__ct_primary',
+              component.number('primaryResistance'),
+              'primary',
+            );
+            resistor(
+              's1',
+              '__ct_secondary',
+              component.number('secondaryResistance'),
+              'secondaryWinding',
+            );
+            _addIdealCurrentTransformer(
+              key('__ct_primary'),
+              key('p2'),
+              key('__ct_secondary'),
+              key('s2'),
+              math.max(0.000001, component.number('turnsRatio')),
+            );
+            resistor(
+              's1',
+              's2',
+              component.number('burdenResistance'),
+              'burden',
+            );
+            if (shortFault) resistor('p1', 'p2', 0.001, 'main');
+          }
+        case ComponentKind.socketOutlet:
+          contact('lineIn', 'lineOut', true);
+          contact('neutralIn', 'neutralOut', true);
+          contact('earthIn', 'earthOut', true);
+        case ComponentKind.industrialSocket:
+          contact('l1In', 'l1Out', true);
+          contact('l2In', 'l2Out', true);
+          contact('l3In', 'l3Out', true);
+          contact('neutralIn', 'neutralOut', true);
+          contact('earthIn', 'earthOut', true);
         case ComponentKind.terminalBlock:
           contact('a', 'b', true);
+        case ComponentKind.neutralBar:
+        case ComponentKind.earthBar:
+        case ComponentKind.distributionBlock:
+          contact('a', 'b', true);
+          contact('a', 'c', true);
+          contact('a', 'd', true);
+          contact('a', 'return', true);
+        case ComponentKind.cableSegment:
+          if (!openFault) {
+            final resistance = shortFault
+                ? 0.001
+                : component.number('resistivity') *
+                    math.max(0.01, component.number('lengthMeters')) /
+                    math.max(0.05, component.number('crossSectionMm2'));
+            resistor('a', 'b', resistance, 'main');
+          }
         case ComponentKind.voltmeter:
+        case ComponentKind.frequencyMeter:
           resistor('positive', 'negative', 1000000, 'measurement');
         case ComponentKind.ammeter:
           resistor('positive', 'negative', 0.01, 'measurement');
         case ComponentKind.digitalCounter:
+        case ComponentKind.wattmeter:
           resistor('voltageL', 'voltageN', 1000000, 'voltageMeasurement');
           resistor('currentIn', 'currentOut', 0.01, 'currentMeasurement');
         case ComponentKind.fuse:
@@ -1196,14 +1682,16 @@ class _Network {
   }
 
   double _supplyFrequency() {
+    var dcEnabled = false;
     for (final component in project.components) {
-      if ((component.kind == ComponentKind.acSupply ||
-              component.kind == ComponentKind.threePhaseSupply) &&
-          component.flag('enabled')) {
+      if (!component.flag('enabled')) continue;
+      if (component.kind == ComponentKind.acSupply ||
+          component.kind == ComponentKind.threePhaseSupply) {
         return math.max(0, component.number('frequency'));
       }
+      if (component.kind == ComponentKind.dcSupply) dcEnabled = true;
     }
-    return 50;
+    return dcEnabled ? 0 : 50;
   }
 
   void _addBranch(_Branch branch) {
@@ -1296,6 +1784,44 @@ class _Network {
     stamp(primaryB, -1, -1);
     stamp(secondaryA, -ratio, -ratio);
     stamp(secondaryB, ratio, ratio);
+  }
+
+  /// Ideal current transformer: primary voltage is zero and secondary current
+  /// is -ratio × primary current. Winding resistance and the secondary burden
+  /// are stamped separately, so secondary voltage is solved rather than drawn.
+  void _addIdealCurrentTransformer(
+    String primaryA,
+    String primaryB,
+    String secondaryA,
+    String secondaryB,
+    double ratio,
+  ) {
+    final oldSize = rhs.length;
+    for (final row in matrix) {
+      row.add(ComplexNumber.zero);
+    }
+    matrix.add(
+      List<ComplexNumber>.filled(
+        oldSize + 1,
+        ComplexNumber.zero,
+        growable: true,
+      ),
+    );
+    rhs.add(ComplexNumber.zero);
+    final branchIndex = oldSize;
+    void stamp(String node, double kcl, double equation) {
+      final index = nodes[node];
+      if (index == null) return;
+      matrix[index][branchIndex] = matrix[index][branchIndex] +
+          ComplexNumber(kcl);
+      matrix[branchIndex][index] = matrix[branchIndex][index] +
+          ComplexNumber(equation);
+    }
+
+    stamp(primaryA, 1, 1);
+    stamp(primaryB, -1, -1);
+    stamp(secondaryA, -ratio, 0);
+    stamp(secondaryB, ratio, 0);
   }
 
   bool solve() {

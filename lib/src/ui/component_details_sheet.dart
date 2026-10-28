@@ -23,6 +23,11 @@ class ComponentDetailsSheet extends StatefulWidget {
 class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
   final _formKey = GlobalKey<FormState>();
   final Map<String, double> _numbers = <String, double>{};
+  final Map<String, String> _strings = <String, String>{};
+  String _interlockGroup = '';
+  String _interlockRole = 'star';
+  String? _interlockPeerId;
+  bool _interlockDirty = false;
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +117,16 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                             Text('ΔI ${(reading.residualCurrent * 1000).toStringAsFixed(1)} mA'),
                           if (reading.energyKwh > 0)
                             Text('${reading.energyKwh.toStringAsFixed(6)} kWh'),
+                          if (reading.secondaryCurrent > 0)
+                            Text('Is ${reading.secondaryCurrent.toStringAsFixed(3)} A'),
+                          if (reading.frequency > 0)
+                            Text('${reading.frequency.toStringAsFixed(2)} Hz'),
+                          if (reading.connectionMode.isNotEmpty)
+                            Text(switch (reading.connectionMode) {
+                              'star' => 'Étoile / نجمة',
+                              'delta' => 'Triangle / مثلث',
+                              _ => 'Open circuit',
+                            }),
                         ],
                       ),
                     ),
@@ -132,6 +147,11 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
       ComponentKind.motorBreaker,
       ComponentKind.thermalRelay,
       ComponentKind.fuse,
+      ComponentKind.mcb2P,
+      ComponentKind.mcb3P,
+      ComponentKind.mcb4P,
+      ComponentKind.rccb2P,
+      ComponentKind.mccb3P,
     }.contains(component.kind);
     final editable = component.properties.entries.where(
       (entry) => !const <String>{
@@ -140,6 +160,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
         'fault',
         'position',
         'supplyBay',
+        'interlockGroup',
+        'interlockRole',
       }.contains(entry.key),
     );
     return Form(
@@ -177,7 +199,10 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: TextFormField(
                   initialValue: value.toString(),
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                    signed: true,
+                  ),
                   decoration: InputDecoration(
                     labelText: _propertyName(entry.key),
                     suffixText: entry.key,
@@ -187,8 +212,25 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                 ),
               );
             }
+            if (value is String) {
+              _strings[entry.key] = value;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: TextFormField(
+                  initialValue: value,
+                  decoration: InputDecoration(
+                    labelText: _propertyName(entry.key),
+                    suffixText: entry.key,
+                  ),
+                  onSaved: (text) => _strings[entry.key] = text?.trim() ?? '',
+                ),
+              );
+            }
             return const SizedBox.shrink();
           }),
+          if (component.kind == ComponentKind.contactor ||
+              component.kind == ComponentKind.contactor4P)
+            _interlockEditor(componentId),
           if (component.kind == ComponentKind.indicator)
             DropdownButtonFormField<String>(
               initialValue: component.text('color').isEmpty
@@ -205,7 +247,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                 <String, Object>{...component.properties, 'color': value ?? 'red'},
               ),
             ),
-          if (component.kind == ComponentKind.rotarySwitch)
+          if (component.kind == ComponentKind.rotarySwitch ||
+              component.kind == ComponentKind.twoWaySwitch)
             DropdownButtonFormField<int>(
               initialValue: component.number('position').round(),
               decoration: const InputDecoration(labelText: 'وضعية المفتاح الدوار'),
@@ -226,6 +269,7 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
               _formKey.currentState!.save();
               final properties = <String, Object>{...component.properties};
               _numbers.forEach((key, value) => properties[key] = value);
+              _strings.forEach((key, value) => properties[key] = value);
               widget.controller.updateComponentProperties(componentId, properties);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('تم تطبيق الخصائص.')),
@@ -261,6 +305,143 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
               label: const Text('إعادة ضبط الحماية / استبدال الفيوز'),
             ),
         ],
+      ),
+    );
+  }
+
+  Widget _interlockEditor(String componentId) {
+    final project = widget.controller.project;
+    final component = project.componentById(componentId)!;
+    if (!_interlockDirty) {
+      _interlockGroup = component.text('interlockGroup').trim();
+      final savedRole = component.text('interlockRole').trim();
+      _interlockRole = savedRole == 'delta' ? 'delta' : 'star';
+      _interlockPeerId = null;
+      if (_interlockGroup.isNotEmpty) {
+        for (final candidate in project.components) {
+          if (candidate.id != componentId &&
+              candidate.text('interlockGroup').trim() == _interlockGroup) {
+            _interlockPeerId = candidate.id;
+            break;
+          }
+        }
+      }
+    }
+    final candidates = project.components
+        .where(
+          (candidate) =>
+              candidate.id != componentId &&
+              (candidate.kind == ComponentKind.contactor ||
+                  candidate.kind == ComponentKind.contactor4P),
+        )
+        .toList(growable: false);
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Text(
+              'التعشيق الميكانيكي Étoile / Triangle',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 6),
+            const Text(
+              'يُحفظ زوج واحد فقط: جهاز star وجهاز delta. اتركه بلا ربط للعمل المستقل.',
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              key: ValueKey<String>(
+                '$componentId-${component.text('interlockGroup')}',
+              ),
+              initialValue: _interlockGroup,
+              decoration: const InputDecoration(
+                labelText: 'اسم المجموعة',
+                hintText: 'مثال: m1_star_delta',
+              ),
+              onChanged: (value) {
+                _interlockGroup = value;
+                _interlockDirty = true;
+              },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              key: ValueKey<String>('peer-${_interlockPeerId ?? 'none'}'),
+              initialValue: _interlockPeerId,
+              decoration: const InputDecoration(labelText: 'الكونتاكتور المقابل'),
+              items: candidates
+                  .map(
+                    (candidate) => DropdownMenuItem<String>(
+                      value: candidate.id,
+                      child: Text(candidate.label),
+                    ),
+                  )
+                  .toList(growable: false),
+              onChanged: candidates.isEmpty
+                  ? null
+                  : (value) => setState(() {
+                      _interlockPeerId = value;
+                      _interlockDirty = true;
+                    }),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              initialValue: _interlockRole,
+              decoration: const InputDecoration(labelText: 'دور هذا الجهاز'),
+              items: const <DropdownMenuItem<String>>[
+                DropdownMenuItem(value: 'star', child: Text('Étoile / نجمة')),
+                DropdownMenuItem(value: 'delta', child: Text('Triangle / مثلث')),
+              ],
+              onChanged: (value) => setState(() {
+                _interlockRole = value ?? 'star';
+                _interlockDirty = true;
+              }),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: <Widget>[
+                FilledButton.icon(
+                  onPressed: () {
+                    final error = widget.controller.configureInterlockPair(
+                      componentId,
+                      _interlockPeerId ?? '',
+                      _interlockGroup,
+                      _interlockRole,
+                    );
+                    if (error == null) {
+                      setState(() => _interlockDirty = false);
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          error ?? 'تم ربط زوج التعشيق والتحقق من الدورين.',
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.link),
+                  label: const Text('ربط الزوج'),
+                ),
+                OutlinedButton.icon(
+                  onPressed: () {
+                    final error = widget.controller.clearInterlockPair(componentId);
+                    if (error == null) {
+                      setState(() => _interlockDirty = false);
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(error ?? 'تم فك التعشيق للطرفين.')),
+                    );
+                  },
+                  icon: const Icon(Icons.link_off),
+                  label: const Text('فك التعشيق'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -310,8 +491,12 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
 
   static String? _validateNumber(String key, String? text) {
     final parsed = double.tryParse(text ?? '');
-    if (parsed == null || !parsed.isFinite || parsed < 0) {
+    if (parsed == null || !parsed.isFinite) {
       return 'أدخل رقماً صالحاً';
+    }
+    if (parsed < 0 &&
+        !const <String>{'temperature', 'setpoint'}.contains(key)) {
+      return 'أدخل قيمة غير سالبة';
     }
     final limits = const <String, List<double>>{
       'frequency': <double>[40, 70],
@@ -330,6 +515,12 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
       'maxCurrent': <double>[0.001, 1000],
       'pickupRatio': <double>[0.1, 1],
       'dropoutRatio': <double>[0.05, 1],
+      'turnsRatio': <double>[0.000001, 1],
+      'burdenResistance': <double>[0.01, 10000],
+      'crossSectionMm2': <double>[0.05, 1000],
+      'lengthMeters': <double>[0.01, 10000],
+      'resistivity': <double>[0.001, 1],
+      'hysteresis': <double>[0.05, 100],
     }[key];
     if (limits != null && (parsed < limits[0] || parsed > limits[1])) {
       return 'القيمة المدعومة بين ${limits[0]} و${limits[1]}';
@@ -342,6 +533,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
       'coilVoltage',
       'primaryVoltage',
       'secondaryVoltage',
+      'minVoltage',
+      'maxSecondaryVoltage',
     };
     if (voltages.contains(key) && (parsed < 0.1 || parsed > 1000)) {
       return 'الجهد المدعوم بين 0.1 و1000 V';
@@ -373,9 +566,23 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
         'nominalVoltage' => 'جهد المحرك المقنن V',
         'nominalCurrent' => 'تيار المحرك المقنن A',
         'powerFactor' => 'معامل القدرة',
-        'powerWatts' => 'قدرة المصباح W',
+        'powerWatts' => 'القدرة المقننة W',
         'maxVoltage' => 'أقصى جهد للقياس V',
         'maxCurrent' => 'أقصى تيار للقياس A',
+        'maxSecondaryVoltage' => 'أقصى جهد ثانوي V',
+        'minVoltage' => 'أدنى جهد بين الأطوار V',
+        'turnsRatio' => 'نسبة تحويل التيار Np/Ns',
+        'burdenResistance' => 'مقاومة عبء CT Ω',
+        'temperature' => 'الحرارة الحالية °C',
+        'setpoint' => 'نقطة الضبط °C',
+        'hysteresis' => 'التهيستيريسس °C',
+        'heating' => 'وضع تسخين (إيقافه تبريد)',
+        'crossed' => 'التوصيل متقاطع',
+        'lengthMeters' => 'طول الكابل m',
+        'crossSectionMm2' => 'مقطع الكابل mm²',
+        'resistivity' => 'المقاومة النوعية Ω·mm²/m',
+        'interlockGroup' => 'مجموعة التعشيق الميكانيكي (فارغ = بلا تعشيق)',
+        'interlockRole' => 'الدور: star أو delta (فارغ = مستقل)',
         _ => key,
       };
 }

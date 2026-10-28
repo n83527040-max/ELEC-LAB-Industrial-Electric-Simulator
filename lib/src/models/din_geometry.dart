@@ -22,7 +22,23 @@ abstract final class DinGeometry {
         ComponentKind.timerOffDelay ||
         ComponentKind.transformer ||
         ComponentKind.terminalBlock ||
-        ComponentKind.fuse => true,
+        ComponentKind.fuse ||
+        ComponentKind.mcb2P ||
+        ComponentKind.mcb3P ||
+        ComponentKind.mcb4P ||
+        ComponentKind.rccb2P ||
+        ComponentKind.isolator3P ||
+        ComponentKind.mccb3P ||
+        ComponentKind.contactor4P ||
+        ComponentKind.impulseRelay ||
+        ComponentKind.staircaseTimer ||
+        ComponentKind.bellTransformer ||
+        ComponentKind.thermostat ||
+        ComponentKind.phaseRelay ||
+        ComponentKind.voltageTransformer ||
+        ComponentKind.neutralBar ||
+        ComponentKind.earthBar ||
+        ComponentKind.distributionBlock => true,
         _ => false,
       };
 

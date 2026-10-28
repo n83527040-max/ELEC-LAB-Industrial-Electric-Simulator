@@ -1,0 +1,1001 @@
+[
+  {
+    "id": "mcb",
+    "file": "models/mcb.glb",
+    "name_fr": "Disjoncteur MCB",
+    "name_ar": "قاطع كهربائي MCB",
+    "category": "Protection",
+    "description": "3 poles, line/load terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "rcd",
+    "file": "models/rcd.glb",
+    "name_fr": "Disjoncteur différentiel",
+    "name_ar": "قاطع تفاضلي",
+    "category": "Protection",
+    "description": "Line/load terminals and test button",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "motor_breaker",
+    "file": "models/motor_breaker.glb",
+    "name_fr": "Disjoncteur moteur",
+    "name_ar": "قاطع حماية المحرك",
+    "category": "Protection",
+    "description": "Motor protection terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "contactor",
+    "file": "models/contactor.glb",
+    "name_fr": "Contacteur 3P + Aux",
+    "name_ar": "كونتاكتور ثلاثي الطور",
+    "category": "Contactors",
+    "description": "L1/L2/L3, T1/T2/T3, A1/A2, auxiliary contacts",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "L1",
+        "position": [
+          -0.22,
+          0.3,
+          0.39
+        ],
+        "type": "power_in"
+      },
+      {
+        "id": "L2",
+        "position": [
+          0,
+          0.3,
+          0.39
+        ],
+        "type": "power_in"
+      },
+      {
+        "id": "L3",
+        "position": [
+          0.22,
+          0.3,
+          0.39
+        ],
+        "type": "power_in"
+      },
+      {
+        "id": "T1",
+        "position": [
+          -0.22,
+          0.3,
+          -0.39
+        ],
+        "type": "power_out"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0,
+          0.3,
+          -0.39
+        ],
+        "type": "power_out"
+      },
+      {
+        "id": "T3",
+        "position": [
+          0.22,
+          0.3,
+          -0.39
+        ],
+        "type": "power_out"
+      },
+      {
+        "id": "A1",
+        "position": [
+          -0.28,
+          0.3,
+          0.16
+        ],
+        "type": "coil"
+      },
+      {
+        "id": "A2",
+        "position": [
+          0.28,
+          0.3,
+          -0.1
+        ],
+        "type": "coil"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "thermal_relay",
+    "file": "models/thermal_relay.glb",
+    "name_fr": "Relais thermique",
+    "name_ar": "مرحل حراري",
+    "category": "Protection",
+    "description": "Power and auxiliary trip contacts",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "aux_relay",
+    "file": "models/aux_relay.glb",
+    "name_fr": "Relais auxiliaire",
+    "name_ar": "ريليه مساعد",
+    "category": "Control",
+    "description": "Coil and auxiliary contacts",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "motor_3ph",
+    "file": "models/motor_3ph.glb",
+    "name_fr": "Moteur triphasé",
+    "name_ar": "محرك ثلاثي الطور",
+    "category": "Motors",
+    "description": "U/V/W and PE terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "U1",
+        "position": [
+          -0.08,
+          0.15,
+          0.48
+        ],
+        "type": "motor_terminal"
+      },
+      {
+        "id": "V1",
+        "position": [
+          0,
+          0.15,
+          0.48
+        ],
+        "type": "motor_terminal"
+      },
+      {
+        "id": "W1",
+        "position": [
+          0.08,
+          0.15,
+          0.48
+        ],
+        "type": "motor_terminal"
+      },
+      {
+        "id": "PE",
+        "position": [
+          0.35,
+          0.1,
+          -0.3
+        ],
+        "type": "protective_earth"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "motor_1ph",
+    "file": "models/motor_1ph.glb",
+    "name_fr": "Moteur monophasé",
+    "name_ar": "محرك أحادي الطور",
+    "category": "Motors",
+    "description": "Phase, neutral and PE terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "pushbutton_green",
+    "file": "models/pushbutton_green.glb",
+    "name_fr": "Bouton poussoir NO",
+    "name_ar": "زر تشغيل أخضر NO",
+    "category": "Control",
+    "description": "NO contact terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "pushbutton_red",
+    "file": "models/pushbutton_red.glb",
+    "name_fr": "Bouton poussoir NC",
+    "name_ar": "زر توقف أحمر NC",
+    "category": "Control",
+    "description": "NC contact terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "emergency_stop",
+    "file": "models/emergency_stop.glb",
+    "name_fr": "Arrêt d’urgence",
+    "name_ar": "زر توقف اضطراري",
+    "category": "Control",
+    "description": "Emergency stop contact terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "selector",
+    "file": "models/selector.glb",
+    "name_fr": "Sélecteur",
+    "name_ar": "مفتاح اختيار",
+    "category": "Control",
+    "description": "Selectable switch positions",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "pilot_red",
+    "file": "models/pilot_red.glb",
+    "name_fr": "Voyant rouge",
+    "name_ar": "مصباح إشارة أحمر",
+    "category": "Indicators",
+    "description": "Indicator terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "pilot_green",
+    "file": "models/pilot_green.glb",
+    "name_fr": "Voyant vert",
+    "name_ar": "مصباح إشارة أخضر",
+    "category": "Indicators",
+    "description": "Indicator terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "pilot_amber",
+    "file": "models/pilot_amber.glb",
+    "name_fr": "Voyant orange",
+    "name_ar": "مصباح إشارة برتقالي",
+    "category": "Indicators",
+    "description": "Indicator terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "timer_on",
+    "file": "models/timer_on.glb",
+    "name_fr": "Temporisateur ON-delay",
+    "name_ar": "مؤقت زمني ON-delay",
+    "category": "Control",
+    "description": "Supply, coil and timed contacts",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "timer_off",
+    "file": "models/timer_off.glb",
+    "name_fr": "Temporisateur OFF-delay",
+    "name_ar": "مؤقت زمني OFF-delay",
+    "category": "Control",
+    "description": "Supply, coil and timed contacts",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "psu_single",
+    "file": "models/psu_single.glb",
+    "name_fr": "Alimentation monophasée",
+    "name_ar": "مصدر تغذية أحادي الطور",
+    "category": "Power",
+    "description": "L/N/PE terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "psu_three",
+    "file": "models/psu_three.glb",
+    "name_fr": "Alimentation triphasée",
+    "name_ar": "مصدر تغذية ثلاثي الطور",
+    "category": "Power",
+    "description": "L1/L2/L3, optional N, PE",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "L1",
+        "position": [
+          -0.22,
+          0.3,
+          -0.32
+        ],
+        "type": "supply"
+      },
+      {
+        "id": "L2",
+        "position": [
+          0,
+          0.3,
+          -0.32
+        ],
+        "type": "supply"
+      },
+      {
+        "id": "L3",
+        "position": [
+          0.22,
+          0.3,
+          -0.32
+        ],
+        "type": "supply"
+      },
+      {
+        "id": "N",
+        "position": [
+          0.32,
+          0.3,
+          -0.32
+        ],
+        "type": "supply"
+      },
+      {
+        "id": "PE",
+        "position": [
+          0.38,
+          0.3,
+          -0.32
+        ],
+        "type": "protective_earth"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "psu_dc",
+    "file": "models/psu_dc.glb",
+    "name_fr": "Alimentation DC",
+    "name_ar": "مصدر تغذية DC",
+    "category": "Power",
+    "description": "+V/0V terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "terminal_block",
+    "file": "models/terminal_block.glb",
+    "name_fr": "Bornier",
+    "name_ar": "كتلة توصيل",
+    "category": "Wiring",
+    "description": "Terminal connection points",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "fuse_holder",
+    "file": "models/fuse_holder.glb",
+    "name_fr": "Porte-fusible",
+    "name_ar": "حامل فيوز",
+    "category": "Protection",
+    "description": "Fuse input/output",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "transformer",
+    "file": "models/transformer.glb",
+    "name_fr": "Transformateur",
+    "name_ar": "محول كهربائي",
+    "category": "Power",
+    "description": "Primary and secondary terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "current_transformer",
+    "file": "models/current_transformer.glb",
+    "name_fr": "Transformateur de courant",
+    "name_ar": "محول تيار",
+    "category": "Measurement",
+    "description": "Primary aperture and secondary terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "limit_switch",
+    "file": "models/limit_switch.glb",
+    "name_fr": "Fin de course",
+    "name_ar": "مفتاح نهاية مشوار",
+    "category": "Sensors",
+    "description": "NO/NC contact terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "sensor",
+    "file": "models/sensor.glb",
+    "name_fr": "Capteur de proximité",
+    "name_ar": "حساس اقتراب",
+    "category": "Sensors",
+    "description": "Supply and signal terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "voltmeter",
+    "file": "models/voltmeter.glb",
+    "name_fr": "Voltmètre",
+    "name_ar": "فولتميتر",
+    "category": "Measurement",
+    "description": "Voltage measurement terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "ammeter",
+    "file": "models/ammeter.glb",
+    "name_fr": "Ampèremètre",
+    "name_ar": "أمبيرمتر",
+    "category": "Measurement",
+    "description": "Current measurement terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "digital_meter",
+    "file": "models/digital_meter.glb",
+    "name_fr": "Compteur numérique",
+    "name_ar": "عداد رقمي",
+    "category": "Measurement",
+    "description": "Measurement and supply terminals",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  },
+  {
+    "id": "wire_bundle",
+    "file": "models/wire_bundle.glb",
+    "name_fr": "Câbles électriques",
+    "name_ar": "أسلاك كهربائية",
+    "category": "Wiring",
+    "description": "Wire colors for material library",
+    "format": "glTF Binary (.glb)",
+    "terminal_points": [
+      {
+        "id": "T1",
+        "position": [
+          -0.15,
+          0.25,
+          0.35
+        ],
+        "type": "terminal"
+      },
+      {
+        "id": "T2",
+        "position": [
+          0.15,
+          0.25,
+          -0.35
+        ],
+        "type": "terminal"
+      }
+    ],
+    "terminal_coordinates_note": "Starter local-coordinate metadata for integration; verify and calibrate each terminal against the rendered model before using in electrical simulation."
+  }
+]

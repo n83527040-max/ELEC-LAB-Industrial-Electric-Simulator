@@ -228,6 +228,38 @@ class ElectricalProject {
         throw FormatException('Missing layer ${component.layerId}.');
       }
       ComponentCatalog.specOf(component.kind);
+      final role = component.text('interlockRole').trim();
+      if (!const <String>{'', 'star', 'delta'}.contains(role)) {
+        throw FormatException('Invalid interlock role for ${component.id}.');
+      }
+    }
+    final interlockGroups = <String, List<CircuitComponent>>{};
+    for (final component in components) {
+      final group = component.text('interlockGroup').trim();
+      if (group.isEmpty) continue;
+      if (component.kind != ComponentKind.contactor &&
+          component.kind != ComponentKind.contactor4P) {
+        throw FormatException('Interlock requires contactors: ${component.id}.');
+      }
+      if (!const <String>{'star', 'delta'}.contains(
+        component.text('interlockRole').trim(),
+      )) {
+        throw FormatException('Incomplete interlock role for ${component.id}.');
+      }
+      interlockGroups
+          .putIfAbsent(group, () => <CircuitComponent>[])
+          .add(component);
+    }
+    for (final entry in interlockGroups.entries) {
+      final roles = entry.value
+          .map((component) => component.text('interlockRole').trim())
+          .toSet();
+      if (entry.value.length != 2 ||
+          !roles.containsAll(const <String>{'star', 'delta'})) {
+        throw FormatException(
+          'Interlock ${entry.key} requires one star and one delta contactor.',
+        );
+      }
     }
     final connections = <String>{};
     for (final wire in wires) {
@@ -237,7 +269,14 @@ class ElectricalProject {
       _validateTerminal(wire.from);
       _validateTerminal(wire.to);
       if (wire.from.componentId == wire.to.componentId) {
-        throw const FormatException('A wire cannot connect a device to itself.');
+        final component = componentById(wire.from.componentId);
+        final motorBridge = component?.kind == ComponentKind.motor6Terminal &&
+            wire.from.terminalId != wire.to.terminalId;
+        if (!motorBridge) {
+          throw const FormatException(
+            'A wire cannot connect a device to itself.',
+          );
+        }
       }
       final forward = '${wire.from.key}>${wire.to.key}';
       final reverse = '${wire.to.key}>${wire.from.key}';

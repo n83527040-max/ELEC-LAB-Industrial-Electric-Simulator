@@ -1,7 +1,7 @@
 {
   "format": "elec-lab-glb-manifest",
-  "version": 1,
-  "license": "ELEC LAB original assets; see docs/ASSETS_3D.md",
+  "version": 2,
+  "license": "ELEC LAB original assets and user-supplied starter pack; see docs/ASSETS_3D.md",
   "models": [
     {
       "kind": "dcSupply",
@@ -9,14 +9,21 @@
         "positive",
         "negative"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/psu_dc.glb",
+          "sha256": "cc5463c0c7f596985ade674067888a9f21e2d896684a15f52cf9227e9ce35327",
+          "bytes": 7824
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/dcSupply.glb",
-          "bytes": 66132,
+          "bytes": 66220,
           "vertices": 2118,
           "triangles": 2974,
           "materials": 12,
-          "sha256": "560df37b5ce95718dec0e03576bbb544cd73695d75449c1fd93efc644c8af224",
+          "sha256": "be8f31ef8ae54961b57adabdedfdb80ac64b59e7dc08b1cc2a87f49381cc5c61",
           "bounds": {
             "min": [
               -1.1666666666666667,
@@ -32,41 +39,41 @@
         },
         "preview": {
           "path": "assets/models/preview/dcSupply.glb",
-          "bytes": 79200,
-          "vertices": 2494,
-          "triangles": 3686,
-          "materials": 12,
-          "sha256": "49713fe9e98a2b18490b8ecc02ea224721233af07414a4ed17f5ca25fc72469d",
+          "bytes": 36120,
+          "vertices": 1000,
+          "triangles": 1676,
+          "materials": 9,
+          "sha256": "ec8f87fa909f9defb22b326d7883deef5c8b19d236dc684cd734895d32793197",
           "bounds": {
             "min": [
-              -1.1666666666666667,
+              -0.8166666666666667,
               -1.46925,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              1.1666666666666667,
-              1.3125,
-              0.7225333333333334
+              0.8166666666666667,
+              0.4817499880356093,
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/dcSupply.glb",
-          "bytes": 108680,
-          "vertices": 3378,
-          "triangles": 5258,
-          "materials": 12,
-          "sha256": "1c80d6e29a5f7bc57d4f86bfd0f820bca6d8d5ea5249eeb4b37ca265f30ecd51",
+          "bytes": 90844,
+          "vertices": 2776,
+          "triangles": 4460,
+          "materials": 9,
+          "sha256": "ebb4f5a37b14a833ad425b58baf69f44a457aaf726e45bf06a3c53951154d8be",
           "bounds": {
             "min": [
-              -1.1666666666666667,
+              -1.0158333333333334,
               -1.46925,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              1.1666666666666667,
-              1.3125,
-              0.7225333333333334
+              1.0158333333333334,
+              0.4817499880356093,
+              0.6794
             ]
           }
         }
@@ -78,14 +85,21 @@
         "line",
         "neutral"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/psu_single.glb",
+          "sha256": "4561a81cd3b4baf177c041e5482e7344bf82a6b7c58ca3e2ab6c13d1f1d37221",
+          "bytes": 7820
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/acSupply.glb",
-          "bytes": 66848,
+          "bytes": 66936,
           "vertices": 2142,
           "triangles": 3010,
           "materials": 12,
-          "sha256": "28577b414251b5fdfc0fe137e8f35e7f55a4c8da58b72d903dd4fba8fd3e757c",
+          "sha256": "dd8f01228a45a47095f622c940d560b248b34f0eeded50a7460d53fa941c996a",
           "bounds": {
             "min": [
               -1.1666666666666667,
@@ -101,41 +115,41 @@
         },
         "preview": {
           "path": "assets/models/preview/acSupply.glb",
-          "bytes": 79916,
-          "vertices": 2518,
-          "triangles": 3722,
-          "materials": 12,
-          "sha256": "9d84a15ba699e9df887d6842195578e5adcdd9d815e5c86299eb1560da3e1c1e",
+          "bytes": 36852,
+          "vertices": 1024,
+          "triangles": 1712,
+          "materials": 9,
+          "sha256": "797b65b8f95e662acc37fd59d5e46ac52329db57904f33e7a693596ea808e0ef",
           "bounds": {
             "min": [
-              -1.1666666666666667,
+              -0.8166666666666667,
               -1.46925,
-              -0.6144000000000001
+              -0.4345999999999999
             ],
             "max": [
-              1.1666666666666667,
-              1.3125,
-              0.7225333333333334
+              0.8166666666666667,
+              0.4817499999999999,
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/acSupply.glb",
-          "bytes": 111072,
-          "vertices": 3458,
-          "triangles": 5378,
-          "materials": 12,
-          "sha256": "be82d2c10f7417fb9d39fc5fed504f72c3b83f3ed06edfe43b95423fa8dfd27e",
+          "bytes": 91576,
+          "vertices": 2800,
+          "triangles": 4496,
+          "materials": 9,
+          "sha256": "79c30bb27d1af0acaf4663d947f3556b93a972d6b373a2a2346ea24729d8c80d",
           "bounds": {
             "min": [
-              -1.1666666666666667,
+              -1.0158333333333334,
               -1.46925,
-              -0.6144000000000001
+              -0.4345999999999999
             ],
             "max": [
-              1.1666666666666667,
-              1.3125,
-              0.7225333333333334
+              1.0158333333333334,
+              0.4817499999999999,
+              0.6794
             ]
           }
         }
@@ -150,14 +164,21 @@
         "neutral",
         "pe"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/psu_three.glb",
+          "sha256": "9f001de5fca944262601299e34964a64b8efef2876670574cbcf1ec06a35fc0e",
+          "bytes": 20760
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/threePhaseSupply.glb",
-          "bytes": 77932,
+          "bytes": 78020,
           "vertices": 2471,
           "triangles": 3571,
           "materials": 13,
-          "sha256": "24674614a355bcebfc4a5b79f01b389442e762269784ffafb6afceb6e67be6c5",
+          "sha256": "6d2245b9b60a22b092616671c979cd97657f82c6e9d2c4fdda9cb4adb4e4bcbf",
           "bounds": {
             "min": [
               -1.4791666666666667,
@@ -173,41 +194,41 @@
         },
         "preview": {
           "path": "assets/models/preview/threePhaseSupply.glb",
-          "bytes": 101080,
-          "vertices": 3135,
-          "triangles": 4835,
+          "bytes": 77984,
+          "vertices": 2160,
+          "triangles": 3880,
           "materials": 13,
-          "sha256": "1bed216035a550f8c40e89344063a65d33066fed4b34ab6ae763634739a4a708",
+          "sha256": "5a19787ec3a22b5cd737dfc864e43f4b0a79add12c926c5d5b667819f4f722d4",
           "bounds": {
             "min": [
-              -1.4791666666666667,
+              -1.1359166666666667,
               -1.46925,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.6359166666666667,
-              1.3125,
-              0.7475333333333334
+              0.481750021975412,
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/threePhaseSupply.glb",
-          "bytes": 145208,
-          "vertices": 4435,
-          "triangles": 7211,
+          "bytes": 145676,
+          "vertices": 4296,
+          "triangles": 7384,
           "materials": 13,
-          "sha256": "cf70adb07171f7df384b06baaa1bb28e3962e80dbe7cdc44c6b9470cd2b1a211",
+          "sha256": "ffcf1c1ff1a4bf9c5a10c7506497bfe95fca708e260b2e6533c8fb5182106341",
           "bounds": {
             "min": [
-              -1.4791666666666667,
+              -1.2845833333333334,
               -1.46925,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.6359166666666667,
-              1.3125,
-              0.7475333333333334
+              0.481750021975412,
+              0.6794
             ]
           }
         }
@@ -219,14 +240,21 @@
         "line",
         "load"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/mcb.glb",
+          "sha256": "9f488870a3704b90374682f4d63e64ce825d7a75b00af1c2233d2ad8ba308bdb",
+          "bytes": 14256
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/circuitBreaker.glb",
-          "bytes": 41784,
+          "bytes": 41864,
           "vertices": 1253,
           "triangles": 1841,
           "materials": 11,
-          "sha256": "e3fc643216abc7ea4188abf9f5d2490cf1438e7e608391e5e1243fae38ff837f",
+          "sha256": "aa9719d0ff48cdca29adf6cb8ba75492c5051fd329221acbd504e16682c4e655",
           "bounds": {
             "min": [
               -0.8125,
@@ -242,41 +270,41 @@
         },
         "preview": {
           "path": "assets/models/preview/circuitBreaker.glb",
-          "bytes": 48512,
-          "vertices": 1445,
-          "triangles": 2209,
-          "materials": 11,
-          "sha256": "7fa8645e9660768c7b7a55a88c11d89b6e6277d147cf1eeef3de9c7197b49a7c",
+          "bytes": 41528,
+          "vertices": 1112,
+          "triangles": 1984,
+          "materials": 10,
+          "sha256": "f8e80a62078152a6aa0e914432acf565f7b444202fb3709a6cc1e4db99bd153e",
           "bounds": {
             "min": [
-              -0.8125,
+              -0.56875,
               -1.5734166666666667,
-              -0.6144000000000001
+              -0.4345999999999999
             ],
             "max": [
-              0.8125,
+              0.56875,
               1.5734166666666667,
-              0.7442
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/circuitBreaker.glb",
-          "bytes": 70164,
-          "vertices": 2121,
-          "triangles": 3337,
-          "materials": 11,
-          "sha256": "1833c9b841c5db6ec0b576e92eca8812fe13584902a060a867d3419dafb32b2d",
+          "bytes": 96564,
+          "vertices": 2900,
+          "triangles": 4780,
+          "materials": 10,
+          "sha256": "94ac3ec1987e53ace74e19838a152c03ffdf8b5606745981958dc7fc06356897",
           "bounds": {
             "min": [
-              -0.8125,
+              -0.7112499999999999,
               -1.5734166666666667,
-              -0.6144000000000001
+              -0.4345999999999999
             ],
             "max": [
-              0.8125,
+              0.7112499999999999,
               1.5734166666666667,
-              0.7442
+              0.6794
             ]
           }
         }
@@ -290,14 +318,21 @@
         "lineOut",
         "neutralOut"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/rcd.glb",
+          "sha256": "19c62fa223ee052e491be0f8c8bdc228f8ac19c5260ac2b04bb6eee12383ca54",
+          "bytes": 18156
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/differentialBreaker.glb",
-          "bytes": 52660,
+          "bytes": 52744,
           "vertices": 1645,
           "triangles": 2321,
           "materials": 12,
-          "sha256": "7c6b250bc5ba9c9a424f4f4a94d23fb39e1cf66fd1bf0fdfcc49fe23b86724a2",
+          "sha256": "b9db9d50a651f8c262d1de1552e51867ed6896d82f606fb482296ef933c71fbb",
           "bounds": {
             "min": [
               -1.1666666666666667,
@@ -313,41 +348,41 @@
         },
         "preview": {
           "path": "assets/models/preview/differentialBreaker.glb",
-          "bytes": 66684,
-          "vertices": 2045,
-          "triangles": 3089,
-          "materials": 12,
-          "sha256": "05786370d03da72cc74df3280e7ce3aea2ad953e57252dda86b6272a9501d770",
+          "bytes": 61464,
+          "vertices": 1688,
+          "triangles": 3036,
+          "materials": 11,
+          "sha256": "77fb5c17ecec2b6355824203112e5c98bde6cad4fb1b404268180bbe4246abe9",
           "bounds": {
             "min": [
-              -1.1666666666666667,
+              -0.8166666666666667,
               -1.78175,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              1.1666666666666667,
+              0.8166666666666667,
               1.78175,
-              0.7442
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/differentialBreaker.glb",
-          "bytes": 99236,
-          "vertices": 3029,
-          "triangles": 4817,
-          "materials": 12,
-          "sha256": "791754a6d5a1f2bbcbf9fa423c423d797cf3b8918f436f5770efcdfc2d80b443",
+          "bytes": 124836,
+          "vertices": 3704,
+          "triangles": 6300,
+          "materials": 11,
+          "sha256": "6b00de384e1bdb45bbf65e0b4a131d07de19fc800c4f1dd721b703bfd10f4610",
           "bounds": {
             "min": [
-              -1.1666666666666667,
+              -1.0158333333333334,
               -1.78175,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              1.1666666666666667,
+              1.0158333333333334,
               1.78175,
-              0.7442
+              0.6794
             ]
           }
         }
@@ -365,14 +400,21 @@
         "nc95",
         "nc96"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/motor_breaker.glb",
+          "sha256": "a874dae5b40efedfd639deddadef703382945a256e4c12af90bf66e63d74f4d9",
+          "bytes": 14392
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/motorBreaker.glb",
-          "bytes": 65476,
+          "bytes": 65568,
           "vertices": 2072,
           "triangles": 2992,
           "materials": 11,
-          "sha256": "6e7b7d7ed048d41fae9615380c1d0da78e87c09f212b160c712f802703b5712d",
+          "sha256": "15ac8ff504567a8ef88b1f40e2342f5e69fb22919b95e5dae688da392ea1bf11",
           "bounds": {
             "min": [
               -1.5748666666666666,
@@ -388,41 +430,41 @@
         },
         "preview": {
           "path": "assets/models/preview/motorBreaker.glb",
-          "bytes": 93808,
-          "vertices": 2884,
-          "triangles": 4540,
-          "materials": 11,
-          "sha256": "3fa46e40b918e329627e8442a04cce41da52f81e4b323413bbbbf50159f6a12d",
+          "bytes": 80528,
+          "vertices": 2264,
+          "triangles": 4108,
+          "materials": 9,
+          "sha256": "8b851bef36bcb3f039a805ae178bc24bd09e2d6a65184f142e30e4a722fb8aed",
           "bounds": {
             "min": [
               -1.6359166666666667,
               -1.8025833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.6359166666666667,
               1.8025833333333332,
-              0.8117
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/motorBreaker.glb",
-          "bytes": 142204,
-          "vertices": 4288,
-          "triangles": 7168,
-          "materials": 11,
-          "sha256": "84081690c0261d9c5c5c43d2700880c493a76210ce7bfa050cc8d996a0efb09c",
+          "bytes": 161180,
+          "vertices": 4760,
+          "triangles": 8332,
+          "materials": 9,
+          "sha256": "d7d40d4d2c267f18834d1405acf48e1aa2f302b0f9eb2adbbecf779ed82c5f53",
           "bounds": {
             "min": [
               -1.6359166666666667,
               -1.8025833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.6359166666666667,
               1.8025833333333332,
-              0.8117
+              0.6794
             ]
           }
         }
@@ -444,14 +486,21 @@
         "aux21",
         "aux22"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/contactor.glb",
+          "sha256": "b099f3b7793d8951b140a3b070c52dc84d05512d1a1eea27805f24006efe7af4",
+          "bytes": 26004
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/contactor.glb",
-          "bytes": 88252,
+          "bytes": 88340,
           "vertices": 2780,
           "triangles": 4180,
           "materials": 11,
-          "sha256": "95a916d1af326e7f3c353fb90e5d1e6236933760a9fa7288794c92fc8fff1627",
+          "sha256": "63dab5992b85fbff0e5b1dea22be07210aff7860be8e2f8739602209bd36c418",
           "bounds": {
             "min": [
               -1.5748666666666666,
@@ -467,41 +516,41 @@
         },
         "preview": {
           "path": "assets/models/preview/contactor.glb",
-          "bytes": 139148,
-          "vertices": 4252,
-          "triangles": 6948,
-          "materials": 11,
-          "sha256": "b44f3278fc6dcfcd444fbf1bbb524e58629ce9ba526c45ef40c5e506426cd7a6",
+          "bytes": 124952,
+          "vertices": 3524,
+          "triangles": 6548,
+          "materials": 9,
+          "sha256": "8ccab6f0938c13d369d10fa108e3276fa3587bd962a6a836bc186484f5d6ebf1",
           "bounds": {
             "min": [
               -1.6359166666666667,
               -1.8025833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.6359166666666667,
               1.8025833333333332,
-              0.7767
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/contactor.glb",
-          "bytes": 219072,
-          "vertices": 6580,
-          "triangles": 11280,
-          "materials": 11,
-          "sha256": "bc909c512abb0562580baa24acc91cff849b7e185bbd65830b6519482d167b57",
+          "bytes": 222880,
+          "vertices": 6500,
+          "triangles": 11732,
+          "materials": 9,
+          "sha256": "183a441cd617724b0df7b46857ae3f74ff2811fe4f2821f1048b869a7e20f907",
           "bounds": {
             "min": [
               -1.6359166666666667,
               -1.8025833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.6359166666666667,
               1.8025833333333332,
-              0.7767
+              0.6794
             ]
           }
         }
@@ -519,14 +568,21 @@
         "nc95",
         "nc96"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/thermal_relay.glb",
+          "sha256": "01365525af10b1213484f6d20c8512f9bac6e6a07950073eaaaf3fcae7091a1e",
+          "bytes": 14576
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/thermalRelay.glb",
-          "bytes": 75068,
+          "bytes": 75160,
           "vertices": 2354,
           "triangles": 3478,
           "materials": 12,
-          "sha256": "a3ada9bfd3916915f6d39800e00a87645da70cf8d57b0fed1a75c0d9dca464ae",
+          "sha256": "fe411afb0cb625dce18a633424d7cb1763a1894e1c5b919bb72ff9f480a607b4",
           "bounds": {
             "min": [
               -1.2623666666666666,
@@ -542,41 +598,41 @@
         },
         "preview": {
           "path": "assets/models/preview/thermalRelay.glb",
-          "bytes": 103108,
-          "vertices": 3154,
-          "triangles": 5014,
-          "materials": 12,
-          "sha256": "a3e8996fb795caab721ba4fa1e1b2002e31fe5b472de3e1479e6baed5d6e70a0",
+          "bytes": 90756,
+          "vertices": 2586,
+          "triangles": 4608,
+          "materials": 10,
+          "sha256": "ec4da5621f708a0591111d6bb7cee3e20d1f2aed8f02b0a63bba5308e91cc5ab",
           "bounds": {
             "min": [
               -1.3234166666666667,
               -1.4900833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.3234166666666667,
               1.4900833333333332,
-              0.7666999999999999
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/thermalRelay.glb",
-          "bytes": 159092,
-          "vertices": 4818,
-          "triangles": 8014,
-          "materials": 12,
-          "sha256": "624281294496db2a3843960cd91b072e87516dc05f723bd5fce60ac3cceaf63a",
+          "bytes": 171408,
+          "vertices": 5082,
+          "triangles": 8832,
+          "materials": 10,
+          "sha256": "a123ece35ddf50dc6f0d24f0609bb948108d28bf1b778e38cc40b3dc4f42c851",
           "bounds": {
             "min": [
               -1.3234166666666667,
               -1.4900833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
               1.3234166666666667,
               1.4900833333333332,
-              0.7666999999999999
+              0.6794
             ]
           }
         }
@@ -591,14 +647,21 @@
         "no",
         "nc"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/aux_relay.glb",
+          "sha256": "1efecd155135d8d8a9d59e7548867ae3b4317d7bb077b48417b5a5b6e22915a0",
+          "bytes": 13064
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/auxiliaryRelay.glb",
-          "bytes": 53488,
+          "bytes": 53576,
           "vertices": 1638,
           "triangles": 2398,
           "materials": 12,
-          "sha256": "2ec040bd2d7b0adc0b94adfdd96d51c112a08e21582594c0eeb4944b0b57b98d",
+          "sha256": "cbf8ceabca54092c602568d8f3c73acb3e24774f8243417078cba7f203efbbe1",
           "bounds": {
             "min": [
               -1.1790333333333332,
@@ -614,41 +677,41 @@
         },
         "preview": {
           "path": "assets/models/preview/auxiliaryRelay.glb",
-          "bytes": 71448,
-          "vertices": 2150,
-          "triangles": 3382,
-          "materials": 12,
-          "sha256": "caada87ed891758cc903ed2c59dfcb1eebbf7f52dbbb8cbc770ebbfdf75fac32",
+          "bytes": 63232,
+          "vertices": 1772,
+          "triangles": 3160,
+          "materials": 9,
+          "sha256": "cc8d7a394fcb06e013887f6a7357cb65f3450d57f77a2bcd16a4112c0c5ac705",
           "bounds": {
             "min": [
               -1.2400833333333332,
-              -1.421875,
-              -0.6144000000000001
+              -1.0208333333333335,
+              -0.4346
             ],
             "max": [
               1.2400833333333332,
-              1.3541666666666667,
-              0.9592
+              0.9275833333333334,
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/auxiliaryRelay.glb",
-          "bytes": 112064,
-          "vertices": 3374,
-          "triangles": 5542,
-          "materials": 12,
-          "sha256": "426814bd607d44acd7a86f74ead4029cd6043d29caf632526f0cb54e149fb476",
+          "bytes": 130920,
+          "vertices": 3908,
+          "triangles": 6664,
+          "materials": 9,
+          "sha256": "daf5fd4f6aea8c35746be7aaa703b626178c3ebf47b156c2f14f769bdf1f4fa5",
           "bounds": {
             "min": [
               -1.2400833333333332,
-              -1.421875,
-              -0.6144000000000001
+              -1.1464711764705884,
+              -0.4346
             ],
             "max": [
               1.2400833333333332,
-              1.3541666666666667,
-              0.9592
+              0.9275833333333334,
+              0.6794
             ]
           }
         }
@@ -660,14 +723,21 @@
         "input",
         "output"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/pushbutton_green.glb",
+          "sha256": "e885f39697842c405b4ba9d513aa4bcab679d448ae80fc41623bad0d6760ba90",
+          "bytes": 8500
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/pushButtonNO.glb",
-          "bytes": 23552,
+          "bytes": 23648,
           "vertices": 656,
           "triangles": 1040,
           "materials": 7,
-          "sha256": "6ba66e1ab2922f66762912b1dc84496c52fb0cbaaa343c7918fb7c5ee28043ff",
+          "sha256": "b8aeb08908a92afada59bdd5238eb612927b75d94072f3112de615e5222a6e08",
           "bounds": {
             "min": [
               -0.66625,
@@ -683,19 +753,19 @@
         },
         "preview": {
           "path": "assets/models/preview/pushButtonNO.glb",
-          "bytes": 35000,
-          "vertices": 972,
-          "triangles": 1676,
-          "materials": 7,
-          "sha256": "2f530451ebe3ed16f297a7f35f8595afd102b8d74d4c30e1cbebdfd4a1c02fbb",
+          "bytes": 60712,
+          "vertices": 1812,
+          "triangles": 2940,
+          "materials": 8,
+          "sha256": "690cb66a7eaffb49b2d358edbff3e84a1b157bc40d60654870f57a1c0b669fc0",
           "bounds": {
             "min": [
-              -0.66625,
+              -0.61193998646915,
               -1.1150833333333334,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.66625,
+              0.61193998646915,
               1.1150833333333334,
               0.8450000000000001
             ]
@@ -703,19 +773,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/pushButtonNO.glb",
-          "bytes": 50556,
-          "vertices": 1404,
-          "triangles": 2540,
-          "materials": 7,
-          "sha256": "10f267ee163479f7dfa5348c7b733c55b57e76ba3fdddbe1512f57124ef3f876",
+          "bytes": 115732,
+          "vertices": 3600,
+          "triangles": 5736,
+          "materials": 8,
+          "sha256": "aac6e2c310a34020e6460acbd53172845a66c2c4a0e9b1081d3fbd7b972046eb",
           "bounds": {
             "min": [
-              -0.66625,
+              -0.7470833333333332,
               -1.1150833333333334,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.66625,
+              0.7470833333333332,
               1.1150833333333334,
               0.8450000000000001
             ]
@@ -729,14 +799,21 @@
         "input",
         "output"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/pushbutton_red.glb",
+          "sha256": "1d8e331c48a27cb690113550f266a89ac0e823ac4c2933f1b127218071a217a1",
+          "bytes": 8488
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/pushButtonNC.glb",
-          "bytes": 22352,
+          "bytes": 22444,
           "vertices": 616,
           "triangles": 980,
           "materials": 7,
-          "sha256": "22f8d7835ac65cabf367e8c2634793ea5f81d8b362532898dc327a4088ab1e72",
+          "sha256": "adbaf1f44b331b63851689209f990606218fbe341e49f1d5b7bbab4e2b3a315e",
           "bounds": {
             "min": [
               -0.66625,
@@ -752,19 +829,19 @@
         },
         "preview": {
           "path": "assets/models/preview/pushButtonNC.glb",
-          "bytes": 33800,
-          "vertices": 932,
-          "triangles": 1616,
-          "materials": 7,
-          "sha256": "3b7b2f7e4cccde6d0b750e5a4f9eb0df12f1f4a8460ac3b7e5d037614ddaa8ce",
+          "bytes": 59508,
+          "vertices": 1772,
+          "triangles": 2880,
+          "materials": 8,
+          "sha256": "e828d1673586fc2149ea04f3281e8466fecaa7b78fc9e5cb3d8a07d091ebb5c5",
           "bounds": {
             "min": [
-              -0.66625,
+              -0.61193998646915,
               -1.1150833333333334,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.66625,
+              0.61193998646915,
               1.1150833333333334,
               0.8450000000000001
             ]
@@ -772,19 +849,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/pushButtonNC.glb",
-          "bytes": 49356,
-          "vertices": 1364,
-          "triangles": 2480,
-          "materials": 7,
-          "sha256": "802eae8545432368569f5a92a0f98a5024436d9d0b4a8c03fef9b1d83a5baf50",
+          "bytes": 114528,
+          "vertices": 3560,
+          "triangles": 5676,
+          "materials": 8,
+          "sha256": "29d562c618490a5cb5ef8522d6e37fac717539061d88916f3561bbcbdda29d07",
           "bounds": {
             "min": [
-              -0.66625,
+              -0.7470833333333332,
               -1.1150833333333334,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.66625,
+              0.7470833333333332,
               1.1150833333333334,
               0.8450000000000001
             ]
@@ -798,14 +875,21 @@
         "input",
         "output"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/emergency_stop.glb",
+          "sha256": "b7f9c4e736e69885f1e9c5aeb3c8dd95b79c9c2f4697e1ed3ae5dc52ab8c10cb",
+          "bytes": 8488
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/emergencyStop.glb",
-          "bytes": 28644,
+          "bytes": 28736,
           "vertices": 840,
           "triangles": 1252,
           "materials": 8,
-          "sha256": "c2385f6552bb9e4aca7ca81dc468eef28cc678ef4d39bf9301948bf5cea9bc50",
+          "sha256": "350fd10d8ff0a74c7ef486a3b089d6ca91cb6ca25044493e5d17fe55a5ae82d0",
           "bounds": {
             "min": [
               -0.88,
@@ -821,19 +905,19 @@
         },
         "preview": {
           "path": "assets/models/preview/emergencyStop.glb",
-          "bytes": 40236,
-          "vertices": 1178,
-          "triangles": 1878,
-          "materials": 8,
-          "sha256": "66fcb737b2f7a97a7420d0ab02f9d2689ff2837461ef0ea401312a580457e887",
+          "bytes": 57092,
+          "vertices": 1682,
+          "triangles": 2742,
+          "materials": 9,
+          "sha256": "a19ad187c2c560be94c6b0b4919b32a791a3b039022a172ec9f02c40853577aa",
           "bounds": {
             "min": [
-              -0.88,
+              -0.7,
               -1.28175,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.88,
+              0.7,
               1.28175,
               0.8450000000000001
             ]
@@ -841,19 +925,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/emergencyStop.glb",
-          "bytes": 52480,
-          "vertices": 1496,
-          "triangles": 2580,
-          "materials": 8,
-          "sha256": "e3f35658a44f61712cff4e27d2426b6f75720eca66b7c54468cedae015e1f682",
+          "bytes": 111992,
+          "vertices": 3464,
+          "triangles": 5532,
+          "materials": 9,
+          "sha256": "cf732be661f02387c2c44731a091589258273c467a55d6291ca8e49ded620d5a",
           "bounds": {
             "min": [
-              -0.88,
+              -0.8724999999999999,
               -1.28175,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.88,
+              0.8724999999999999,
               1.28175,
               0.8450000000000001
             ]
@@ -867,14 +951,21 @@
         "input",
         "output"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/selector.glb",
+          "sha256": "39d277ee91fc99736488d60a22b90ca03603b98163f81961b865fedb7459967c",
+          "bytes": 9044
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/selectorSwitch.glb",
-          "bytes": 16984,
+          "bytes": 17072,
           "vertices": 436,
           "triangles": 712,
           "materials": 7,
-          "sha256": "0e0c1fbc5162156cf1ba4141c5638e7cb4f02a00ad79443728ad59122ce45ad6",
+          "sha256": "65cff739920db8172d23d11e28adabe74332db921f94935f27c50256445a9ea9",
           "bounds": {
             "min": [
               -0.66625,
@@ -890,19 +981,19 @@
         },
         "preview": {
           "path": "assets/models/preview/selectorSwitch.glb",
-          "bytes": 27564,
-          "vertices": 732,
-          "triangles": 1296,
+          "bytes": 53388,
+          "vertices": 1580,
+          "triangles": 2592,
           "materials": 7,
-          "sha256": "3b7acfcfb89ed20337dc35c36a15874562778f06e17df67f08f5f51b642a0f0b",
+          "sha256": "8d257e49421c41537e508b4b01b4626b96ab08ad4df06573a5cd85db62887b13",
           "bounds": {
             "min": [
-              -0.66625,
+              -0.61193998646915,
               -1.1150833333333334,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.66625,
+              0.61193998646915,
               1.1150833333333334,
               0.8450000000000001
             ]
@@ -910,19 +1001,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/selectorSwitch.glb",
-          "bytes": 41396,
-          "vertices": 1116,
-          "triangles": 2064,
+          "bytes": 108404,
+          "vertices": 3368,
+          "triangles": 5388,
           "materials": 7,
-          "sha256": "ba2f2925ef0c94fb77fe47d30ec6b9607fea3233908086b95b294f5d50b0cba8",
+          "sha256": "5c91a46f723d66289e835ea5cb68a74ed65bdca67cda529fcdeadbe39143aaf2",
           "bounds": {
             "min": [
-              -0.66625,
+              -0.7470833333333332,
               -1.1150833333333334,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.66625,
+              0.7470833333333332,
               1.1150833333333334,
               0.8450000000000001
             ]
@@ -937,14 +1028,15 @@
         "out1",
         "out2"
       ],
+      "sourceAssets": [],
       "lods": {
         "board": {
           "path": "assets/models/board/rotarySwitch.glb",
-          "bytes": 24064,
+          "bytes": 24128,
           "vertices": 668,
           "triangles": 1040,
           "materials": 8,
-          "sha256": "7fdfc6913e0f664574d8b026bbc8721b389f291dccb3f529da714e0d74bf8e7b",
+          "sha256": "21c1d632d2613258c84c1826bb0bfc49786c4c0eae4d19067d5080d812cbbc85",
           "bounds": {
             "min": [
               -0.88,
@@ -960,11 +1052,11 @@
         },
         "preview": {
           "path": "assets/models/preview/rotarySwitch.glb",
-          "bytes": 45664,
+          "bytes": 45732,
           "vertices": 1308,
           "triangles": 2168,
           "materials": 9,
-          "sha256": "bc40265bedb89845086fa291c864c298617d7282395b3db35cc32041c0da5e43",
+          "sha256": "59ef715114d137ee397f0099a886a256fceabd20a4002049ba2b0a8ceb3240a8",
           "bounds": {
             "min": [
               -0.88,
@@ -980,11 +1072,11 @@
         },
         "detailed": {
           "path": "assets/models/detailed/rotarySwitch.glb",
-          "bytes": 62948,
+          "bytes": 63012,
           "vertices": 1776,
           "triangles": 3140,
           "materials": 9,
-          "sha256": "912f3b74c86d1111376a8a925845872a63b09b5423d13600371ef8b2b4f852d8",
+          "sha256": "f1bf60289b7f717942c8ea68b86f1ebcad26206695ab923227b7c4c6f4aa0dd2",
           "bounds": {
             "min": [
               -0.88,
@@ -1006,16 +1098,24 @@
         "a1",
         "a2",
         "t15",
+        "t16",
         "t18"
+      ],
+      "sourceAssets": [
+        {
+          "file": "models/timer_on.glb",
+          "sha256": "fe934b2fb85a988a3163f437dd11aaf8922e95f9ccea91447f2e01665091ddfa",
+          "bytes": 14524
+        }
       ],
       "lods": {
         "board": {
           "path": "assets/models/board/timer.glb",
-          "bytes": 73588,
-          "vertices": 2357,
-          "triangles": 3357,
+          "bytes": 76416,
+          "vertices": 2437,
+          "triangles": 3505,
           "materials": 12,
-          "sha256": "233747178447fdd341c73e16f6cff0af0a94aa71bf20e46342e73120724973a0",
+          "sha256": "c64e0c3d2e7c9f3b90a473eac6d63336bfff98e58602d1e766700dd391ee469b",
           "bounds": {
             "min": [
               -1.1998666666666666,
@@ -1031,40 +1131,40 @@
         },
         "preview": {
           "path": "assets/models/preview/timer.glb",
-          "bytes": 89912,
-          "vertices": 2821,
-          "triangles": 4253,
-          "materials": 12,
-          "sha256": "f08a519fc2e68cfb40acd449360174b9f930a1cba30ed5a70a52a1d2db3c5df8",
+          "bytes": 72376,
+          "vertices": 2054,
+          "triangles": 3612,
+          "materials": 10,
+          "sha256": "87793cbe3dd40a18e7348e6b7deb0aeee83dc46276c0f94cef7ebb723f1f2ec6",
           "bounds": {
             "min": [
               -1.2609166666666667,
-              -1.509375,
-              -0.6144000000000001
+              -1.0775000000000001,
+              -0.4346
             ],
             "max": [
               1.2609166666666667,
-              1.4375,
+              0.9275833333333332,
               0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/timer.glb",
-          "bytes": 135288,
-          "vertices": 4213,
-          "triangles": 6641,
-          "materials": 12,
-          "sha256": "8c8bcb0ca879e82f1354184800f52c7ad6381818d929969184d11072e7070295",
+          "bytes": 140068,
+          "vertices": 4190,
+          "triangles": 7116,
+          "materials": 10,
+          "sha256": "83d7ab06741479f61063dec0965676356c8fdcdbf8336ac06253a9f7719e7009",
           "bounds": {
             "min": [
               -1.2609166666666667,
-              -1.509375,
-              -0.6144000000000001
+              -1.2038231862745097,
+              -0.4346
             ],
             "max": [
               1.2609166666666667,
-              1.4375,
+              0.9275833333333332,
               0.6794
             ]
           }
@@ -1077,16 +1177,24 @@
         "a1",
         "a2",
         "t15",
+        "t16",
         "t18"
+      ],
+      "sourceAssets": [
+        {
+          "file": "models/timer_off.glb",
+          "sha256": "7128a1a9a59c2c6db81c4372495aac71dee52c90d6e7169cd6f4d5092cc75282",
+          "bytes": 14536
+        }
       ],
       "lods": {
         "board": {
           "path": "assets/models/board/timerOffDelay.glb",
-          "bytes": 73372,
-          "vertices": 2349,
-          "triangles": 3345,
+          "bytes": 76200,
+          "vertices": 2429,
+          "triangles": 3493,
           "materials": 12,
-          "sha256": "edd0d642b56ad21cb6eaf8647994fbd0151c2c0e3ae5d5fffde9648e124056d7",
+          "sha256": "6bfa4fe28ba6f4779b4a91be084f64e825244c2e7e0e782ee8137d7b947dac71",
           "bounds": {
             "min": [
               -1.1998666666666666,
@@ -1102,40 +1210,40 @@
         },
         "preview": {
           "path": "assets/models/preview/timerOffDelay.glb",
-          "bytes": 89696,
-          "vertices": 2813,
-          "triangles": 4241,
-          "materials": 12,
-          "sha256": "591501a472f1c3abf0cbc864319ea3d1478cefd7823078b35fd6e131f24f3891",
+          "bytes": 72164,
+          "vertices": 2046,
+          "triangles": 3600,
+          "materials": 10,
+          "sha256": "48ca57a7a836dc43c66296d00b33979702f15bb8a9f8d05a995c5f8fe3130942",
           "bounds": {
             "min": [
               -1.2609166666666667,
-              -1.509375,
-              -0.6144000000000001
+              -1.0775000000000001,
+              -0.4346
             ],
             "max": [
               1.2609166666666667,
-              1.4375,
+              0.9275833333333332,
               0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/timerOffDelay.glb",
-          "bytes": 135072,
-          "vertices": 4205,
-          "triangles": 6629,
-          "materials": 12,
-          "sha256": "d51f071dfae09985469f2ddc3e08a502d1599d779848a5813fcdf5f915fc3ce2",
+          "bytes": 139852,
+          "vertices": 4182,
+          "triangles": 7104,
+          "materials": 10,
+          "sha256": "95e8b816a71e60da64a5a8f023de0acd1fd1178c7a0bb3e6287439183a975b29",
           "bounds": {
             "min": [
               -1.2609166666666667,
-              -1.509375,
-              -0.6144000000000001
+              -1.2038231862745097,
+              -0.4346
             ],
             "max": [
               1.2609166666666667,
-              1.4375,
+              0.9275833333333332,
               0.6794
             ]
           }
@@ -1148,14 +1256,21 @@
         "input",
         "output"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/sensor.glb",
+          "sha256": "c53d87d9275fc5db5de90f4662aa2bcd0cb6e87af3db03abb730303ccf123b66",
+          "bytes": 12476
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/sensor.glb",
-          "bytes": 34252,
+          "bytes": 34336,
           "vertices": 996,
           "triangles": 1564,
           "materials": 8,
-          "sha256": "6baf5ee87191f43332fedf666095f5e86ee88775b1499847465711c15c9ac9f6",
+          "sha256": "ab12caeb46954daf8d7c2ea752688aaf24280f65fb1e6e174356c00257cc7ace",
           "bounds": {
             "min": [
               -0.56875,
@@ -1171,19 +1286,19 @@
         },
         "preview": {
           "path": "assets/models/preview/sensor.glb",
-          "bytes": 46272,
-          "vertices": 1316,
-          "triangles": 2244,
-          "materials": 8,
-          "sha256": "14b1273138cf2d5fa46a4857e173db3bcca609cf310afdef94f9a8d07be74346",
+          "bytes": 42076,
+          "vertices": 1164,
+          "triangles": 1976,
+          "materials": 10,
+          "sha256": "934d7a38d57465b1302a2c4739b70d08652eabc569952bc160691a6b342a4a79",
           "bounds": {
             "min": [
-              -0.56875,
+              -0.6124999999999999,
               -1.1359166666666667,
-              -0.525
+              -0.47700000000000004
             ],
             "max": [
-              0.69,
+              0.6124999999999999,
               1.1359166666666667,
               0.7370000000000001
             ]
@@ -1191,19 +1306,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/sensor.glb",
-          "bytes": 69748,
-          "vertices": 1976,
-          "triangles": 3540,
-          "materials": 8,
-          "sha256": "91ac1404bff87b39a19e67da5164b16843aed4854ab47fdf2efd60a39eeb9c82",
+          "bytes": 97088,
+          "vertices": 2952,
+          "triangles": 4772,
+          "materials": 10,
+          "sha256": "53dbf051c77fa75841b725341d20db2f74d1fc49158c7f663a6dce63ae50701f",
           "bounds": {
             "min": [
-              -0.56875,
+              -0.7649999999999999,
               -1.1359166666666667,
-              -0.525
+              -0.47700000000000004
             ],
             "max": [
-              0.69,
+              0.7649999999999999,
               1.1359166666666667,
               0.7370000000000001
             ]
@@ -1217,14 +1332,21 @@
         "input",
         "output"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/limit_switch.glb",
+          "sha256": "8a8136972728f13f0f61d8f9424298e686af34f80511821b8000d3bb82d5d1f4",
+          "bytes": 7016
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/limitSwitch.glb",
-          "bytes": 28208,
+          "bytes": 28300,
           "vertices": 788,
           "triangles": 1264,
           "materials": 8,
-          "sha256": "8a41069362be55b983ba087339941631a9bef41e3ad0cdd8d5ff20cc38c0c226",
+          "sha256": "ac0171fb95e5de429a45507e7b06ce53841679cbc062f470891e1279e57a6931",
           "bounds": {
             "min": [
               -0.5822916666666668,
@@ -1240,40 +1362,40 @@
         },
         "preview": {
           "path": "assets/models/preview/limitSwitch.glb",
-          "bytes": 39368,
-          "vertices": 1108,
-          "triangles": 1872,
+          "bytes": 47712,
+          "vertices": 1392,
+          "triangles": 2276,
           "materials": 8,
-          "sha256": "52ac6578c36e3874e3f9807b3808cf946b615779f84219757bcecece4714d130",
+          "sha256": "422ab77ecc75d5cc011951482910f29d1926674ef75bc8e4a132be669b22fa8a",
           "bounds": {
             "min": [
-              -0.5822916666666668,
+              -0.6270833333333333,
               -1.3234166666666667,
-              -0.29250000000000004
+              -0.47700000000000004
             ],
             "max": [
-              0.6091666666666666,
-              1.5933333333333335,
+              0.6270833333333333,
+              1.3234166666666667,
               0.7370000000000001
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/limitSwitch.glb",
-          "bytes": 64956,
-          "vertices": 1884,
-          "triangles": 3228,
+          "bytes": 102724,
+          "vertices": 3180,
+          "triangles": 5072,
           "materials": 8,
-          "sha256": "3bc2030c303418833e919adfbb85d206ebc9d04f3d0307a8a03ba25285b79a0a",
+          "sha256": "b7ff0b792ddbb0e5005cab627649e883b32a151a95eb624345de853755dd14bf",
           "bounds": {
             "min": [
-              -0.5822916666666668,
+              -0.7829166666666666,
               -1.3234166666666667,
-              -0.29250000000000004
+              -0.47700000000000004
             ],
             "max": [
-              0.6091666666666666,
-              1.5933333333333335,
+              0.7829166666666666,
+              1.3234166666666667,
               0.7370000000000001
             ]
           }
@@ -1286,14 +1408,31 @@
         "x1",
         "x2"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/pilot_red.glb",
+          "sha256": "b28f1d331a23021e5f5f69f215d025c72afdc1a3a5b718a4ff53e39608a18bdb",
+          "bytes": 15040
+        },
+        {
+          "file": "models/pilot_green.glb",
+          "sha256": "83c06c031621172d352b782f5336bbaf9547a57ac01feef0eead269d0739909b",
+          "bytes": 15056
+        },
+        {
+          "file": "models/pilot_amber.glb",
+          "sha256": "7d6f73515a1360781c8872d399bfbc30dfb0508a58b5da27fdfe67f75e7dd737",
+          "bytes": 15040
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/indicator.glb",
-          "bytes": 18308,
+          "bytes": 18444,
           "vertices": 500,
           "triangles": 788,
           "materials": 6,
-          "sha256": "5c57c80d2f29dba75cc6d916241d51156704f5ed13cde8d4d35b3da3a3591908",
+          "sha256": "d480621acb3eaa0bc944bd9afe0aaaf8e0e90b53a6b66fcf80589d5bcffbbbc5",
           "bounds": {
             "min": [
               -0.6174999999999999,
@@ -1309,19 +1448,19 @@
         },
         "preview": {
           "path": "assets/models/preview/indicator.glb",
-          "bytes": 33020,
-          "vertices": 916,
-          "triangles": 1596,
-          "materials": 6,
-          "sha256": "29b32246c9480a1cb1b9cab7fad7f8ac447737324c08f9ff9f7474cbb2e4d495",
+          "bytes": 56568,
+          "vertices": 1630,
+          "triangles": 2744,
+          "materials": 9,
+          "sha256": "b322d7190fa931aac7f5edde37812c630bf1e98ecfe07d42c2a91da40d99d0a7",
           "bounds": {
             "min": [
-              -0.6174999999999999,
+              -0.61193998646915,
               -1.1984166666666667,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.6174999999999999,
+              0.61193998646915,
               1.1984166666666667,
               0.8450000000000001
             ]
@@ -1329,19 +1468,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/indicator.glb",
-          "bytes": 57360,
-          "vertices": 1600,
-          "triangles": 2940,
-          "materials": 6,
-          "sha256": "078f1b0bd8c1381881b3c5d23f528d2fe50711e3911bd2d425a2ea73d10b9881",
+          "bytes": 111444,
+          "vertices": 3412,
+          "triangles": 5534,
+          "materials": 9,
+          "sha256": "d6e9a498dce7458ac56d53b184988eda0b58bd4ec312ac08065d37c867c3d8fc",
           "bounds": {
             "min": [
-              -0.6174999999999999,
+              -0.6933333333333332,
               -1.1984166666666667,
-              -0.47400000000000003
+              -0.5565
             ],
             "max": [
-              0.6174999999999999,
+              0.6933333333333332,
               1.1984166666666667,
               0.8450000000000001
             ]
@@ -1357,14 +1496,21 @@
         "w",
         "earth"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/motor_3ph.glb",
+          "sha256": "5d756faa32c6191f3e77c34c60a1c54ddd9debff4221e20c184806a18a7d242c",
+          "bytes": 15552
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/motor3Phase.glb",
-          "bytes": 63648,
+          "bytes": 63736,
           "vertices": 2056,
           "triangles": 2948,
           "materials": 8,
-          "sha256": "feae3fe870240f34b68ea59b1d7a2960665136411e6e1ef613a0c3fdb8e4eed0",
+          "sha256": "b6a27a940566f138b1d5b10e214a1597b035b097472075ce2f31463f4a015444",
           "bounds": {
             "min": [
               -1.4712500000000002,
@@ -1380,19 +1526,19 @@
         },
         "preview": {
           "path": "assets/models/preview/motor3Phase.glb",
-          "bytes": 96164,
-          "vertices": 2876,
-          "triangles": 4808,
-          "materials": 9,
-          "sha256": "8438de3c777bfd8045e032621385f0f83b40b4217809fef5763fde61a270028c",
+          "bytes": 59012,
+          "vertices": 1664,
+          "triangles": 2948,
+          "materials": 8,
+          "sha256": "1615c5006ea0dde66987b6b2b13af77945238b908d3a327e3c868e85d8ec8a0b",
           "bounds": {
             "min": [
-              -1.7833333333333332,
-              -1.2466666666666666,
-              -0.9916666666666667
+              -1.09425,
+              -0.8958333333333334,
+              -0.8958333333333334
             ],
             "max": [
-              3.29375,
+              1.71925,
               1.5734166666666667,
               1.277
             ]
@@ -1400,19 +1546,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/motor3Phase.glb",
-          "bytes": 133324,
-          "vertices": 3956,
-          "triangles": 6824,
-          "materials": 9,
-          "sha256": "cfd4e70e1721a6562cf7d6dc0cb6090e45c28fe272c9a0933cf6bf040bd982af",
+          "bytes": 82924,
+          "vertices": 2336,
+          "triangles": 4268,
+          "materials": 8,
+          "sha256": "ad198ddf93f11feb3d9ee9ba87214b485cef264c3cda2907602cd366b3eab19b",
           "bounds": {
             "min": [
-              -1.7833333333333332,
-              -1.2466666666666666,
-              -0.9916666666666667
+              -1.09425,
+              -0.8958333333333334,
+              -0.8744999999999999
             ],
             "max": [
-              3.29375,
+              1.71925,
               1.5734166666666667,
               1.277
             ]
@@ -1427,14 +1573,21 @@
         "v",
         "earth"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/motor_1ph.glb",
+          "sha256": "f10351853f28a1aa288f23da9093301f50727c7ecefa57bcf9b4abd0ab9cc4ed",
+          "bytes": 15364
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/motor1Phase.glb",
-          "bytes": 57304,
+          "bytes": 57392,
           "vertices": 1828,
           "triangles": 2680,
           "materials": 7,
-          "sha256": "968571fa9593a6a3d27322fabe4f759e68a408cd87fc73d0a0908015bdf57c47",
+          "sha256": "9a570f553eecc2a5a472c0ee446384fc23e70528be9cc83d0130fe0c6f27fbd7",
           "bounds": {
             "min": [
               -1.30875,
@@ -1450,19 +1603,19 @@
         },
         "preview": {
           "path": "assets/models/preview/motor1Phase.glb",
-          "bytes": 88484,
-          "vertices": 2636,
-          "triangles": 4440,
-          "materials": 8,
-          "sha256": "b8b26c2fd5bfe4be88dd4b2581e922a60f765a34f7a2b4d47d87d8ab2016b1bb",
+          "bytes": 48824,
+          "vertices": 1332,
+          "triangles": 2460,
+          "materials": 7,
+          "sha256": "a2d4bdfd074d83ac706e535180b0c4dd3605a1bfd748aaea742394470d4c68e8",
           "bounds": {
             "min": [
-              -1.575,
-              -1.1733333333333333,
-              -0.9333333333333332
+              -0.8859166666666667,
+              -0.8441666666666666,
+              -0.8441666666666666
             ],
             "max": [
-              2.90625,
+              1.5109166666666667,
               1.4900833333333332,
               1.133
             ]
@@ -1470,19 +1623,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/motor1Phase.glb",
-          "bytes": 120460,
-          "vertices": 3560,
-          "triangles": 6180,
-          "materials": 8,
-          "sha256": "b33c8ba06fead11cac135ac6c11d429a0814daecdfc53ceea59c5ed1d64763f2",
+          "bytes": 68412,
+          "vertices": 1884,
+          "triangles": 3540,
+          "materials": 7,
+          "sha256": "b4bf575a9755d1d1ea5b29e01a57e2edb6d3de3ae287f8f49230cb2f3d258ea8",
           "bounds": {
             "min": [
-              -1.575,
-              -1.1733333333333333,
-              -0.9333333333333332
+              -0.8859166666666667,
+              -0.8441666666666666,
+              -0.8234404074036409
             ],
             "max": [
-              2.90625,
+              1.5109166666666667,
               1.4900833333333332,
               1.133
             ]
@@ -1498,14 +1651,21 @@
         "secondaryLine",
         "secondaryNeutral"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/transformer.glb",
+          "sha256": "a0bea1f87155c66d423c37e977cccd4c3f3c81b444b8c1b46730ea3ec6be0b6b",
+          "bytes": 10180
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/transformer.glb",
-          "bytes": 88136,
+          "bytes": 88228,
           "vertices": 3076,
           "triangles": 3968,
           "materials": 8,
-          "sha256": "1d824814b0eeb6fd3c6bd4fb55489e9c9e941f0d5e140097a4c83f44e0a0b450",
+          "sha256": "3d61e9c06fb3c48ba4c4c16ca0841231d06eaa51ad9db1c4aeeafdca2172391a",
           "bounds": {
             "min": [
               -1.40625,
@@ -1521,41 +1681,41 @@
         },
         "preview": {
           "path": "assets/models/preview/transformer.glb",
-          "bytes": 148912,
-          "vertices": 5308,
-          "triangles": 6800,
-          "materials": 8,
-          "sha256": "3c6f17488f1eac9ad31b48f096fe041e49fc5939c96a23aec1b8cf2fee2485b6",
+          "bytes": 67992,
+          "vertices": 1994,
+          "triangles": 3332,
+          "materials": 9,
+          "sha256": "2139ffa6426b0a6d7150cd267f1e927a4344e6af52d383770ee3711dcf6ada04",
           "bounds": {
             "min": [
-              -1.40625,
+              -1.2192499999999997,
               -1.6775833333333332,
-              -0.30165
+              -0.4346
             ],
             "max": [
-              1.40625,
+              1.2192499999999997,
               1.6775833333333332,
-              0.76085
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/transformer.glb",
-          "bytes": 256496,
-          "vertices": 8292,
-          "triangles": 12780,
-          "materials": 8,
-          "sha256": "d7377613240d7d2867c18a8c58c9b58d7f35cad320b904ffbe48fd516f6aa7c1",
+          "bytes": 131340,
+          "vertices": 4010,
+          "triangles": 6596,
+          "materials": 9,
+          "sha256": "313d2f1aec6723eecd249cd8bb59f14836b5acc0424b074c821bb9fbeefb12d9",
           "bounds": {
             "min": [
-              -1.40625,
+              -1.35625,
               -1.6775833333333332,
-              -0.3329
+              -0.4346
             ],
             "max": [
-              1.40625,
+              1.35625,
               1.6775833333333332,
-              0.7921
+              0.6794
             ]
           }
         }
@@ -1567,14 +1727,21 @@
         "a",
         "b"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/terminal_block.glb",
+          "sha256": "634542fceb6b3ad2f923f73216d2ce5cadbdc3b17a63b49c276433974b5016a2",
+          "bytes": 10688
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/terminalBlock.glb",
-          "bytes": 19284,
+          "bytes": 19376,
           "vertices": 532,
           "triangles": 808,
           "materials": 7,
-          "sha256": "1348d00780efc93a645b2f511abf0be97736694a49c5353504fd09b84dd1682a",
+          "sha256": "9acfc74125599b8f6bed8c3b02dc692c9e08b89f1e283c966f95e78c74e91bd8",
           "bounds": {
             "min": [
               -0.58125,
@@ -1590,19 +1757,19 @@
         },
         "preview": {
           "path": "assets/models/preview/terminalBlock.glb",
-          "bytes": 28460,
-          "vertices": 788,
-          "triangles": 1288,
-          "materials": 8,
-          "sha256": "b0b9ea17c322d1db35bf3d3bf51242df70fd5c5fa2aac63e9961c85f28320148",
+          "bytes": 56444,
+          "vertices": 1638,
+          "triangles": 2668,
+          "materials": 11,
+          "sha256": "59af39f7dc35d47426a302a3c73fddd91a618963235eeba9621b728d49019371",
           "bounds": {
             "min": [
-              -0.58125,
+              -0.45208333333333334,
               -1.0525833333333334,
-              -0.41
+              -0.4345999999999999
             ],
             "max": [
-              0.58125,
+              0.45208333333333334,
               1.0525833333333334,
               0.6794
             ]
@@ -1610,19 +1777,19 @@
         },
         "detailed": {
           "path": "assets/models/detailed/terminalBlock.glb",
-          "bytes": 38836,
-          "vertices": 1076,
-          "triangles": 1864,
-          "materials": 8,
-          "sha256": "2146786bfccae6bf96fa9e37ed4bcb1adae5b50eeb9378e2f1c242505c52e219",
+          "bytes": 111168,
+          "vertices": 3414,
+          "triangles": 5452,
+          "materials": 11,
+          "sha256": "2bdb56ee7b9893175cfac77f4f196e2b73d46d66a59a51ad559dc0eae4bf2f9a",
           "bounds": {
             "min": [
-              -0.58125,
+              -0.5679166666666666,
               -1.0525833333333334,
-              -0.41
+              -0.4345999999999999
             ],
             "max": [
-              0.58125,
+              0.5679166666666666,
               1.0525833333333334,
               0.6794
             ]
@@ -1636,14 +1803,21 @@
         "positive",
         "negative"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/voltmeter.glb",
+          "sha256": "09086b6ced46da25118c15a02aa1da23b096ad5a960909e7ebe34dd08e36f296",
+          "bytes": 13612
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/voltmeter.glb",
-          "bytes": 50740,
+          "bytes": 50828,
           "vertices": 1556,
           "triangles": 2312,
           "materials": 10,
-          "sha256": "7d5861f156aa61fcd942ad4e8ee91a8274c361136cfd867ba0f8530b860b290e",
+          "sha256": "6bc2a043bcc8d7a2ee34cd9956865e235c75205a6691062b8b6ff31216775718",
           "bounds": {
             "min": [
               -0.9791666666666666,
@@ -1659,41 +1833,41 @@
         },
         "preview": {
           "path": "assets/models/preview/voltmeter.glb",
-          "bytes": 59192,
-          "vertices": 1796,
-          "triangles": 2776,
-          "materials": 10,
-          "sha256": "87c8d4e5c7d5aeece7f2b57d96fc0db28aa7d26a9a0a424b1e338f4853a0be63",
+          "bytes": 50176,
+          "vertices": 1445,
+          "triangles": 2431,
+          "materials": 8,
+          "sha256": "21da0b8692f71067c0668235eba489d85977733ad2596d2e8c0f8cb40a9eb2eb",
           "bounds": {
             "min": [
-              -0.9791666666666666,
+              -0.6854166666666666,
               -1.1359166666666667,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              0.9791666666666666,
+              0.6854166666666666,
               1.1359166666666667,
-              0.6837
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/voltmeter.glb",
-          "bytes": 80412,
-          "vertices": 2442,
-          "triangles": 3898,
-          "materials": 10,
-          "sha256": "c535418208de277aa44257f6572b54726d9ca4938058b5ca939cdc0b6019596e",
+          "bytes": 105120,
+          "vertices": 3230,
+          "triangles": 5224,
+          "materials": 8,
+          "sha256": "2ebefb89067c448ec7f49f7b4810ff09ae9d7c83f986462a36033ef468defd70",
           "bounds": {
             "min": [
-              -0.9791666666666666,
+              -0.8545833333333333,
               -1.1359166666666667,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              0.9791666666666666,
+              0.8545833333333333,
               1.1359166666666667,
-              0.6837
+              0.6794
             ]
           }
         }
@@ -1705,14 +1879,21 @@
         "positive",
         "negative"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/ammeter.glb",
+          "sha256": "8d6727795ff76de3f44e9cb1f11bb933f814ab5699aa092dc988b9f85bafda67",
+          "bytes": 13600
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/ammeter.glb",
-          "bytes": 49532,
+          "bytes": 49620,
           "vertices": 1516,
           "triangles": 2252,
           "materials": 10,
-          "sha256": "628756284c582f20e497c467ba27bca23a3e7d5af8e7a49aee58b842800de583",
+          "sha256": "13e734585d4590e0d0a94c828018a0d6df981ef9efb44e74c6dc4b2dc256c70c",
           "bounds": {
             "min": [
               -0.9791666666666666,
@@ -1728,41 +1909,41 @@
         },
         "preview": {
           "path": "assets/models/preview/ammeter.glb",
-          "bytes": 57984,
-          "vertices": 1756,
-          "triangles": 2716,
-          "materials": 10,
-          "sha256": "921787a0a2d983c1b262184ee5885a469b7b601d373ab927e7d79a702824d79d",
+          "bytes": 47528,
+          "vertices": 1357,
+          "triangles": 2299,
+          "materials": 8,
+          "sha256": "2b7f72e3412dff2e68efeea9b6b24995e0bc7a0f0f4ef3555b3db825c30161ac",
           "bounds": {
             "min": [
-              -0.9791666666666666,
+              -0.6854166666666666,
               -1.1359166666666667,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              0.9791666666666666,
+              0.6854166666666666,
               1.1359166666666667,
-              0.6837
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/ammeter.glb",
-          "bytes": 79208,
-          "vertices": 2402,
-          "triangles": 3838,
-          "materials": 10,
-          "sha256": "88bc90244dec6be0d391c49d4c2c065c7c8d43f6b07fbd7718cc6fd6a2f9e72a",
+          "bytes": 102468,
+          "vertices": 3142,
+          "triangles": 5092,
+          "materials": 8,
+          "sha256": "3f50369fd4e9c403949eedecb4ca2a6f3d933b47f2d62d61bc8308e245bc5c43",
           "bounds": {
             "min": [
-              -0.9791666666666666,
+              -0.8545833333333333,
               -1.1359166666666667,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              0.9791666666666666,
+              0.8545833333333333,
               1.1359166666666667,
-              0.6837
+              0.6794
             ]
           }
         }
@@ -1776,14 +1957,21 @@
         "currentIn",
         "currentOut"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/digital_meter.glb",
+          "sha256": "119d443077dfed5904e7e159d9ea8f2c157c5c5fe939359c7e41abd4b423ea17",
+          "bytes": 7236
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/digitalCounter.glb",
-          "bytes": 76388,
+          "bytes": 76480,
           "vertices": 2430,
           "triangles": 3574,
           "materials": 10,
-          "sha256": "73d41c0185ec54cd3cd0c0b595ff36f82f465cffd0d7dd1223822766c93dbfc3",
+          "sha256": "328bfddf02d07156cb8c84630c119c15a33273245d215e73819dc94bfcec1237",
           "bounds": {
             "min": [
               -1.125,
@@ -1799,41 +1987,41 @@
         },
         "preview": {
           "path": "assets/models/preview/digitalCounter.glb",
-          "bytes": 91560,
-          "vertices": 2862,
-          "triangles": 4406,
-          "materials": 10,
-          "sha256": "bda86d170e0b105c03af9b3c2028dd4d3fcb6993eb3c7efa4dfde0b39fc4bd2e",
+          "bytes": 50700,
+          "vertices": 1428,
+          "triangles": 2460,
+          "materials": 9,
+          "sha256": "ce5efa92b74547f693bda39e391cc7644ae0c8d500e635791e42fdae0b50e480",
           "bounds": {
             "min": [
-              -1.125,
+              -0.7875,
               -1.2400833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              1.125,
+              0.7875,
               1.2400833333333332,
-              0.6837
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/digitalCounter.glb",
-          "bytes": 121284,
-          "vertices": 3742,
-          "triangles": 6002,
-          "materials": 10,
-          "sha256": "f3bfe86ae39ec9df2416f3d11218cb9d4dbc9e3a7da94f795e6ae9c979e8f9ae",
+          "bytes": 114068,
+          "vertices": 3444,
+          "triangles": 5724,
+          "materials": 9,
+          "sha256": "6475d58669027d1a0f8f69e4a7a9802c9722e4ffcdb6436f55883e00f0cc1b69",
           "bounds": {
             "min": [
-              -1.125,
+              -0.98,
               -1.2400833333333332,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              1.125,
+              0.98,
               1.2400833333333332,
-              0.6837
+              0.6794
             ]
           }
         }
@@ -1847,14 +2035,21 @@
         "input",
         "output"
       ],
+      "sourceAssets": [
+        {
+          "file": "models/fuse_holder.glb",
+          "sha256": "ae00abc64a58fdf5e08cbb4756e2d9bbf9280f1664e7ae9f7b847d3293e76843",
+          "bytes": 6476
+        }
+      ],
       "lods": {
         "board": {
           "path": "assets/models/board/fuse.glb",
-          "bytes": 41856,
+          "bytes": 41944,
           "vertices": 1214,
           "triangles": 1886,
           "materials": 11,
-          "sha256": "4ef67c13831f3983c2735ce49ecbac636dab815fd84f51ea5aa236f5db72eb54",
+          "sha256": "b442199d45f58182b88bbaffe23146d2a166564e778988961deba3c2c0054a71",
           "bounds": {
             "min": [
               -0.75,
@@ -1870,45 +2065,3028 @@
         },
         "preview": {
           "path": "assets/models/preview/fuse.glb",
-          "bytes": 60584,
-          "vertices": 1750,
-          "triangles": 2910,
-          "materials": 11,
-          "sha256": "ce0289bf26e8587b63473aa0307f2dc89fc364d106d8b162bd93dd66426f38cb",
+          "bytes": 42112,
+          "vertices": 1154,
+          "triangles": 2020,
+          "materials": 9,
+          "sha256": "e80b26e6e5bbd137819ff63f06f1603ffb7faf6edcd0c866bb311ed595319f2f",
           "bounds": {
             "min": [
-              -0.75,
+              -0.5249999999999999,
               -1.1984166666666667,
-              -0.6144000000000001
+              -0.4346
             ],
             "max": [
-              0.75,
+              0.5249999999999999,
               1.1984166666666667,
-              0.9792000000000001
+              0.6794
             ]
           }
         },
         "detailed": {
           "path": "assets/models/detailed/fuse.glb",
-          "bytes": 100740,
-          "vertices": 2933,
-          "triangles": 5073,
-          "materials": 11,
-          "sha256": "695c5ef65f4d7715b32ac90c99992de2fa082004c3dc1b4671c816144029555c",
+          "bytes": 105528,
+          "vertices": 3173,
+          "triangles": 5287,
+          "materials": 9,
+          "sha256": "8ae098adc2c76a4a26144bc02488144d8352420e9b21a106ab55f1e64fe63433",
           "bounds": {
             "min": [
-              -0.75,
+              -0.6575,
+              -1.1984166666666667,
+              -0.4346
+            ],
+            "max": [
+              0.6575,
+              1.1984166666666667,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "motor6Terminal",
+      "terminalIds": [
+        "u1",
+        "v1",
+        "w1",
+        "u2",
+        "v2",
+        "w2",
+        "earth"
+      ],
+      "sourceAssets": [
+        {
+          "file": "models/motor_3ph.glb",
+          "sha256": "5d756faa32c6191f3e77c34c60a1c54ddd9debff4221e20c184806a18a7d242c",
+          "bytes": 15552
+        }
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/motor6Terminal.glb",
+          "bytes": 77096,
+          "vertices": 2440,
+          "triangles": 3644,
+          "materials": 9,
+          "sha256": "c329d85d40cb0e77c75020508a04e15db3978854b3d901f334cd6e8495c9a8ce",
+          "bounds": {
+            "min": [
+              -1.2266666666666668,
+              -1.6998666666666666,
+              -1.0908333333333335
+            ],
+            "max": [
+              2.1658333333333335,
+              1.6998666666666666,
+              1.2654999999999998
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/motor6Terminal.glb",
+          "bytes": 94828,
+          "vertices": 2748,
+          "triangles": 4784,
+          "materials": 10,
+          "sha256": "5260bfd2714e6c12b7a0580fc77692c2e47bc4bc3ab443fcfa21bb8f98e1372c",
+          "bounds": {
+            "min": [
+              -1.1150833333333334,
+              -1.7609166666666667,
+              -1.0120833333333334
+            ],
+            "max": [
+              1.823416666666667,
+              1.7609166666666667,
+              1.277
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/motor6Terminal.glb",
+          "bytes": 147784,
+          "vertices": 4316,
+          "triangles": 7628,
+          "materials": 10,
+          "sha256": "323b59d3d8b688f56e9f39baf3bd9dbdd02e4b3f74d83923becb4685d58fa6e3",
+          "bounds": {
+            "min": [
+              -1.1150833333333334,
+              -1.7609166666666667,
+              -0.9871470526575057
+            ],
+            "max": [
+              1.823416666666667,
+              1.7609166666666667,
+              1.277
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "mcb2P",
+      "terminalIds": [
+        "lineIn",
+        "neutralIn",
+        "lineOut",
+        "neutralOut"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/mcb2P.glb",
+          "bytes": 53472,
+          "vertices": 1695,
+          "triangles": 2395,
+          "materials": 10,
+          "sha256": "a2ade66e3146011183666a551562a32f62c05a8744a892d346178f502ce30739",
+          "bounds": {
+            "min": [
+              -1.0833333333333333,
+              -1.6165333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0833333333333333,
+              1.6165333333333332,
+              0.7442
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/mcb2P.glb",
+          "bytes": 66916,
+          "vertices": 2079,
+          "triangles": 3131,
+          "materials": 10,
+          "sha256": "c7464b603efde2ebe7aaf671bbe139fbb8d98e306730370c0840e5634ec99719",
+          "bounds": {
+            "min": [
+              -1.0833333333333333,
+              -1.6775833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0833333333333333,
+              1.6775833333333332,
+              0.7442
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/mcb2P.glb",
+          "bytes": 126928,
+          "vertices": 3983,
+          "triangles": 6227,
+          "materials": 10,
+          "sha256": "ab4ca29dd2842d8fdbb94886ddf794d50cc2b806a21a9d75b701eebf0a628a65",
+          "bounds": {
+            "min": [
+              -1.0833333333333333,
+              -1.6775833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0833333333333333,
+              1.6775833333333332,
+              0.7442
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "mcb3P",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/mcb3P.glb",
+          "bytes": 61712,
+          "vertices": 1947,
+          "triangles": 2835,
+          "materials": 10,
+          "sha256": "e20d8ca5ee4520e5ec3cbe65671815593b0b0360abd27d954dc075a526d08417",
+          "bounds": {
+            "min": [
+              -1.375,
+              -1.6582,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.6582,
+              0.7442
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/mcb3P.glb",
+          "bytes": 81884,
+          "vertices": 2523,
+          "triangles": 3939,
+          "materials": 10,
+          "sha256": "06a76b9e82b6aae5616396a39bc339d6a5a5671194cc9f544a49794dadf4e09e",
+          "bounds": {
+            "min": [
+              -1.375,
+              -1.71925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.71925,
+              0.7442
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/mcb3P.glb",
+          "bytes": 150532,
+          "vertices": 4667,
+          "triangles": 7515,
+          "materials": 10,
+          "sha256": "ede0719f839f77a3640912f36da6283bc8bbf05f61c1c598e97d3402dd8f6f7d",
+          "bounds": {
+            "min": [
+              -1.375,
+              -1.71925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.71925,
+              0.7442
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "mcb4P",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "neutralIn",
+        "t1",
+        "t2",
+        "t3",
+        "neutralOut"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/mcb4P.glb",
+          "bytes": 70716,
+          "vertices": 2220,
+          "triangles": 3308,
+          "materials": 10,
+          "sha256": "92ef11b34edbd868e830570cce1b99bdc2380425b0b49a54e2867281364af851",
+          "bounds": {
+            "min": [
+              -1.6458333333333333,
+              -1.6582,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6458333333333333,
+              1.6582,
+              0.7442
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/mcb4P.glb",
+          "bytes": 97608,
+          "vertices": 2988,
+          "triangles": 4780,
+          "materials": 10,
+          "sha256": "34f96de8ae4307e75963c7b9a144032b08dd35ae343c99c8f31f5936ddd15077",
+          "bounds": {
+            "min": [
+              -1.6458333333333333,
+              -1.71925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6458333333333333,
+              1.71925,
+              0.7442
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/mcb4P.glb",
+          "bytes": 174900,
+          "vertices": 5372,
+          "triangles": 8836,
+          "materials": 10,
+          "sha256": "9a44569d61c5b392888c1769375396c16b9b1a3c43b7ee7e304abd6f8155c686",
+          "bounds": {
+            "min": [
+              -1.6458333333333333,
+              -1.71925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6458333333333333,
+              1.71925,
+              0.7442
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "rccb2P",
+      "terminalIds": [
+        "lineIn",
+        "neutralIn",
+        "lineOut",
+        "neutralOut"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/rccb2P.glb",
+          "bytes": 53144,
+          "vertices": 1671,
+          "triangles": 2363,
+          "materials": 11,
+          "sha256": "872b63d36ea65ffc09b981a4974d532bcdf1b741ecd19a05e3a082f15a57df3e",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.7207,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.7207,
+              0.7442
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/rccb2P.glb",
+          "bytes": 67168,
+          "vertices": 2071,
+          "triangles": 3131,
+          "materials": 11,
+          "sha256": "58c2f098e8304c2777af8e7f197f74c0c8cf8ba9318f801ff12190b1ef23c036",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.78175,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.78175,
+              0.7442
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/rccb2P.glb",
+          "bytes": 128044,
+          "vertices": 3999,
+          "triangles": 6275,
+          "materials": 11,
+          "sha256": "23febadf39028f1ae6762cd90a584134a86fa9a7f7db236f51194544ba816b2e",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.78175,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.78175,
+              0.7442
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "isolator3P",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/isolator3P.glb",
+          "bytes": 67992,
+          "vertices": 2187,
+          "triangles": 3115,
+          "materials": 10,
+          "sha256": "8e54fb662996569b1a52f93350989d3588b64f00805470564103a086d8010d19",
+          "bounds": {
+            "min": [
+              -1.375,
+              -1.6165333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.6165333333333332,
+              0.8792
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/isolator3P.glb",
+          "bytes": 88736,
+          "vertices": 2779,
+          "triangles": 4251,
+          "materials": 10,
+          "sha256": "69fdd1a6957d30ff4fbeedabf7b57505a12bbfb07bbaf06bb8ecfa9f33c541fd",
+          "bounds": {
+            "min": [
+              -1.375,
+              -1.6775833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.6775833333333332,
+              0.8792
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/isolator3P.glb",
+          "bytes": 157676,
+          "vertices": 4923,
+          "triangles": 7851,
+          "materials": 10,
+          "sha256": "75976ef39b3d93e4a4822f7329e796658cd4aa587ed3de7fd03cc4b198f06290",
+          "bounds": {
+            "min": [
+              -1.375,
+              -1.6775833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.6775833333333332,
+              0.8792
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "mccb3P",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "t1",
+        "t2",
+        "t3"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/mccb3P.glb",
+          "bytes": 65556,
+          "vertices": 2186,
+          "triangles": 2974,
+          "materials": 8,
+          "sha256": "d83bd05537f82424e102d1ee81ff642910fd12f372575c7e17fb1f745d03f9fe",
+          "bounds": {
+            "min": [
+              -1.6458333333333333,
+              -1.9082,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6458333333333333,
+              1.9082,
+              0.8792
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/mccb3P.glb",
+          "bytes": 86876,
+          "vertices": 2802,
+          "triangles": 4134,
+          "materials": 8,
+          "sha256": "44c59193db0e8846a9206791fc1bf89d12f331bdf2b64efff6859530c1fa4b1f",
+          "bounds": {
+            "min": [
+              -1.6458333333333333,
+              -1.96925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6458333333333333,
+              1.96925,
+              0.8792
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/mccb3P.glb",
+          "bytes": 155812,
+          "vertices": 4946,
+          "triangles": 7734,
+          "materials": 8,
+          "sha256": "5311cc0be8bf166a0e1a53f4d260436d6487d655ec24274886afca7d34a14006",
+          "bounds": {
+            "min": [
+              -1.6458333333333333,
+              -1.96925,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.6458333333333333,
+              1.96925,
+              0.8792
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "contactor4P",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "neutralIn",
+        "t1",
+        "t2",
+        "t3",
+        "neutralOut",
+        "a1",
+        "a2",
+        "aux13",
+        "aux14",
+        "aux21",
+        "aux22"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/contactor4P.glb",
+          "bytes": 89664,
+          "vertices": 2850,
+          "triangles": 4282,
+          "materials": 9,
+          "sha256": "55ce695c03223015cbfabae7a1a79f35ecd895137d552a598fe08b284f85d62e",
+          "bounds": {
+            "min": [
+              -1.8457,
+              -1.9915333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.8457,
+              1.9915333333333332,
+              0.7942
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/contactor4P.glb",
+          "bytes": 145164,
+          "vertices": 4450,
+          "triangles": 7306,
+          "materials": 9,
+          "sha256": "5ecf84722ee366880c480d7f1f5d536faf2e43cc12d126fe8d7497da905678f3",
+          "bounds": {
+            "min": [
+              -1.90675,
+              -2.052583333333333,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.90675,
+              2.052583333333333,
+              0.7942
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/contactor4P.glb",
+          "bytes": 239444,
+          "vertices": 7218,
+          "triangles": 12394,
+          "materials": 9,
+          "sha256": "d402a3cb6cffc44bf2a55375b18953de5d1287c51250b1a505982a4852d6c32b",
+          "bounds": {
+            "min": [
+              -1.90675,
+              -2.052583333333333,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.90675,
+              2.052583333333333,
+              0.7942
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "lightSwitch",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/lightSwitch.glb",
+          "bytes": 22608,
+          "vertices": 612,
+          "triangles": 940,
+          "materials": 9,
+          "sha256": "ddb78f42ae2fba209e59dc24fde427f5f72fd06860b558d0abd43d1299ff8f54",
+          "bounds": {
+            "min": [
+              -0.7516666666666666,
+              -1.0957,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.7516666666666666,
+              1.0957,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/lightSwitch.glb",
+          "bytes": 31464,
+          "vertices": 868,
+          "triangles": 1420,
+          "materials": 9,
+          "sha256": "5146a213ce83cada3af1747079d9ab2eb02863c4f679ca757d85b868af6018ce",
+          "bounds": {
+            "min": [
+              -0.7516666666666666,
+              -1.15675,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.7516666666666666,
+              1.15675,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/lightSwitch.glb",
+          "bytes": 66460,
+          "vertices": 1978,
+          "triangles": 3226,
+          "materials": 9,
+          "sha256": "a648200b34aad6304c208939d728774ca8aad5ced46e799b11f66d5d1730b5e0",
+          "bounds": {
+            "min": [
+              -0.7516666666666666,
+              -1.15675,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.7516666666666666,
+              1.15675,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "twoWaySwitch",
+      "terminalIds": [
+        "common",
+        "out1",
+        "out2"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/twoWaySwitch.glb",
+          "bytes": 37600,
+          "vertices": 1094,
+          "triangles": 1706,
+          "materials": 9,
+          "sha256": "8411c2be612b01c199d9e0f2d48f642dc7e852c95da5c42c6e68c992d7c873d5",
+          "bounds": {
+            "min": [
+              -0.825,
+              -1.1790333333333332,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.825,
+              1.1790333333333332,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/twoWaySwitch.glb",
+          "bytes": 49808,
+          "vertices": 1446,
+          "triangles": 2370,
+          "materials": 9,
+          "sha256": "8cf53a1b2ec65401e4282e2f19aa930417b8aa004c618600808e31ba6d981c5e",
+          "bounds": {
+            "min": [
+              -0.825,
+              -1.2400833333333332,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.825,
+              1.2400833333333332,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/twoWaySwitch.glb",
+          "bytes": 82788,
+          "vertices": 2466,
+          "triangles": 4098,
+          "materials": 9,
+          "sha256": "e74e7f4436e59c3db33e3ec05ce243e29c06bb645c19686106997d6ac553a1b9",
+          "bounds": {
+            "min": [
+              -0.825,
+              -1.2400833333333332,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.825,
+              1.2400833333333332,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "intermediateSwitch",
+      "terminalIds": [
+        "in1",
+        "in2",
+        "out1",
+        "out2"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/intermediateSwitch.glb",
+          "bytes": 41196,
+          "vertices": 1212,
+          "triangles": 1884,
+          "materials": 9,
+          "sha256": "7138529680bdcb38498095f76dad7dd10f0fadeaf806de22bb323af2208e2ba2",
+          "bounds": {
+            "min": [
+              -0.9533333333333333,
+              -1.2623666666666666,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.9533333333333333,
+              1.2623666666666666,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/intermediateSwitch.glb",
+          "bytes": 56768,
+          "vertices": 1660,
+          "triangles": 2732,
+          "materials": 9,
+          "sha256": "da52ba7d75cd545b3e7eca83efcd40bb83d9e4e44695c0abd3cfa0d37e027bfc",
+          "bounds": {
+            "min": [
+              -0.9533333333333333,
+              -1.3234166666666667,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.9533333333333333,
+              1.3234166666666667,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/intermediateSwitch.glb",
+          "bytes": 103764,
+          "vertices": 3122,
+          "triangles": 5186,
+          "materials": 9,
+          "sha256": "6aac61d30c7262935a47a770b16bf4cb3d5580cf948b2336c2e12a9165000cab",
+          "bounds": {
+            "min": [
+              -0.9533333333333333,
+              -1.3234166666666667,
+              -0.43700000000000006
+            ],
+            "max": [
+              0.9533333333333333,
+              1.3234166666666667,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "impulseRelay",
+      "terminalIds": [
+        "a1",
+        "a2",
+        "common",
+        "no",
+        "nc"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/impulseRelay.glb",
+          "bytes": 63184,
+          "vertices": 2011,
+          "triangles": 2827,
+          "materials": 12,
+          "sha256": "1e49aea78c5bcab5ab9f13a8e7f9baf17c20b1db73f134bf1a77cb2b79cc3e7e",
+          "bounds": {
+            "min": [
+              -1.1998666666666666,
+              -1.5531250000000003,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1998666666666666,
+              1.4791666666666667,
+              1.03045
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/impulseRelay.glb",
+          "bytes": 82964,
+          "vertices": 2563,
+          "triangles": 3923,
+          "materials": 12,
+          "sha256": "5f33f0da1fa177f02eaae69cad2a115aa8362f881b63419ac7027dd9c8c4b88c",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.5531250000000003,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4791666666666667,
+              1.03045
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/impulseRelay.glb",
+          "bytes": 153492,
+          "vertices": 4743,
+          "triangles": 7619,
+          "materials": 12,
+          "sha256": "8b1676d3bc2d26f05b6203cc0b9a98ee003cfecaedc2149847b229457ae394df",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.5531250000000003,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4791666666666667,
+              1.03045
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "staircaseTimer",
+      "terminalIds": [
+        "a1",
+        "a2",
+        "t15",
+        "t16",
+        "t18"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/staircaseTimer.glb",
+          "bytes": 71368,
+          "vertices": 2275,
+          "triangles": 3243,
+          "materials": 12,
+          "sha256": "0df57e0141946d9fb8246025e3944c5bf6a6966a54d60f0342b3258ced70227f",
+          "bounds": {
+            "min": [
+              -1.1998666666666666,
+              -1.5531250000000003,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1998666666666666,
+              1.4791666666666667,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/staircaseTimer.glb",
+          "bytes": 88736,
+          "vertices": 2771,
+          "triangles": 4195,
+          "materials": 12,
+          "sha256": "14a20c00bb2b55e0e3e238c059576177739890867c9430b9e6dab6ccad0c15fe",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.5531250000000003,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4791666666666667,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/staircaseTimer.glb",
+          "bytes": 149616,
+          "vertices": 4675,
+          "triangles": 7363,
+          "materials": 12,
+          "sha256": "6611784b6ed8e857d39e372e37b1e462fb77dbb2a1df28acf68d6b8d2e9fa222",
+          "bounds": {
+            "min": [
+              -1.2609166666666667,
+              -1.5531250000000003,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.2609166666666667,
+              1.4791666666666667,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "socketOutlet",
+      "terminalIds": [
+        "lineIn",
+        "neutralIn",
+        "earthIn",
+        "lineOut",
+        "neutralOut",
+        "earthOut"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/socketOutlet.glb",
+          "bytes": 47688,
+          "vertices": 1450,
+          "triangles": 2186,
+          "materials": 9,
+          "sha256": "a6e1f32542eea261ef6ce6abd60c27f474805f103c64958ed3916057d407a9ce",
+          "bounds": {
+            "min": [
+              -1.1062500000000002,
+              -1.4082,
+              -0.33519999999999994
+            ],
+            "max": [
+              1.1062500000000002,
+              1.4082,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/socketOutlet.glb",
+          "bytes": 72360,
+          "vertices": 2146,
+          "triangles": 3546,
+          "materials": 9,
+          "sha256": "502c1bb829ab3412f59b8cd09300df80d619d6526a6178a218b73d914d1f64d1",
+          "bounds": {
+            "min": [
+              -1.1062500000000002,
+              -1.46925,
+              -0.33519999999999994
+            ],
+            "max": [
+              1.1062500000000002,
+              1.46925,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/socketOutlet.glb",
+          "bytes": 132320,
+          "vertices": 3962,
+          "triangles": 6726,
+          "materials": 9,
+          "sha256": "6d71ebddd4caa99d65a60968a9228cc6469cd346462aeeeb49269ddb155cc305",
+          "bounds": {
+            "min": [
+              -1.1062500000000002,
+              -1.46925,
+              -0.33519999999999994
+            ],
+            "max": [
+              1.1062500000000002,
+              1.46925,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "industrialSocket",
+      "terminalIds": [
+        "l1In",
+        "l2In",
+        "l3In",
+        "neutralIn",
+        "earthIn",
+        "l1Out",
+        "l2Out",
+        "l3Out",
+        "neutralOut",
+        "earthOut"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/industrialSocket.glb",
+          "bytes": 66544,
+          "vertices": 2043,
+          "triangles": 3191,
+          "materials": 8,
+          "sha256": "13ef229c27befdc2337151435310488c197272e5cb9c684b174f4c7f8a473e6e",
+          "bounds": {
+            "min": [
+              -1.63125,
+              -1.7415333333333332,
+              -0.33519999999999994
+            ],
+            "max": [
+              1.63125,
+              1.7415333333333332,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/industrialSocket.glb",
+          "bytes": 108112,
+          "vertices": 3235,
+          "triangles": 5463,
+          "materials": 8,
+          "sha256": "be6d31b58465b2641319df2cb1278401f5b10b9bf0c0ff4a31095d35639b8e2e",
+          "bounds": {
+            "min": [
+              -1.63125,
+              -1.8025833333333332,
+              -0.33519999999999994
+            ],
+            "max": [
+              1.63125,
+              1.8025833333333332,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/industrialSocket.glb",
+          "bytes": 187368,
+          "vertices": 5567,
+          "triangles": 9735,
+          "materials": 8,
+          "sha256": "06810d15fe30a314e2911ad791fa60a77aebc99dc0cd4ff57df00bcca5991874",
+          "bounds": {
+            "min": [
+              -1.63125,
+              -1.8025833333333332,
+              -0.33519999999999994
+            ],
+            "max": [
+              1.63125,
+              1.8025833333333332,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "ledLamp",
+      "terminalIds": [
+        "line",
+        "neutral",
+        "earth"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/ledLamp.glb",
+          "bytes": 39880,
+          "vertices": 1164,
+          "triangles": 1828,
+          "materials": 9,
+          "sha256": "c6ab2da9063193a2443186f5ecd0bc18cdff738b616e33b62db074cf3faa15fb",
+          "bounds": {
+            "min": [
+              -0.9425,
+              -0.9225,
+              -0.40875000000000006
+            ],
+            "max": [
+              1.1373666666666666,
+              1.2207,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/ledLamp.glb",
+          "bytes": 82816,
+          "vertices": 2416,
+          "triangles": 4152,
+          "materials": 9,
+          "sha256": "8205382b14bf768f0701f3911a98586358f6085063906949f2393c062c8e4387",
+          "bounds": {
+            "min": [
+              -0.9425,
+              -0.9225,
+              -0.40875000000000006
+            ],
+            "max": [
+              1.1984166666666667,
+              1.28175,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/ledLamp.glb",
+          "bytes": 205524,
+          "vertices": 6016,
+          "triangles": 10776,
+          "materials": 9,
+          "sha256": "f759ed8e1be8f2ccfe53306615827baee7b1f8eac8b086b1e8cb4d8bfc000b2c",
+          "bounds": {
+            "min": [
+              -0.9425,
+              -1.043842857142857,
+              -0.40875000000000006
+            ],
+            "max": [
+              1.1984166666666667,
+              1.28175,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "bellTransformer",
+      "terminalIds": [
+        "primaryLine",
+        "primaryNeutral",
+        "secondaryLine",
+        "secondaryNeutral"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/bellTransformer.glb",
+          "bytes": 95696,
+          "vertices": 3404,
+          "triangles": 4260,
+          "materials": 8,
+          "sha256": "7d33e4bb922bee111c769808b9e812a03712f471fe870e7560ab71ede2fee3ff",
+          "bounds": {
+            "min": [
+              -1.2833333333333332,
+              -1.5748666666666666,
+              -0.2616666666666667
+            ],
+            "max": [
+              1.2833333333333332,
+              1.5748666666666666,
+              0.6716666666666666
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/bellTransformer.glb",
+          "bytes": 154924,
+          "vertices": 5596,
+          "triangles": 7004,
+          "materials": 8,
+          "sha256": "3e6da8dfa341b3c79a6fb4c83f2ebbc87809923e3cc00bcbb1c2fc264b8018dc",
+          "bounds": {
+            "min": [
+              -1.2833333333333332,
+              -1.6359166666666667,
+              -0.2616666666666667
+            ],
+            "max": [
+              1.2833333333333332,
+              1.6359166666666667,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/bellTransformer.glb",
+          "bytes": 205576,
+          "vertices": 7140,
+          "triangles": 9680,
+          "materials": 8,
+          "sha256": "6652bf1d74894ac388973fc867f25d126620ab1ac75d511f39edbcc159e7fff0",
+          "bounds": {
+            "min": [
+              -1.2833333333333332,
+              -1.6359166666666667,
+              -0.2616666666666667
+            ],
+            "max": [
+              1.2833333333333332,
+              1.6359166666666667,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "bell",
+      "terminalIds": [
+        "x1",
+        "x2"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/bell.glb",
+          "bytes": 24040,
+          "vertices": 676,
+          "triangles": 1060,
+          "materials": 7,
+          "sha256": "4c1e359d129056f710ed28b8409a8aadf394ee085defaf3b4fa3b3043d01607c",
+          "bounds": {
+            "min": [
+              -0.7475,
+              -1.0957,
+              -0.40875000000000006
+            ],
+            "max": [
+              0.7475,
+              1.0957,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/bell.glb",
+          "bytes": 34340,
+          "vertices": 964,
+          "triangles": 1628,
+          "materials": 7,
+          "sha256": "f37967ee9eee1ea0e8a2cf28ec1937e8e3cd371afb856f189d0dc6340c97695b",
+          "bounds": {
+            "min": [
+              -0.7475,
+              -1.15675,
+              -0.40875000000000006
+            ],
+            "max": [
+              0.7475,
+              1.15675,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/bell.glb",
+          "bytes": 76104,
+          "vertices": 2260,
+          "triangles": 3812,
+          "materials": 7,
+          "sha256": "2dbf397becd56378c10ebc2c4d14bf1f85bf3c5e2a4d83ca9ada40793b15cda2",
+          "bounds": {
+            "min": [
+              -0.7475,
+              -1.15675,
+              -0.40875000000000006
+            ],
+            "max": [
+              0.7475,
+              1.15675,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "buzzer",
+      "terminalIds": [
+        "x1",
+        "x2"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/buzzer.glb",
+          "bytes": 31156,
+          "vertices": 900,
+          "triangles": 1428,
+          "materials": 7,
+          "sha256": "057c4e53a3134f35d419538c2330a1c43647ada8751fbee4002db2f15878dd67",
+          "bounds": {
+            "min": [
+              -0.7475,
+              -1.0957,
+              -0.40875000000000006
+            ],
+            "max": [
+              0.7475,
+              1.0957,
+              0.8335
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/buzzer.glb",
+          "bytes": 42216,
+          "vertices": 1216,
+          "triangles": 2032,
+          "materials": 7,
+          "sha256": "a6ea80b168576c9455f5f671c46e20762850840fe0eed8d422192cf49f998e2f",
+          "bounds": {
+            "min": [
+              -0.7475,
+              -1.15675,
+              -0.40875000000000006
+            ],
+            "max": [
+              0.7475,
+              1.15675,
+              0.8450000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/buzzer.glb",
+          "bytes": 78656,
+          "vertices": 2344,
+          "triangles": 3940,
+          "materials": 7,
+          "sha256": "7fe59afed98dde3735fc3183d7d217ffdca10b76ee3556d0970d986af9fa5b5c",
+          "bounds": {
+            "min": [
+              -0.7475,
+              -1.15675,
+              -0.40875000000000006
+            ],
+            "max": [
+              0.7475,
+              1.15675,
+              0.8450000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "thermostat",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/thermostat.glb",
+          "bytes": 55100,
+          "vertices": 1745,
+          "triangles": 2481,
+          "materials": 10,
+          "sha256": "af33ea1a936cde5faa8928d974ad2c1dfc572dcad469bf782973eb9e19c3c681",
+          "bounds": {
+            "min": [
+              -1.0833333333333333,
+              -1.3040333333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0833333333333333,
+              1.3040333333333332,
+              0.7242000000000001
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/thermostat.glb",
+          "bytes": 61824,
+          "vertices": 1929,
+          "triangles": 2857,
+          "materials": 10,
+          "sha256": "dc949fdd3c514f08b753b21e0098ea62b35cef498310fd8345c21d93a7e0a2db",
+          "bounds": {
+            "min": [
+              -1.0833333333333333,
+              -1.3650833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0833333333333333,
+              1.3650833333333332,
+              0.7242000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/thermostat.glb",
+          "bytes": 109740,
+          "vertices": 3473,
+          "triangles": 5305,
+          "materials": 10,
+          "sha256": "97645ced5737a6c4b7432b61e137223a13631be9b95cfcc6bad5b367da2574d9",
+          "bounds": {
+            "min": [
+              -1.0833333333333333,
+              -1.3650833333333332,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0833333333333333,
+              1.3650833333333332,
+              0.7242000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "motionSensor",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/motionSensor.glb",
+          "bytes": 32796,
+          "vertices": 943,
+          "triangles": 1459,
+          "materials": 9,
+          "sha256": "6a5149b9710529421c08ddb2cd8244be15ba9140c1ab8c1eadaf5c7fe42cd0fa",
+          "bounds": {
+            "min": [
+              -0.705,
+              -1.2623666666666666,
+              -0.279
+            ],
+            "max": [
+              0.705,
+              1.2623666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/motionSensor.glb",
+          "bytes": 46640,
+          "vertices": 1343,
+          "triangles": 2211,
+          "materials": 9,
+          "sha256": "e7c60c467c4095c99b96e8ae58428b694e9a7090181bef5cdc4d68228eb48391",
+          "bounds": {
+            "min": [
+              -0.705,
+              -1.3234166666666667,
+              -0.279
+            ],
+            "max": [
+              0.705,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/motionSensor.glb",
+          "bytes": 90880,
+          "vertices": 2680,
+          "triangles": 4560,
+          "materials": 9,
+          "sha256": "4d20b7951193f928e03503622a30f97b34dfd4186ea1d71ebeb5b8258e4689c1",
+          "bounds": {
+            "min": [
+              -0.705,
+              -1.3234166666666667,
+              -0.279
+            ],
+            "max": [
+              0.705,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "lightSensor",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/lightSensor.glb",
+          "bytes": 42348,
+          "vertices": 1255,
+          "triangles": 1943,
+          "materials": 9,
+          "sha256": "f0ab6dd540e121f869499ef8eb7e8516a1e05739f9ebde71d689d70673742a03",
+          "bounds": {
+            "min": [
+              -0.705,
+              -1.2623666666666666,
+              -0.279
+            ],
+            "max": [
+              0.705,
+              1.2623666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/lightSensor.glb",
+          "bytes": 57344,
+          "vertices": 1687,
+          "triangles": 2759,
+          "materials": 9,
+          "sha256": "ba7aaaf9264b79d4a850fb5905ae10b0dc2bede744d151f025784cb7239c5276",
+          "bounds": {
+            "min": [
+              -0.705,
+              -1.3234166666666667,
+              -0.279
+            ],
+            "max": [
+              0.705,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/lightSensor.glb",
+          "bytes": 103312,
+          "vertices": 3072,
+          "triangles": 5204,
+          "materials": 9,
+          "sha256": "d8b188a667d88986c58f67591f56b44c9e272950631b1ef4c1fbf2a5db55dc7f",
+          "bounds": {
+            "min": [
+              -0.705,
+              -1.3234166666666667,
+              -0.279
+            ],
+            "max": [
+              0.705,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "floatSwitch",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/floatSwitch.glb",
+          "bytes": 26448,
+          "vertices": 719,
+          "triangles": 1151,
+          "materials": 9,
+          "sha256": "2dc90fdc4ad1efa818ac89f2260bd7df88b55278d4a9312de753a041a006cd82",
+          "bounds": {
+            "min": [
+              -0.6658333333333334,
+              -1.2623666666666666,
+              -0.4895833333333333
+            ],
+            "max": [
+              0.6658333333333334,
+              1.2623666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/floatSwitch.glb",
+          "bytes": 40872,
+          "vertices": 1135,
+          "triangles": 1935,
+          "materials": 9,
+          "sha256": "f186d81d25279c5ee6f120cac6fce18c7cd321317d9ac11aaec728bfffd9d41e",
+          "bounds": {
+            "min": [
+              -0.6658333333333334,
+              -1.3234166666666667,
+              -0.4895833333333333
+            ],
+            "max": [
+              0.6658333333333334,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/floatSwitch.glb",
+          "bytes": 85976,
+          "vertices": 2496,
+          "triangles": 4332,
+          "materials": 9,
+          "sha256": "068ab4651d5d45d90121a9942fc82792a8cd2243cfe936e96ba46f1611bedd2e",
+          "bounds": {
+            "min": [
+              -0.6658333333333334,
+              -1.3234166666666667,
+              -0.4895833333333333
+            ],
+            "max": [
+              0.6658333333333334,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "pressureSwitch",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/pressureSwitch.glb",
+          "bytes": 34740,
+          "vertices": 995,
+          "triangles": 1535,
+          "materials": 10,
+          "sha256": "894fb9d1a0514e8bbba008e3b071c51e90514f1c5f3657a0634260a0cef234f0",
+          "bounds": {
+            "min": [
+              -0.6658333333333334,
+              -1.2623666666666666,
+              -0.24750000000000003
+            ],
+            "max": [
+              0.6658333333333334,
+              1.2623666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/pressureSwitch.glb",
+          "bytes": 45320,
+          "vertices": 1287,
+          "triangles": 2123,
+          "materials": 10,
+          "sha256": "d158d8708603d2ae12b51d3b552aca88d2e589f990df9fe092ef1a7d0449d705",
+          "bounds": {
+            "min": [
+              -0.6658333333333334,
+              -1.3234166666666667,
+              -0.24750000000000003
+            ],
+            "max": [
+              0.6658333333333334,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/pressureSwitch.glb",
+          "bytes": 81636,
+          "vertices": 2396,
+          "triangles": 4040,
+          "materials": 10,
+          "sha256": "b7b33df93db3fac3af9ba431dfe6d4ba7c955cfa311545b4ca03c6fb0975b5b8",
+          "bounds": {
+            "min": [
+              -0.6658333333333334,
+              -1.3234166666666667,
+              -0.24750000000000003
+            ],
+            "max": [
+              0.6658333333333334,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "flowSwitch",
+      "terminalIds": [
+        "input",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/flowSwitch.glb",
+          "bytes": 27776,
+          "vertices": 775,
+          "triangles": 1239,
+          "materials": 8,
+          "sha256": "ee9c4fb308a37535507d03605860504d9cf80a2af34d6b75b9404338b541ae41",
+          "bounds": {
+            "min": [
+              -0.734375,
+              -1.2623666666666666,
+              -0.47
+            ],
+            "max": [
+              0.734375,
+              1.2623666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/flowSwitch.glb",
+          "bytes": 39800,
+          "vertices": 1103,
+          "triangles": 1911,
+          "materials": 8,
+          "sha256": "e42c170372eef9a781fd1a7ce9857ed4e066966e2e0f4e2ad6624dd1036a1c06",
+          "bounds": {
+            "min": [
+              -0.734375,
+              -1.3234166666666667,
+              -0.47
+            ],
+            "max": [
+              0.734375,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/flowSwitch.glb",
+          "bytes": 78712,
+          "vertices": 2284,
+          "triangles": 3972,
+          "materials": 8,
+          "sha256": "5eca1a3f81295e9d51419997ef1270b795c7b197072d8be63faa73b1db28acd6",
+          "bounds": {
+            "min": [
+              -0.734375,
+              -1.3234166666666667,
+              -0.47
+            ],
+            "max": [
+              0.734375,
+              1.3234166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "proximitySensor",
+      "terminalIds": [
+        "positive",
+        "negative",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/proximitySensor.glb",
+          "bytes": 42368,
+          "vertices": 1254,
+          "triangles": 1970,
+          "materials": 8,
+          "sha256": "0913c8abc642774fd27585c4954db48bb106274e90d86318b1a6fd56c039496e",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3248666666666666,
+              -0.6124999999999999
+            ],
+            "max": [
+              1.1165333333333332,
+              1.3248666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/proximitySensor.glb",
+          "bytes": 57168,
+          "vertices": 1646,
+          "triangles": 2810,
+          "materials": 8,
+          "sha256": "627b26a795010aed1f0d69fe8c8b615799ca6ffe65bbbabe52fd45780ad6ab38",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3859166666666667,
+              -0.6124999999999999
+            ],
+            "max": [
+              1.1775833333333332,
+              1.3859166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/proximitySensor.glb",
+          "bytes": 101188,
+          "vertices": 2968,
+          "triangles": 5156,
+          "materials": 8,
+          "sha256": "de97f896d3777d0145f5068e7c4696e70555b651b12fbab16d06d65cb3e134b3",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3859166666666667,
+              -0.6124999999999999
+            ],
+            "max": [
+              1.1775833333333332,
+              1.3859166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "capacitiveSensor",
+      "terminalIds": [
+        "positive",
+        "negative",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/capacitiveSensor.glb",
+          "bytes": 41168,
+          "vertices": 1214,
+          "triangles": 1910,
+          "materials": 8,
+          "sha256": "b7951c2ec128c76eeb87aaeb05f97755006a68fc2b1694094894754407f841f4",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3248666666666666,
+              -0.6124999999999999
+            ],
+            "max": [
+              1.1165333333333332,
+              1.3248666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/capacitiveSensor.glb",
+          "bytes": 55972,
+          "vertices": 1606,
+          "triangles": 2750,
+          "materials": 8,
+          "sha256": "cadd50367d7175e177c03ca696dba56824372ff173c13fbb3ed98625a070e6ae",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3859166666666667,
+              -0.6124999999999999
+            ],
+            "max": [
+              1.1775833333333332,
+              1.3859166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/capacitiveSensor.glb",
+          "bytes": 99992,
+          "vertices": 2928,
+          "triangles": 5096,
+          "materials": 8,
+          "sha256": "75333777ef3e2bf20e3f3d255117e0c9b9144c525647b6fe7eca094bd1c368c7",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3859166666666667,
+              -0.6124999999999999
+            ],
+            "max": [
+              1.1775833333333332,
+              1.3859166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "photoelectricSensor",
+      "terminalIds": [
+        "positive",
+        "negative",
+        "output"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/photoelectricSensor.glb",
+          "bytes": 47732,
+          "vertices": 1426,
+          "triangles": 2214,
+          "materials": 9,
+          "sha256": "a2af212c3f805a86229753bf5f763d04917ee222ae19be3cea61fbfe85c21ff9",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3248666666666666,
+              -0.30600000000000005
+            ],
+            "max": [
+              1.1165333333333332,
+              1.3248666666666666,
+              0.7255
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/photoelectricSensor.glb",
+          "bytes": 68488,
+          "vertices": 2026,
+          "triangles": 3342,
+          "materials": 9,
+          "sha256": "012d3a8c47c873e727d3a86999d91f66dfc942f67562c072f8d24a182a4612d7",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3859166666666667,
+              -0.30600000000000005
+            ],
+            "max": [
+              1.1775833333333332,
+              1.3859166666666667,
+              0.7370000000000001
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/photoelectricSensor.glb",
+          "bytes": 126624,
+          "vertices": 3756,
+          "triangles": 6456,
+          "materials": 9,
+          "sha256": "51b9d62bf4fa9e5b9a54891bf86ae191fa87932b0abec12ac3500ba20f1ba0e1",
+          "bounds": {
+            "min": [
+              -0.6941666666666667,
+              -1.3859166666666667,
+              -0.30600000000000005
+            ],
+            "max": [
+              1.1775833333333332,
+              1.3859166666666667,
+              0.7370000000000001
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "phaseRelay",
+      "terminalIds": [
+        "l1",
+        "l2",
+        "l3",
+        "common",
+        "no",
+        "nc"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/phaseRelay.glb",
+          "bytes": 73336,
+          "vertices": 2315,
+          "triangles": 3343,
+          "materials": 13,
+          "sha256": "20a596dce4e8593d07bb96949b827f0f87fefdf8c22866b9d7bc06baa896828f",
+          "bounds": {
+            "min": [
+              -1.4707,
+              -1.640625,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.6582,
+              0.8117
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/phaseRelay.glb",
+          "bytes": 104452,
+          "vertices": 3207,
+          "triangles": 5043,
+          "materials": 13,
+          "sha256": "a93d6fff2ba64bc81dcb4516fb8bb82fe129a5c08a5ad2a549c34131eaf5dfe8",
+          "bounds": {
+            "min": [
+              -1.53175,
+              -1.640625,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.71925,
+              0.8117
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/phaseRelay.glb",
+          "bytes": 198600,
+          "vertices": 6059,
+          "triangles": 10035,
+          "materials": 13,
+          "sha256": "0094bcb312a4de51b9e5060db63aab83f7a30f3637d518732d71baadf9808884",
+          "bounds": {
+            "min": [
+              -1.53175,
+              -1.640625,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.375,
+              1.71925,
+              0.8117
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "currentTransformer",
+      "terminalIds": [
+        "p1",
+        "p2",
+        "s1",
+        "s2"
+      ],
+      "sourceAssets": [
+        {
+          "file": "models/current_transformer.glb",
+          "sha256": "c1b4eae5fed4232e6412bfd7fe77cf0159e1c5e623555adde201d2d5d1cff9f1",
+          "bytes": 7088
+        }
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/currentTransformer.glb",
+          "bytes": 42336,
+          "vertices": 1326,
+          "triangles": 1954,
+          "materials": 6,
+          "sha256": "83f13a12b2b147dfb063035c4fe28f77dc32bb779dc2feb386c3aed31ef17007",
+          "bounds": {
+            "min": [
+              -1.085,
+              -1.4498666666666666,
+              -0.29519999999999996
+            ],
+            "max": [
+              1.085,
+              1.4498666666666666,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/currentTransformer.glb",
+          "bytes": 53788,
+          "vertices": 1536,
+          "triangles": 2640,
+          "materials": 8,
+          "sha256": "433bd267f0b07365d6d472a3306b9830f86aa0aa4aac404279a44d8d2dedc734",
+          "bounds": {
+            "min": [
+              -0.93,
+              -1.5109166666666667,
+              -0.4346
+            ],
+            "max": [
+              0.93,
+              1.5109166666666667,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/currentTransformer.glb",
+          "bytes": 91520,
+          "vertices": 2688,
+          "triangles": 4632,
+          "materials": 8,
+          "sha256": "940e4608b9cece2dda9289169829c3949b221873da690fdf51428e27c3ab2337",
+          "bounds": {
+            "min": [
+              -0.93,
+              -1.5109166666666667,
+              -0.4346
+            ],
+            "max": [
+              0.93,
+              1.5109166666666667,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "voltageTransformer",
+      "terminalIds": [
+        "primaryLine",
+        "primaryNeutral",
+        "secondaryLine",
+        "secondaryNeutral"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/voltageTransformer.glb",
+          "bytes": 99988,
+          "vertices": 3548,
+          "triangles": 4476,
+          "materials": 8,
+          "sha256": "ed85719632dc627ad1940df6a31c9393bd5e5ba9cabdfbaac57f9703191ea6ce",
+          "bounds": {
+            "min": [
+              -1.265,
+              -1.5748666666666666,
+              -0.255
+            ],
+            "max": [
+              1.265,
+              1.5748666666666666,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/voltageTransformer.glb",
+          "bytes": 159220,
+          "vertices": 5740,
+          "triangles": 7220,
+          "materials": 8,
+          "sha256": "c127fde98f7d9110291a73d08a00d1a4231f4e14772b48234dfc99fdbc7603e8",
+          "bounds": {
+            "min": [
+              -1.265,
+              -1.6359166666666667,
+              -0.255
+            ],
+            "max": [
+              1.265,
+              1.6359166666666667,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/voltageTransformer.glb",
+          "bytes": 178424,
+          "vertices": 6236,
+          "triangles": 8324,
+          "materials": 8,
+          "sha256": "719d250ccda9671a7f5b1e346bf7e60375ce31c92b474455a2805bb40600a5cc",
+          "bounds": {
+            "min": [
+              -1.265,
+              -1.6359166666666667,
+              -0.255
+            ],
+            "max": [
+              1.265,
+              1.6359166666666667,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "wattmeter",
+      "terminalIds": [
+        "voltageL",
+        "voltageN",
+        "currentIn",
+        "currentOut"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/wattmeter.glb",
+          "bytes": 68832,
+          "vertices": 2177,
+          "triangles": 3193,
+          "materials": 10,
+          "sha256": "34e5d0b64c38afe5dbab9371c44c5769e6f6726ae371ff27cfe383568b2e8813",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.2207,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.2207,
+              0.6937
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/wattmeter.glb",
+          "bytes": 84008,
+          "vertices": 2609,
+          "triangles": 4025,
+          "materials": 10,
+          "sha256": "1c403950639755247faec14cb3408066da0625c4548479d386a0627cac87e9e5",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.28175,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.28175,
+              0.6937
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/wattmeter.glb",
+          "bytes": 124772,
+          "vertices": 3857,
+          "triangles": 6173,
+          "materials": 10,
+          "sha256": "4a2e3f202e873d5f69148ce04756548cad12fd87dab95a37d75beefd6dea14c8",
+          "bounds": {
+            "min": [
+              -1.1666666666666667,
+              -1.28175,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.1666666666666667,
+              1.28175,
+              0.6937
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "frequencyMeter",
+      "terminalIds": [
+        "positive",
+        "negative"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/frequencyMeter.glb",
+          "bytes": 51252,
+          "vertices": 1574,
+          "triangles": 2330,
+          "materials": 10,
+          "sha256": "d70ca57b1126df140cf276126f425597c6640571729e21d48721108afde491ef",
+          "bounds": {
+            "min": [
+              -1.0416666666666667,
+              -1.1373666666666666,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0416666666666667,
+              1.1373666666666666,
+              0.6937
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/frequencyMeter.glb",
+          "bytes": 59704,
+          "vertices": 1814,
+          "triangles": 2794,
+          "materials": 10,
+          "sha256": "a7a6bd45eb04fab9cb646795c3d321bc03a4464f727b60704cd4ee883c3ba0c9",
+          "bounds": {
+            "min": [
+              -1.0416666666666667,
               -1.1984166666666667,
               -0.6144000000000001
             ],
             "max": [
-              0.75,
+              1.0416666666666667,
               1.1984166666666667,
-              0.9792000000000001
+              0.6937
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/frequencyMeter.glb",
+          "bytes": 91824,
+          "vertices": 2822,
+          "triangles": 4462,
+          "materials": 10,
+          "sha256": "d670c93a594d19f42024d07513ad3ac6e55fd042a424996f793a17fd87b67a92",
+          "bounds": {
+            "min": [
+              -1.0416666666666667,
+              -1.1984166666666667,
+              -0.6144000000000001
+            ],
+            "max": [
+              1.0416666666666667,
+              1.1984166666666667,
+              0.6937
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "neutralBar",
+      "terminalIds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "return"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/neutralBar.glb",
+          "bytes": 30536,
+          "vertices": 864,
+          "triangles": 1408,
+          "materials": 7,
+          "sha256": "a6a41fa8fd2170f35357077795f337320daa2057e2aa7052fe4a988a32733f1f",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.8457,
+              -0.285
+            ],
+            "max": [
+              1.2623666666666666,
+              0.8457,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/neutralBar.glb",
+          "bytes": 52612,
+          "vertices": 1504,
+          "triangles": 2608,
+          "materials": 7,
+          "sha256": "bff49b17d14205209f0fe4998fcc90f202f976447af41d4476254b0a13db062a",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.90675,
+              -0.285
+            ],
+            "max": [
+              1.3234166666666667,
+              0.90675,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/neutralBar.glb",
+          "bytes": 104460,
+          "vertices": 3088,
+          "triangles": 5344,
+          "materials": 7,
+          "sha256": "fdf3d9ba8d75662d6468fa16ed9c5645f545af4eb7f5b63784c929529fa549a0",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.90675,
+              -0.285
+            ],
+            "max": [
+              1.3234166666666667,
+              0.90675,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "earthBar",
+      "terminalIds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "return"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/earthBar.glb",
+          "bytes": 30772,
+          "vertices": 872,
+          "triangles": 1420,
+          "materials": 7,
+          "sha256": "4e20bf142dfbc49df9aa4eee73a4261bbece6f623748df19a7092a3eaa87bdcc",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.8457,
+              -0.285
+            ],
+            "max": [
+              1.2623666666666666,
+              0.8457,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/earthBar.glb",
+          "bytes": 52848,
+          "vertices": 1512,
+          "triangles": 2620,
+          "materials": 7,
+          "sha256": "d1a317d26f9aa4a03a5cf96620f1fe33a9300229ec06c397d0252f388fdc2532",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.90675,
+              -0.285
+            ],
+            "max": [
+              1.3234166666666667,
+              0.90675,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/earthBar.glb",
+          "bytes": 99416,
+          "vertices": 2920,
+          "triangles": 5092,
+          "materials": 7,
+          "sha256": "78015f8d4ccd58696247f5f0722997a1069cf635a99264a70c1aa33622370e0b",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.90675,
+              -0.285
+            ],
+            "max": [
+              1.3234166666666667,
+              0.90675,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "distributionBlock",
+      "terminalIds": [
+        "a",
+        "b",
+        "c",
+        "d",
+        "return"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/distributionBlock.glb",
+          "bytes": 34880,
+          "vertices": 1008,
+          "triangles": 1624,
+          "materials": 7,
+          "sha256": "4b7b33fe311ac4c51d66510d6462a477ceb8dcc6cd70915935daa2eab36dcf7e",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.8457,
+              -0.285
+            ],
+            "max": [
+              1.2623666666666666,
+              0.8457,
+              0.6678999999999999
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/distributionBlock.glb",
+          "bytes": 56956,
+          "vertices": 1648,
+          "triangles": 2824,
+          "materials": 7,
+          "sha256": "af0cb3f5e73505196d6cb7e32426c4bc0c64af53406bb31bff577e83f497c2dc",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.90675,
+              -0.285
+            ],
+            "max": [
+              1.3234166666666667,
+              0.90675,
+              0.6794
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/distributionBlock.glb",
+          "bytes": 122964,
+          "vertices": 3704,
+          "triangles": 6268,
+          "materials": 7,
+          "sha256": "3e97409d865792f83062c7544e94fc960f3f4d164cc1f32c2dd14bab26824cb9",
+          "bounds": {
+            "min": [
+              -1.0966666666666667,
+              -0.90675,
+              -0.285
+            ],
+            "max": [
+              1.3234166666666667,
+              0.90675,
+              0.6794
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "fan",
+      "terminalIds": [
+        "u",
+        "v",
+        "earth"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/fan.glb",
+          "bytes": 37484,
+          "vertices": 1040,
+          "triangles": 1724,
+          "materials": 10,
+          "sha256": "f234cf7eef653dcce53c5ee939c59a0a9cf0315af65b40f1370c75cff4b6c341",
+          "bounds": {
+            "min": [
+              -1.0483333333333336,
+              -1.045,
+              -0.945
+            ],
+            "max": [
+              1.4290333333333332,
+              1.4082,
+              1.1215
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/fan.glb",
+          "bytes": 52756,
+          "vertices": 1480,
+          "triangles": 2556,
+          "materials": 10,
+          "sha256": "ba5f5779eefd0ecd96f503b719fcea7cad3a7dc36a772794c5a1432943bde6a0",
+          "bounds": {
+            "min": [
+              -1.0483333333333336,
+              -1.045,
+              -0.945
+            ],
+            "max": [
+              1.4900833333333332,
+              1.46925,
+              1.133
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/fan.glb",
+          "bytes": 94580,
+          "vertices": 2744,
+          "triangles": 4776,
+          "materials": 10,
+          "sha256": "d9fe6203607387f0885e381c15ff1a5739a8d3768275e4a739ba46a326dd95c9",
+          "bounds": {
+            "min": [
+              -1.0483333333333336,
+              -1.178842857142857,
+              -0.945
+            ],
+            "max": [
+              1.4900833333333332,
+              1.46925,
+              1.133
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "pump",
+      "terminalIds": [
+        "u",
+        "v",
+        "w",
+        "earth"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/pump.glb",
+          "bytes": 45692,
+          "vertices": 1456,
+          "triangles": 2020,
+          "materials": 9,
+          "sha256": "5373cf32c9c144dd17216d423a54c25280a51d6c465645d1d539d3909f31560e",
+          "bounds": {
+            "min": [
+              -1.359375,
+              -1.2425,
+              -0.9466666666666668
+            ],
+            "max": [
+              1.9575,
+              1.5748666666666666,
+              1.2654999999999998
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/pump.glb",
+          "bytes": 54900,
+          "vertices": 1604,
+          "triangles": 2640,
+          "materials": 9,
+          "sha256": "b0df877650609cad0e2c47eb5b81caa5edeb8c81c33144cbed9c727f474cb567",
+          "bounds": {
+            "min": [
+              -1.359375,
+              -1.2425,
+              -0.9466666666666668
+            ],
+            "max": [
+              1.9575,
+              1.6359166666666667,
+              1.277
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/pump.glb",
+          "bytes": 109544,
+          "vertices": 3288,
+          "triangles": 5508,
+          "materials": 9,
+          "sha256": "7545b004d459f11216a75c5ec5444dd5adf4ead1b62bdd3eb1370b52874b6afa",
+          "bounds": {
+            "min": [
+              -1.359375,
+              -1.298842857142857,
+              -0.9466666666666668
+            ],
+            "max": [
+              1.9575,
+              1.6359166666666667,
+              1.277
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "heater3Phase",
+      "terminalIds": [
+        "u",
+        "v",
+        "w",
+        "earth"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/heater3Phase.glb",
+          "bytes": 43456,
+          "vertices": 1316,
+          "triangles": 1972,
+          "materials": 9,
+          "sha256": "0a8f575c3be5e312e128d3d2c5b0a2d3a3f9a0d89dca0bb950ad8c6b5e1d8550",
+          "bounds": {
+            "min": [
+              -1.4349999999999998,
+              -1.155,
+              -0.45375
+            ],
+            "max": [
+              1.5956999999999997,
+              1.4707,
+              1.2654999999999998
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/heater3Phase.glb",
+          "bytes": 55164,
+          "vertices": 1604,
+          "triangles": 2660,
+          "materials": 9,
+          "sha256": "51886f22c26a8ae6d10af2d8dc398c30a200f8f1883fddabb967e31f5fb4b67c",
+          "bounds": {
+            "min": [
+              -1.4349999999999998,
+              -1.155,
+              -0.45375
+            ],
+            "max": [
+              1.6567499999999997,
+              1.53175,
+              1.277
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/heater3Phase.glb",
+          "bytes": 99292,
+          "vertices": 2964,
+          "triangles": 4976,
+          "materials": 9,
+          "sha256": "110890382747e5e56a533b850ac3ccdf84a9c197571850890aea75eefe98f336",
+          "bounds": {
+            "min": [
+              -1.4349999999999998,
+              -1.223842857142857,
+              -0.45375
+            ],
+            "max": [
+              1.6567499999999997,
+              1.53175,
+              1.277
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "solenoidValve",
+      "terminalIds": [
+        "u",
+        "v",
+        "earth"
+      ],
+      "sourceAssets": [],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/solenoidValve.glb",
+          "bytes": 42132,
+          "vertices": 1304,
+          "triangles": 1904,
+          "materials": 8,
+          "sha256": "5ce526d103e67db2fe0953c829c3464c4c291f8aa8d2911a343dd51802fcfd93",
+          "bounds": {
+            "min": [
+              -0.9066666666666667,
+              -1.03,
+              -0.5866666666666667
+            ],
+            "max": [
+              1.2207,
+              1.3873666666666666,
+              1.1215
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/solenoidValve.glb",
+          "bytes": 52792,
+          "vertices": 1600,
+          "triangles": 2496,
+          "materials": 8,
+          "sha256": "4f2b2be506ef7ceff5b25edc5cba78ca2fb926e8f39de59614ed804bd1b52428",
+          "bounds": {
+            "min": [
+              -0.9066666666666667,
+              -1.03,
+              -0.5866666666666667
+            ],
+            "max": [
+              1.28175,
+              1.4484166666666667,
+              1.133
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/solenoidValve.glb",
+          "bytes": 88860,
+          "vertices": 2696,
+          "triangles": 4404,
+          "materials": 8,
+          "sha256": "0c7073ea8629586fd727a19cd1f987d1231947dacd4161bdd6178732e9c6559f",
+          "bounds": {
+            "min": [
+              -0.9066666666666667,
+              -1.1638428571428572,
+              -0.5866666666666667
+            ],
+            "max": [
+              1.28175,
+              1.4484166666666667,
+              1.133
+            ]
+          }
+        }
+      }
+    },
+    {
+      "kind": "cableSegment",
+      "terminalIds": [
+        "a",
+        "b"
+      ],
+      "sourceAssets": [
+        {
+          "file": "models/wire_bundle.glb",
+          "sha256": "3064864520dc71c9464b3146ade5ed677e3a81bd83fb8488975d6de2f8ad558a",
+          "bytes": 15952
+        }
+      ],
+      "lods": {
+        "board": {
+          "path": "assets/models/board/cableSegment.glb",
+          "bytes": 17392,
+          "vertices": 400,
+          "triangles": 716,
+          "materials": 9,
+          "sha256": "5acffc53a63cf642479b403e1e18e35753a6685214b4763411f6ac9bbe797fad",
+          "bounds": {
+            "min": [
+              -1.6998666666666666,
+              -0.51625,
+              -0.09625
+            ],
+            "max": [
+              1.6998666666666666,
+              0.51625,
+              0.47350000000000003
+            ]
+          }
+        },
+        "preview": {
+          "path": "assets/models/preview/cableSegment.glb",
+          "bytes": 46344,
+          "vertices": 1204,
+          "triangles": 2320,
+          "materials": 9,
+          "sha256": "e64f65818091d58cfeb4bd9dad2667d81a82d80cd09ddeb6d6608ed728124fd9",
+          "bounds": {
+            "min": [
+              -1.7609166666666667,
+              -0.6355204445186496,
+              -0.21400000000000002
+            ],
+            "max": [
+              1.7609166666666667,
+              0.6355204445186496,
+              0.48500000000000004
+            ]
+          }
+        },
+        "detailed": {
+          "path": "assets/models/detailed/cableSegment.glb",
+          "bytes": 60172,
+          "vertices": 1588,
+          "triangles": 3088,
+          "materials": 9,
+          "sha256": "5fcaaca50e65a5309e8bfa71bf3a6c263ac4144c2bb93500409d6557bac4503d",
+          "bounds": {
+            "min": [
+              -1.7609166666666667,
+              -0.6355204445186496,
+              -0.21400000000000002
+            ],
+            "max": [
+              1.7609166666666667,
+              0.6355204445186496,
+              0.48500000000000004
             ]
           }
         }
       }
     }
-  ]
+  ],
+  "sourcePack": {
+    "files": 30,
+    "allUsed": true
+  }
 }

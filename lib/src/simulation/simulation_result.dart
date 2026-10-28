@@ -36,6 +36,9 @@ class DeviceReading {
     this.measurementValid = true,
     this.residualCurrent = 0,
     this.energyKwh = 0,
+    this.secondaryCurrent = 0,
+    this.frequency = 0,
+    this.connectionMode = '',
   });
 
   final String componentId;
@@ -51,6 +54,9 @@ class DeviceReading {
   final bool measurementValid;
   final double residualCurrent;
   final double energyKwh;
+  final double secondaryCurrent;
+  final double frequency;
+  final String connectionMode;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'componentId': componentId,
@@ -66,6 +72,9 @@ class DeviceReading {
         'measurementValid': measurementValid,
         'residualCurrent': residualCurrent,
         'energyKwh': energyKwh,
+        'secondaryCurrent': secondaryCurrent,
+        'frequency': frequency,
+        'connectionMode': connectionMode,
       };
 }
 
