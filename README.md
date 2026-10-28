@@ -13,9 +13,10 @@
 - تحريك/تدوير/نسخ/حذف/تحجيم، طبقات قابلة للتسمية والإخفاء والقفل، وUndo/Redo؛ المصادر الدائمة محمية من النقل والحذف والتكرار.
 - توصيل Terminal-to-Terminal مع تحقق، مسارات Straight/90°/Curved، ألوان ومقاطع وأنواع وعزل، ونقاط انحناء قابلة للتحريك.
 - محرك MNA مستقل بأعداد مركبة لـDC وAC RMS، Contacteur وRelais وTemporisateur ON/OFF-delay وتعشيق ذاتي، حمايات وأعطال وقياسات.
+- قالبا **Démarrage direct** و**Étoile-triangle** بمحرك ستة أطراف وتوصيل قدرة حقيقي؛ تتابع المؤقت وNC والتعشيق الميكانيكي يفتح نقاط القدرة عند تعارض الملفين، مع رفض مجموعات التعشيق الناقصة.
 - MCB وDisjoncteur différentier وDisjoncteur moteur وRelais thermique وFusible؛ حساب ΔI من L+N وقواعد فصل تعليمية مرتبطة بالحل.
 - محرك ثلاثي وأحادي الطور، ومحول AC مثالي مقترن داخل MNA مع مقاومتي الملفات، وعداد يقيس V/I/P ويكامل الطاقة kWh.
-- **27 أصل GLB أصلي × 3 LOD (81 ملفاً)** للأنواع المدعومة: board خفيف، preview للمكتبة وdetailed قابل للتدوير والتكبير؛ تحميل كسول وأطراف من تعريف المحاكاة نفسه.
+- **68 نوعاً × 3 LOD = 204 ملفات GLB**: board خفيف، preview للمكتبة وdetailed قابل للتدوير والتكبير؛ تحميل كسول وأطراف من تعريف المحاكاة نفسه. استُعملت ملفات الحزمة المرجعية الثلاثون كلها وسُجل مصدر كل أصل في manifest.
 - مكتبة داكنة متجاوبة بتحميل كسول وبطاقات وأسماء عربية/فرنسية، مع لوحة تركيب/شبكة قابلة للتبديل وأطراف تفاعلية ومسارات تتفادى الأجهزة قدر الإمكان.
 - Voltmètre وAmpèremètre وCompteur وتيارات الأسلاك والرسائل التشخيصية والمساعدة المحلية والتحديات.
 - مشاركة مشروع بChecksum واستيراده، نسخة احتياطية واستعادتها، وتصدير PNG وPDF فعليين.
@@ -29,13 +30,13 @@
 - المحول مثالي لـAC مع مقاومات الملفات فقط؛ لا نموذج للتشبع أو DC أو الفاقد الديناميكي.
 - RCD ثنائي القطب يحسب ΔI من مجموع L+N؛ لا يحاكي منحنيات المصنعين أو كل أشكال أعطال الأرضي. VFD وPLC غير منفذين.
 - منحنيات الحماية واقتراح مقطع السلك تعليمية مبسطة وليست مطابقة لمعايير أو كتالوجات مصنعين.
-- meshes أصلية مفصلة حسب العائلة وليست نماذج CAD photorealistic بأبعاد مصنع؛ لم تُختبر جودتها أو أداؤها بعد على مجموعة هواتف مادية.
+- meshes تجمع أصول الحزمة المرجعية مع توسعات brand-free حسب العائلة، وليست CAD photorealistic بأبعاد مصنع؛ فُكّت واختُبرت بنيوياً في CI، لكن لم تُختبر جودتها أو أداؤها على مجموعة هواتف مادية.
 
 التفاصيل والمعادلات في [`docs/SIMULATION.md`](docs/SIMULATION.md)، وصيغة الحفظ في [`docs/PROJECT_FORMAT.md`](docs/PROJECT_FORMAT.md)، والأصول في [`docs/ASSETS_3D.md`](docs/ASSETS_3D.md)، وتحسينات المكتبة واللوحة في [`docs/UI_WORKSPACE.md`](docs/UI_WORKSPACE.md).
 
 ## المكونات المدعومة حالياً
 
-Alimentation DC/monophasée/triphasée، Disjoncteur MCB/différentiel/moteur، Contacteur 3P + aux، Relais thermique/auxiliaire، Boutons NO/NC وArrêt d'urgence، Sélecteur وCommutateur rotatif 0-1-2، Temporisateurs ON/OFF-delay، Capteur NO وFin de course، Voyant، Moteur triphasé/monophasé، Transformateur، Bornier، Voltmètre، Ampèremètre، Compteur numérique وFusible.
+Alimentation DC/monophasée/triphasée؛ MCB 2P/3P/4P وMCCB وRCCB/RCBO وDisjoncteur moteur وFusible وSectionneur؛ Contacteur 3P/4P + aux وRelais thermique/auxiliaire/impulsion/phase؛ Boutons وArrêt d'urgence ومفاتيح البناء والتبديل؛ Temporisateurs ON/OFF/staircase؛ حساسات NO وPNP وحرارة/ضوء/حركة/ضغط/مستوى/تدفق؛ Voyant/LED/Bell/Buzzer؛ Moteur 3~ ثلاثي أو سداسي الأطراف و1~ وFan/Pump/Solenoid وHeater؛ Transformateurs وCT/VT؛ Borniers وBarres N/PE وDistribution وPrises وCâble؛ Voltmètre/Ampèremètre/Wattmètre/Fréquencemètre/Compteur.
 
 ## التشغيل والبناء
 
@@ -43,7 +44,7 @@ Alimentation DC/monophasée/triphasée، Disjoncteur MCB/différentiel/moteur، 
 
 ```bash
 flutter pub get
-dart format lib test
+dart format --output=none --set-exit-if-changed lib test
 flutter analyze
 flutter test --coverage
 flutter run

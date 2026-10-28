@@ -286,6 +286,20 @@ void main() {
         ).validate,
         throwsFormatException,
       );
+      final unsupportedPeer = valid.copyWith(
+        components: <CircuitComponent>[
+          valid.components.first,
+          device(
+            'h1',
+            ComponentKind.indicator,
+            overrides: const <String, Object>{
+              'interlockGroup': 'motor_pair',
+              'interlockRole': 'delta',
+            },
+          ),
+        ],
+      );
+      expect(unsupportedPeer.validate, throwsFormatException);
     });
 
     test('six-lead motor bridges are allowed only between distinct terminals',

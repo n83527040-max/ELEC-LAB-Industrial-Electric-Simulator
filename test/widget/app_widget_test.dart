@@ -1,9 +1,14 @@
 import 'package:elec_lab/src/app.dart';
+import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/project.dart';
 import 'package:elec_lab/src/models/project_templates.dart';
+import 'package:elec_lab/src/models/terminal.dart';
+import 'package:elec_lab/src/models/wire.dart';
+import 'package:elec_lab/src/state/editor_controller.dart';
 import 'package:elec_lab/src/state/settings_controller.dart';
 import 'package:elec_lab/src/storage/project_repository.dart';
 import 'package:elec_lab/src/ui/circuit_board.dart';
+import 'package:elec_lab/src/ui/component_details_sheet.dart';
 import 'package:elec_lab/src/ui/editor_screen.dart';
 import 'package:elec_lab/src/ui/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -153,4 +158,80 @@ void main() {
     await tester.pump();
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('interlock editor assigns and clears both contactors',
+      (tester) async {
+    final controller = EditorController(
+      project: projectOf(
+        <CircuitComponent>[
+          device('km2', ComponentKind.contactor),
+          device('km3', ComponentKind.contactor),
+        ],
+        const <CircuitWire>[],
+      ),
+    );
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: ComponentDetailsSheet(
+            controller: controller,
+            componentId: 'km2',
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('الخصائص'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('ربط الزوج'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'اسم المجموعة'),
+      'pair_from_ui',
+    );
+    await tester.tap(
+      find.widgetWithText(
+        DropdownButtonFormField<String>,
+        'الكونتاكتور المقابل',
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('KM3').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('ربط الزوج'));
+    await tester.pumpAndSettle();
+    expect(
+      controller.project.componentById('km2')!.text('interlockGroup'),
+      'pair_from_ui',
+    );
+    expect(
+      controller.project.componentById('km2')!.text('interlockRole'),
+      'star',
+    );
+    expect(
+      controller.project.componentById('km3')!.text('interlockGroup'),
+      'pair_from_ui',
+    );
+    expect(
+      controller.project.componentById('km3')!.text('interlockRole'),
+      'delta',
+    );
+    controller.project.validate();
+    await tester.pump(const Duration(seconds: 5));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('فك التعشيق'));
+    await tester.pumpAndSettle();
+    expect(
+      controller.project.componentById('km2')!.text('interlockGroup'),
+      isEmpty,
+    );
+    expect(
+      controller.project.componentById('km3')!.text('interlockGroup'),
+      isEmpty,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
 }

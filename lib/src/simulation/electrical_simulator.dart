@@ -1201,7 +1201,11 @@ class _Network {
     if (group.isEmpty) return true;
     if (!_hasValidInterlockPair(component, project.components)) return false;
     for (final peer in project.components) {
-      if (peer.id == component.id || _interlockGroup(peer) != group) {
+      final supportedPeer = peer.kind == ComponentKind.contactor ||
+          peer.kind == ComponentKind.contactor4P;
+      if (peer.id == component.id ||
+          !supportedPeer ||
+          _interlockGroup(peer) != group) {
         continue;
       }
       final peerRole = _interlockRole(peer);
