@@ -39,16 +39,16 @@ void main() {
               .toSet(),
           reason: path,
         );
-        for (final face in mesh.faces) {
-          expect(face.indices, hasLength(3), reason: path);
-          expect(
-            face.indices.every(
-              (index) => index >= 0 && index < mesh.vertices.length,
-            ),
-            isTrue,
-            reason: path,
-          );
-        }
+        final validTriangles = mesh.faces.every(
+          (face) =>
+              face.indices.length == 3 &&
+              face.indices.every(
+                (index) => index >= 0 && index < mesh.vertices.length,
+              ),
+        );
+        // Validate every triangle without allocating hundreds of thousands of
+        // individual matcher expectations in one Flutter test shell.
+        expect(validTriangles, isTrue, reason: path);
       }
     }
     expect(files, 81);
