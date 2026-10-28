@@ -602,25 +602,18 @@ class _NewProjectSheetState extends State<_NewProjectSheet> {
             const SizedBox(height: 16),
             const Text('قالب البداية'),
             const SizedBox(height: 8),
-            RadioGroup<ProjectTemplateKind>(
-              groupValue: _template,
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() => _template = value);
-                }
-              },
-              child: Column(
-                children: ProjectTemplateKind.values
-                    .map(
-                      (template) => RadioListTile<ProjectTemplateKind>(
-                        value: template,
-                        title: Text(ProjectTemplates.name(template)),
-                        dense: true,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    )
-                    .toList(growable: false),
-              ),
+            Wrap(
+              spacing: 8,
+              runSpacing: 6,
+              children: ProjectTemplateKind.values
+                  .map(
+                    (template) => ChoiceChip(
+                      selected: _template == template,
+                      label: Text(ProjectTemplates.name(template)),
+                      onSelected: (_) => setState(() => _template = template),
+                    ),
+                  )
+                  .toList(growable: false),
             ),
             const SizedBox(height: 12),
             FilledButton.icon(

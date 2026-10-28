@@ -296,7 +296,10 @@ void main() {
         device(
           'h2',
           ComponentKind.indicator,
-          overrides: const <String, Object>{'ratedVoltage': 230.0},
+          overrides: const <String, Object>{
+            'ratedVoltage': 230.0,
+            'powerWatts': 100.0,
+          },
         ),
       ],
       wires: <CircuitWire>[

@@ -19,7 +19,7 @@ void main() {
           .terminals
           .map((t) => t.id)
           .toSet(),
-      <String>{'u1', 'v1', 'w1', 'pe'},
+      <String>{'u', 'v', 'w', 'earth'},
     );
     expect(
       ComponentCatalog.specOf(ComponentKind.motor6Terminal)

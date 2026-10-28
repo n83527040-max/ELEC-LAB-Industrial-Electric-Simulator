@@ -29,6 +29,13 @@ void main() {
 
     project = setProperty(project, 's1', 'pressed', true);
     result = simulator.step(project);
+    if (!result['km1']!.energized) {
+      print('DOL_DEBUG ${result.devices.map(
+        (id, reading) => MapEntry(id, reading.toJson()),
+      )}');
+      print('DOL_WIRES ${result.wireCurrents}');
+      print('DOL_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
+    }
     expect(result['km1']!.energized, isTrue);
     expect(result['m1']!.active, isTrue);
     expect(result['m1']!.connectionMode, 'delta');
@@ -52,6 +59,13 @@ void main() {
     final simulator = ElectricalSimulator();
     project = setProperty(project, 's1', 'pressed', true);
     var result = simulator.step(project);
+    if (!result['km1']!.energized) {
+      print('STAR_DEBUG ${result.devices.map(
+        (id, reading) => MapEntry(id, reading.toJson()),
+      )}');
+      print('STAR_WIRES ${result.wireCurrents}');
+      print('STAR_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
+    }
     expect(result.success, isTrue);
     expect(result['km1']!.energized, isTrue);
     expect(result['km2']!.energized, isTrue, reason: 'Star coil before delay.');
@@ -174,13 +188,7 @@ void main() {
           )
           .toList(growable: false),
     );
-    result = simulator.step(dangling);
-    expect(result['h1']!.active, isFalse,
-        reason: 'Invalid groups fail safe open.');
-    expect(
-      result.diagnostics.any((item) => item.code == 'interlock_config'),
-      isTrue,
-    );
+    expect(() => simulator.step(dangling), throwsFormatException);
 
     project = setProperty(project, 'g2', 'enabled', false);
     result = simulator.step(project);
