@@ -143,11 +143,9 @@ class MeshPainter extends CustomPainter {
         positions,
         colors: colors,
       );
-      try {
-        canvas.drawVertices(vertices, ui.BlendMode.dst, Paint());
-      } finally {
-        vertices.dispose();
-      }
+      // The recorded display list can still reference these vertices during
+      // rasterization; do not dispose them synchronously after recording.
+      canvas.drawVertices(vertices, ui.BlendMode.dst, Paint());
     }
     canvas.drawPath(
       edges,
