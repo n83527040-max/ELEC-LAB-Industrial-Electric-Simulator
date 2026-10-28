@@ -4,7 +4,6 @@ import 'package:elec_lab/src/models/project_templates.dart';
 import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/models/wire.dart';
 import 'package:elec_lab/src/simulation/electrical_simulator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../test_helpers.dart';
@@ -30,14 +29,6 @@ void main() {
 
     project = setProperty(project, 's1', 'pressed', true);
     result = simulator.step(project);
-    if (!result['km1']!.energized) {
-      debugPrint('DOL_DEBUG ${result.devices.map(
-        (id, reading) => MapEntry(id, reading.toJson()),
-      )}');
-      debugPrint('DOL_WIRES ${result.wireCurrents}');
-      debugPrint(
-          'DOL_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
-    }
     expect(result['km1']!.energized, isTrue);
     expect(result['m1']!.active, isTrue);
     expect(result['m1']!.connectionMode, 'delta');
@@ -61,14 +52,6 @@ void main() {
     final simulator = ElectricalSimulator();
     project = setProperty(project, 's1', 'pressed', true);
     var result = simulator.step(project);
-    if (!result['km1']!.energized) {
-      debugPrint('STAR_DEBUG ${result.devices.map(
-        (id, reading) => MapEntry(id, reading.toJson()),
-      )}');
-      debugPrint('STAR_WIRES ${result.wireCurrents}');
-      debugPrint(
-          'STAR_DIAG ${result.diagnostics.map((item) => item.messageAr).toList()}');
-    }
     expect(result.success, isTrue);
     expect(result['km1']!.energized, isTrue);
     expect(result['km2']!.energized, isTrue, reason: 'Star coil before delay.');

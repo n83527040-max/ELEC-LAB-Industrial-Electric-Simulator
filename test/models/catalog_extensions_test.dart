@@ -26,7 +26,7 @@ void main() {
           .terminals
           .map((t) => t.id)
           .toSet(),
-      <String>{'u1', 'v1', 'w1', 'u2', 'v2', 'w2', 'pe'},
+      <String>{'u1', 'v1', 'w1', 'u2', 'v2', 'w2', 'earth'},
     );
   });
 

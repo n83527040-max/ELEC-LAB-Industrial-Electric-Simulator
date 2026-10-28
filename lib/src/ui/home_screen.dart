@@ -560,85 +560,109 @@ class _NewProjectSheetState extends State<_NewProjectSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(
-          20, 0, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Text('مشروع جديد',
-                style: Theme.of(context).textTheme.headlineSmall),
-            const SizedBox(height: 18),
-            TextField(
-              controller: _name,
-              autofocus: true,
-              maxLength: 70,
-              decoration: const InputDecoration(
-                labelText: 'اسم المشروع',
-                hintText: 'مثال: دائرة تشغيل محرك',
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _description,
-              decoration: const InputDecoration(labelText: 'ملاحظات (اختياري)'),
-            ),
-            const SizedBox(height: 16),
-            const Text('مساحة اللوحة'),
-            const SizedBox(height: 8),
-            SegmentedButton<double>(
-              segments: const <ButtonSegment<double>>[
-                ButtonSegment(value: 800, label: Text('صغيرة')),
-                ButtonSegment(value: 1200, label: Text('متوسطة')),
-                ButtonSegment(value: 1600, label: Text('كبيرة')),
-              ],
-              selected: <double>{_width},
-              onSelectionChanged: (value) => setState(() {
-                _width = value.first;
-                _height = _width * 0.75;
-              }),
-            ),
-            const SizedBox(height: 16),
-            const Text('قالب البداية'),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              children: ProjectTemplateKind.values
-                  .map(
-                    (template) => ChoiceChip(
-                      selected: _template == template,
-                      label: Text(ProjectTemplates.name(template)),
-                      onSelected: (_) => setState(() => _template = template),
-                    ),
-                  )
-                  .toList(growable: false),
-            ),
-            const SizedBox(height: 12),
-            FilledButton.icon(
-              onPressed: () {
-                if (_name.text.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('أدخل اسم المشروع أولاً.')),
-                  );
-                  return;
-                }
-                Navigator.pop(
-                  context,
-                  _ProjectDraft(
-                    name: _name.text.trim(),
-                    description: _description.text.trim(),
-                    width: _width,
-                    height: _height,
-                    template: _template,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          20,
+          0,
+          20,
+          MediaQuery.viewInsetsOf(context).bottom + 20,
+        ),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * 0.9,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Flexible(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        'مشروع جديد',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 18),
+                      TextField(
+                        controller: _name,
+                        autofocus: true,
+                        maxLength: 70,
+                        decoration: const InputDecoration(
+                          labelText: 'اسم المشروع',
+                          hintText: 'مثال: دائرة تشغيل محرك',
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _description,
+                        decoration: const InputDecoration(
+                          labelText: 'ملاحظات (اختياري)',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('مساحة اللوحة'),
+                      const SizedBox(height: 8),
+                      SegmentedButton<double>(
+                        segments: const <ButtonSegment<double>>[
+                          ButtonSegment(value: 800, label: Text('صغيرة')),
+                          ButtonSegment(value: 1200, label: Text('متوسطة')),
+                          ButtonSegment(value: 1600, label: Text('كبيرة')),
+                        ],
+                        selected: <double>{_width},
+                        onSelectionChanged: (value) => setState(() {
+                          _width = value.first;
+                          _height = _width * 0.75;
+                        }),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text('قالب البداية'),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        children: ProjectTemplateKind.values
+                            .map(
+                              (template) => ChoiceChip(
+                                selected: _template == template,
+                                label: Text(ProjectTemplates.name(template)),
+                                onSelected: (_) =>
+                                    setState(() => _template = template),
+                              ),
+                            )
+                            .toList(growable: false),
+                      ),
+                    ],
                   ),
-                );
-              },
-              icon: const Icon(Icons.check),
-              label: const Text('إنشاء المشروع'),
-            ),
-          ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              FilledButton.icon(
+                onPressed: () {
+                  if (_name.text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('أدخل اسم المشروع أولاً.')),
+                    );
+                    return;
+                  }
+                  Navigator.pop(
+                    context,
+                    _ProjectDraft(
+                      name: _name.text.trim(),
+                      description: _description.text.trim(),
+                      width: _width,
+                      height: _height,
+                      template: _template,
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.check),
+                label: const Text('إنشاء المشروع'),
+              ),
+            ],
+          ),
         ),
       ),
     );

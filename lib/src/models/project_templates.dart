@@ -315,8 +315,15 @@ abstract final class ProjectTemplates {
     };
     final supplies = installed.components.map((component) {
       if (!enabledSources.contains(component.id)) return component;
+      final control230 = component.id == SupplyBay.singlePhaseId &&
+          (kind == ProjectTemplateKind.directOnLine ||
+              kind == ProjectTemplateKind.starDelta);
       return component.copyWith(
-        properties: <String, Object>{...component.properties, 'enabled': true},
+        properties: <String, Object>{
+          ...component.properties,
+          'enabled': true,
+          if (control230) 'voltage': 230.0,
+        },
       );
     });
     final result = installed.copyWith(
