@@ -722,7 +722,7 @@ class ElectricalSimulator {
     }
     for (final component in project.components) {
       if (_interlockGroup(component).isNotEmpty &&
-          !_hasValidInterlockPair(component)) {
+          !_hasValidInterlockPair(component, project.components)) {
         diagnostics.add(
           SimulationDiagnostic(
             code: 'interlock_config',
@@ -736,7 +736,7 @@ class ElectricalSimulator {
     }
     for (final star in project.components) {
       if (_interlockRole(star) != 'star' ||
-          !_hasValidInterlockPair(star) ||
+          !_hasValidInterlockPair(star, project.components) ||
           !runtime[star.id].energized) {
         continue;
       }
@@ -1049,13 +1049,16 @@ String _interlockGroup(CircuitComponent component) =>
 String _interlockRole(CircuitComponent component) =>
     component.text('interlockRole').trim();
 
-bool _hasValidInterlockPair(CircuitComponent component) {
+bool _hasValidInterlockPair(
+  CircuitComponent component,
+  List<CircuitComponent> components,
+) {
   final group = _interlockGroup(component);
   final role = _interlockRole(component);
   if (group.isEmpty || !const <String>{'star', 'delta'}.contains(role)) {
     return false;
   }
-  final members = project.components
+  final members = components
       .where((item) => _interlockGroup(item) == group)
       .toList(growable: false);
   return members.length == 2 &&
@@ -1196,7 +1199,7 @@ class _Network {
     final group = _interlockGroup(component);
     final role = _interlockRole(component);
     if (group.isEmpty) return true;
-    if (!_hasValidInterlockPair(component)) return false;
+    if (!_hasValidInterlockPair(component, project.components)) return false;
     for (final peer in project.components) {
       if (peer.id == component.id || _interlockGroup(peer) != group) {
         continue;

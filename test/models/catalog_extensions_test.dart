@@ -1,5 +1,6 @@
 import 'package:elec_lab/src/models/component.dart';
 import 'package:elec_lab/src/models/component_catalog.dart';
+import 'package:elec_lab/src/models/component_catalog_extensions.dart';
 import 'package:elec_lab/src/models/terminal.dart';
 import 'package:elec_lab/src/models/wire.dart';
 import 'package:elec_lab/src/simulation/electrical_simulator.dart';
@@ -41,11 +42,11 @@ void main() {
       );
       for (final terminal in spec.terminals) {
         expect(terminal.id, isNotEmpty, reason: kind.name);
-        expect(terminal.localPosition.x.isFinite, isTrue,
+        expect(terminal.position.x.isFinite, isTrue,
             reason: '${kind.name}/${terminal.id}');
-        expect(terminal.localPosition.y.isFinite, isTrue,
+        expect(terminal.position.y.isFinite, isTrue,
             reason: '${kind.name}/${terminal.id}');
-        expect(terminal.localPosition.z.isFinite, isTrue,
+        expect(terminal.position.z.isFinite, isTrue,
             reason: '${kind.name}/${terminal.id}');
       }
       for (final entry in spec.defaultProperties.entries) {
