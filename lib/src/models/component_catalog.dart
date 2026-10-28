@@ -419,7 +419,8 @@ abstract final class ComponentCatalog {
         'tripTime': 5.0,
         'fault': 'none',
       },
-      description: 'ثلاثة مسارات قدرة L1/T1 وL2/T2 وL3/T3 ونقطة NC تفتح عند الحمل الزائد.',
+      description:
+          'ثلاثة مسارات قدرة L1/T1 وL2/T2 وL3/T3 ونقطة NC تفتح عند الحمل الزائد.',
     ),
     ComponentKind.auxiliaryRelay: ComponentSpec(
       kind: ComponentKind.auxiliaryRelay,
@@ -504,7 +505,8 @@ abstract final class ComponentCatalog {
         'closed': true,
         'fault': 'none',
       },
-      description: 'نقطة NC مع maintained stop؛ اضغط أثناء المحاكاة للفصل وإعادة التعشيق.',
+      description:
+          'نقطة NC مع maintained stop؛ اضغط أثناء المحاكاة للفصل وإعادة التعشيق.',
     ),
     ComponentKind.selectorSwitch: ComponentSpec(
       kind: ComponentKind.selectorSwitch,
@@ -562,7 +564,8 @@ abstract final class ComponentCatalog {
         'position': 0,
         'fault': 'none',
       },
-      description: 'مفتاح maintained بثلاث وضعيات؛ يصل COM إلى 1 أو 2 حسب الاختيار.',
+      description:
+          'مفتاح maintained بثلاث وضعيات؛ يصل COM إلى 1 أو 2 حسب الاختيار.',
     ),
     ComponentKind.timer: ComponentSpec(
       kind: ComponentKind.timer,
@@ -707,7 +710,8 @@ abstract final class ComponentCatalog {
         'active': false,
         'fault': 'none',
       },
-      description: 'نقطة NO بمحرك roller؛ التنشيط اليدوي يمثل وصول الجزء الميكانيكي.',
+      description:
+          'نقطة NO بمحرك roller؛ التنشيط اليدوي يمثل وصول الجزء الميكانيكي.',
     ),
     ComponentKind.indicator: ComponentSpec(
       kind: ComponentKind.indicator,

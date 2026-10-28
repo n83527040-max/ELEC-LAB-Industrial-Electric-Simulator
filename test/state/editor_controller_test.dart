@@ -24,11 +24,16 @@ void main() {
 
   tearDown(() => controller.dispose());
 
-  test('add, snap, move, rotate, duplicate, delete and undo/redo are real edits', () {
-    final id = controller.addComponent(ComponentKind.dcSupply, const BoardPoint(103, 207));
-    expect(controller.project.componentById(id)!.position, const BoardPoint(100, 200));
+  test(
+      'add, snap, move, rotate, duplicate, delete and undo/redo are real edits',
+      () {
+    final id = controller.addComponent(
+        ComponentKind.dcSupply, const BoardPoint(103, 207));
+    expect(controller.project.componentById(id)!.position,
+        const BoardPoint(100, 200));
     controller.moveComponent(id, const BoardPoint(122, 244));
-    expect(controller.project.componentById(id)!.position, const BoardPoint(120, 240));
+    expect(controller.project.componentById(id)!.position,
+        const BoardPoint(120, 240));
     controller.rotateComponent(id);
     expect(controller.project.componentById(id)!.rotation, 1);
     final duplicate = controller.duplicateComponent(id)!;
@@ -48,7 +53,8 @@ void main() {
   });
 
   test('continuous drag is one undo operation', () {
-    final id = controller.addComponent(ComponentKind.indicator, const BoardPoint(100, 100));
+    final id = controller.addComponent(
+        ComponentKind.indicator, const BoardPoint(100, 100));
     final before = controller.undoCount;
     controller.beginInteraction();
     controller.moveComponent(id, const BoardPoint(120, 100), transient: true);
@@ -56,9 +62,11 @@ void main() {
     controller.moveComponent(id, const BoardPoint(160, 100), transient: true);
     controller.endInteraction();
     expect(controller.undoCount, before + 1);
-    expect(controller.project.componentById(id)!.position, const BoardPoint(160, 100));
+    expect(controller.project.componentById(id)!.position,
+        const BoardPoint(160, 100));
     controller.undo();
-    expect(controller.project.componentById(id)!.position, const BoardPoint(100, 100));
+    expect(controller.project.componentById(id)!.position,
+        const BoardPoint(100, 100));
   });
 
   test('terminal-to-terminal flow validates and edits wires and waypoints', () {
@@ -81,10 +89,13 @@ void main() {
     expect(controller.project.wires, hasLength(1));
     expect(controller.selectedWireId, wireId);
     controller.addWireWaypoint(wireId, const BoardPoint(305, 205));
-    expect(controller.selectedWire!.waypoints.single, const BoardPoint(300, 200));
+    expect(
+        controller.selectedWire!.waypoints.single, const BoardPoint(300, 200));
     controller.moveWireWaypoint(wireId, 0, const BoardPoint(330, 240));
-    expect(controller.selectedWire!.waypoints.single, const BoardPoint(340, 240));
-    controller.updateWire(controller.selectedWire!.copyWith(crossSectionMm2: 2.5));
+    expect(
+        controller.selectedWire!.waypoints.single, const BoardPoint(340, 240));
+    controller
+        .updateWire(controller.selectedWire!.copyWith(crossSectionMm2: 2.5));
     expect(controller.selectedWire!.crossSectionMm2, 2.5);
     controller.autoRouteWire(wireId);
     expect(controller.selectedWire!.waypoints, isEmpty);
@@ -97,7 +108,9 @@ void main() {
     expect(controller.project.wires, hasLength(1));
   });
 
-  test('source-to-coil wiring is stored on the control layer with control color', () {
+  test(
+      'source-to-coil wiring is stored on the control layer with control color',
+      () {
     final contactorId = controller.addComponent(
       ComponentKind.contactor,
       const BoardPoint(500, 261),
@@ -119,7 +132,8 @@ void main() {
   });
 
   test('layers rename, hide, lock and protect against accidental deletion', () {
-    final id = controller.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
+    final id = controller.addComponent(
+        ComponentKind.dcSupply, const BoardPoint(100, 100));
     final before = controller.project.componentById(id)!.position;
     controller.setLayerVisibility('power', false);
     expect(controller.project.layerById('power')!.visible, isFalse);
@@ -145,15 +159,18 @@ void main() {
     expect(retained.rotation, supply.rotation);
     expect(retained.scale, supply.scale);
     controller.setSupplyEnabled(supply.id, true);
-    expect(controller.project.componentById(supply.id)!.flag('enabled'), isTrue);
+    expect(
+        controller.project.componentById(supply.id)!.flag('enabled'), isTrue);
 
     final id = controller.addComponent(
       ComponentKind.contactor,
       const BoardPoint(300, 260),
     );
-    expect(controller.project.componentById(id)!.position, const BoardPoint(300, 261));
+    expect(controller.project.componentById(id)!.position,
+        const BoardPoint(300, 261));
     controller.moveComponent(id, const BoardPoint(320, 420));
-    expect(controller.project.componentById(id)!.position, const BoardPoint(320, 420));
+    expect(controller.project.componentById(id)!.position,
+        const BoardPoint(320, 420));
   });
 
   test('viewport limits and snap settings are enforced', () {
@@ -179,7 +196,8 @@ void main() {
         saved = project;
       },
     );
-    savingController.addComponent(ComponentKind.dcSupply, const BoardPoint(100, 100));
+    savingController.addComponent(
+        ComponentKind.dcSupply, const BoardPoint(100, 100));
     await savingController.flush();
     expect(saved, isNotNull);
     expect(saved!.components, hasLength(4));
@@ -187,7 +205,8 @@ void main() {
     savingController.dispose();
   });
 
-  test('interlock pair is validated and committed atomically with undo/redo', () {
+  test('interlock pair is validated and committed atomically with undo/redo',
+      () {
     final first = controller.addComponent(
       ComponentKind.contactor,
       const BoardPoint(250, 261),
@@ -200,7 +219,8 @@ void main() {
       controller.configureInterlockPair(first, '', 'motor_1', 'star'),
       isNotNull,
     );
-    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(first)!.text('interlockGroup'),
+        isEmpty);
 
     final before = controller.undoCount;
     expect(
@@ -209,33 +229,42 @@ void main() {
     );
     controller.project.validate();
     expect(controller.undoCount, before + 1);
-    expect(controller.project.componentById(first)!.text('interlockRole'), 'star');
-    expect(controller.project.componentById(second)!.text('interlockRole'), 'delta');
+    expect(
+        controller.project.componentById(first)!.text('interlockRole'), 'star');
+    expect(controller.project.componentById(second)!.text('interlockRole'),
+        'delta');
     expect(
       controller.project.componentById(first)!.text('interlockGroup'),
       controller.project.componentById(second)!.text('interlockGroup'),
     );
 
     controller.undo();
-    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
-    expect(controller.project.componentById(second)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(first)!.text('interlockGroup'),
+        isEmpty);
+    expect(controller.project.componentById(second)!.text('interlockGroup'),
+        isEmpty);
     controller.redo();
-    expect(controller.project.componentById(first)!.text('interlockGroup'), 'motor_1');
+    expect(controller.project.componentById(first)!.text('interlockGroup'),
+        'motor_1');
 
     controller.updateComponentProperties(first, <String, Object>{
       ...controller.project.componentById(first)!.properties,
       'interlockGroup': 'dangling',
     });
-    expect(controller.project.componentById(first)!.text('interlockGroup'), 'motor_1');
+    expect(controller.project.componentById(first)!.text('interlockGroup'),
+        'motor_1');
     expect(controller.lastError, contains('زوج التعشيق'));
 
     expect(controller.clearInterlockPair(first), isNull);
     controller.project.validate();
-    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
-    expect(controller.project.componentById(second)!.text('interlockGroup'), isEmpty);
+    expect(controller.project.componentById(first)!.text('interlockGroup'),
+        isEmpty);
+    expect(controller.project.componentById(second)!.text('interlockGroup'),
+        isEmpty);
   });
 
-  test('pair reassignment duplication and deletion never leave dangling groups', () {
+  test('pair reassignment duplication and deletion never leave dangling groups',
+      () {
     final first = controller.addComponent(
       ComponentKind.contactor,
       const BoardPoint(250, 261),
@@ -252,28 +281,42 @@ void main() {
       ComponentKind.contactor,
       const BoardPoint(850, 261),
     );
-    expect(controller.configureInterlockPair(first, second, 'pair_a', 'star'), isNull);
-    expect(controller.configureInterlockPair(third, fourth, 'pair_a', 'star'), isNotNull);
-    expect(controller.project.componentById(third)!.text('interlockGroup'), isEmpty);
-    expect(controller.project.componentById(fourth)!.text('interlockGroup'), isEmpty);
+    expect(controller.configureInterlockPair(first, second, 'pair_a', 'star'),
+        isNull);
+    expect(controller.configureInterlockPair(third, fourth, 'pair_a', 'star'),
+        isNotNull);
+    expect(controller.project.componentById(third)!.text('interlockGroup'),
+        isEmpty);
+    expect(controller.project.componentById(fourth)!.text('interlockGroup'),
+        isEmpty);
 
-    expect(controller.configureInterlockPair(first, third, 'pair_b', 'delta'), isNull);
+    expect(controller.configureInterlockPair(first, third, 'pair_b', 'delta'),
+        isNull);
     controller.project.validate();
-    expect(controller.project.componentById(first)!.text('interlockRole'), 'delta');
-    expect(controller.project.componentById(third)!.text('interlockRole'), 'star');
-    expect(controller.project.componentById(second)!.text('interlockGroup'), isEmpty);
-    expect(controller.project.componentById(second)!.text('interlockRole'), isEmpty);
+    expect(controller.project.componentById(first)!.text('interlockRole'),
+        'delta');
+    expect(
+        controller.project.componentById(third)!.text('interlockRole'), 'star');
+    expect(controller.project.componentById(second)!.text('interlockGroup'),
+        isEmpty);
+    expect(controller.project.componentById(second)!.text('interlockRole'),
+        isEmpty);
 
     final duplicate = controller.duplicateComponent(first)!;
-    expect(controller.project.componentById(duplicate)!.text('interlockGroup'), isEmpty);
-    expect(controller.project.componentById(duplicate)!.text('interlockRole'), isEmpty);
+    expect(controller.project.componentById(duplicate)!.text('interlockGroup'),
+        isEmpty);
+    expect(controller.project.componentById(duplicate)!.text('interlockRole'),
+        isEmpty);
     controller.deleteComponent(third);
     controller.project.validate();
-    expect(controller.project.componentById(first)!.text('interlockGroup'), isEmpty);
-    expect(controller.project.componentById(first)!.text('interlockRole'), isEmpty);
+    expect(controller.project.componentById(first)!.text('interlockGroup'),
+        isEmpty);
+    expect(controller.project.componentById(first)!.text('interlockRole'),
+        isEmpty);
   });
 
-  test('controller stores the last calculated result when simulation stops', () {
+  test('controller stores the last calculated result when simulation stops',
+      () {
     final project = ProjectTemplates.apply(empty, ProjectTemplateKind.dcLamp);
     final simulationController = EditorController(project: project);
     simulationController.startSimulation();

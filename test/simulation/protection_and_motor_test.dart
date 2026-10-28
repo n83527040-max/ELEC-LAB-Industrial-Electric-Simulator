@@ -10,7 +10,8 @@ import '../test_helpers.dart';
 
 void main() {
   group('Protection and faults', () {
-    test('short circuit trips MCB and remains tripped until explicit reset', () {
+    test('short circuit trips MCB and remains tripped until explicit reset',
+        () {
       final project = projectOf(
         <CircuitComponent>[
           device('g1', ComponentKind.dcSupply),
@@ -29,11 +30,13 @@ void main() {
       var result = simulator.step(project);
       expect(result['q1']!.tripped, isTrue);
       expect(result['q1']!.current, closeTo(0, 1e-6));
-      expect(result.diagnostics.any((item) => item.code == 'breaker_trip'), isTrue);
+      expect(result.diagnostics.any((item) => item.code == 'breaker_trip'),
+          isTrue);
 
       simulator.resetProtection('q1');
       result = simulator.step(project);
-      expect(result['q1']!.tripped, isTrue, reason: 'The short is still present.');
+      expect(result['q1']!.tripped, isTrue,
+          reason: 'The short is still present.');
     });
 
     test('fuse blows under severe overcurrent and opens the path', () {
@@ -56,16 +59,19 @@ void main() {
       final result = ElectricalSimulator().step(project);
       expect(result['fu1']!.blown, isTrue);
       expect(result['h1']!.active, isFalse);
-      expect(result.diagnostics.any((item) => item.code == 'fuse_blown'), isTrue);
+      expect(
+          result.diagnostics.any((item) => item.code == 'fuse_blown'), isTrue);
     });
 
-    test('thermal relay accumulates overload, trips, and drops contactor coil', () {
+    test('thermal relay accumulates overload, trips, and drops contactor coil',
+        () {
       final empty = ElectricalProject.empty(
         id: 'thermal',
         name: 'Thermal',
         now: testNow,
       );
-      final project = ProjectTemplates.apply(empty, ProjectTemplateKind.motorProtection);
+      final project =
+          ProjectTemplates.apply(empty, ProjectTemplateKind.motorProtection);
       final simulator = ElectricalSimulator();
       var result = simulator.step(project);
       expect(result['m1']!.active, isTrue);
@@ -97,7 +103,8 @@ void main() {
           ],
         );
 
-    test('calculates approximately nominal phase current and forward sequence', () {
+    test('calculates approximately nominal phase current and forward sequence',
+        () {
       final result = ElectricalSimulator().step(directMotor());
       expect(result.success, isTrue);
       expect(result['m1']!.active, isTrue);
@@ -105,7 +112,8 @@ void main() {
       expect(result['m1']!.voltage, closeTo(400, 1));
       expect(result['m1']!.current, closeTo(2, 0.03));
       expect(result['m1']!.activePower, greaterThan(900));
-      expect(result.diagnostics.any((item) => item.code == 'motor_running'), isTrue);
+      expect(result.diagnostics.any((item) => item.code == 'motor_running'),
+          isTrue);
     });
 
     test('swapping two phases reverses calculated phase sequence', () {
@@ -129,7 +137,9 @@ void main() {
       );
       final result = ElectricalSimulator().step(project);
       expect(result['m1']!.active, isFalse);
-      expect(result.diagnostics.any((item) => item.code == 'motor_phase_problem'), isTrue);
+      expect(
+          result.diagnostics.any((item) => item.code == 'motor_phase_problem'),
+          isTrue);
     });
 
     test('identical circuits produce reproducible values', () {
@@ -137,7 +147,8 @@ void main() {
       final second = ElectricalSimulator().step(directMotor());
       expect(first['m1']!.voltage, closeTo(second['m1']!.voltage, 1e-10));
       expect(first['m1']!.current, closeTo(second['m1']!.current, 1e-10));
-      expect(first['m1']!.activePower, closeTo(second['m1']!.activePower, 1e-10));
+      expect(
+          first['m1']!.activePower, closeTo(second['m1']!.activePower, 1e-10));
     });
   });
 }

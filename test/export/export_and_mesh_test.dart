@@ -16,7 +16,8 @@ import '../test_helpers.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('3D devices are real polygon meshes with catalog-matched terminals', () async {
+  test('3D devices are real polygon meshes with catalog-matched terminals',
+      () async {
     final project = ProjectTemplates.apply(
       ElectricalProject.empty(id: 'mesh', name: 'Mesh', now: testNow),
       ProjectTemplateKind.selfHolding,
@@ -36,25 +37,33 @@ void main() {
     }
   });
 
-  test('every catalog device has distinct lightweight and detailed LOD meshes', () async {
+  test('every catalog device has distinct lightweight and detailed LOD meshes',
+      () async {
     for (final kind in ComponentKind.values) {
-      final board = await DeviceMeshRepository.forKind(kind, detail: MeshDetail.board);
+      final board =
+          await DeviceMeshRepository.forKind(kind, detail: MeshDetail.board);
       final detailed = await DeviceMeshRepository.forKind(
         kind,
         detail: MeshDetail.detailed,
       );
       expect(board.vertices, isNotEmpty, reason: kind.name);
-      expect(detailed.faces.length, greaterThan(board.faces.length), reason: kind.name);
+      expect(detailed.faces.length, greaterThan(board.faces.length),
+          reason: kind.name);
       expect(
-        identical(board, await DeviceMeshRepository.forKind(kind, detail: MeshDetail.board)),
+        identical(board,
+            await DeviceMeshRepository.forKind(kind, detail: MeshDetail.board)),
         isTrue,
         reason: 'Board geometry should be lazily cached.',
       );
       for (final vertex in detailed.vertices) {
-        expect(vertex.x.isFinite && vertex.y.isFinite && vertex.z.isFinite, isTrue);
+        expect(vertex.x.isFinite && vertex.y.isFinite && vertex.z.isFinite,
+            isTrue);
       }
       for (final face in detailed.faces) {
-        expect(face.indices.every((index) => index >= 0 && index < detailed.vertices.length), isTrue);
+        expect(
+            face.indices.every(
+                (index) => index >= 0 && index < detailed.vertices.length),
+            isTrue);
       }
     }
   });
@@ -63,18 +72,25 @@ void main() {
     for (final spec in ComponentCatalog.byKind.values) {
       final mesh = await DeviceMeshRepository.forKind(spec.kind);
       for (final terminal in spec.terminals) {
-        final actual = mesh.terminals.singleWhere((item) => item.id == terminal.id);
-        final expectedX =
-            (terminal.position.x / spec.size.width - 0.5) * spec.size.width / 48;
-        final expectedY =
-            (0.5 - terminal.position.y / spec.size.height) * spec.size.height / 48;
-        expect(actual.position.x, closeTo(expectedX, 1e-9), reason: terminal.id);
-        expect(actual.position.y, closeTo(expectedY, 1e-9), reason: terminal.id);
+        final actual =
+            mesh.terminals.singleWhere((item) => item.id == terminal.id);
+        final expectedX = (terminal.position.x / spec.size.width - 0.5) *
+            spec.size.width /
+            48;
+        final expectedY = (0.5 - terminal.position.y / spec.size.height) *
+            spec.size.height /
+            48;
+        expect(actual.position.x, closeTo(expectedX, 1e-9),
+            reason: terminal.id);
+        expect(actual.position.y, closeTo(expectedY, 1e-9),
+            reason: terminal.id);
       }
     }
   });
 
-  test('industrial device families differ in geometry, not only labels or colors', () async {
+  test(
+      'industrial device families differ in geometry, not only labels or colors',
+      () async {
     final kinds = ComponentKind.values;
     final signatures = <String>{};
     for (final kind in kinds) {
@@ -89,7 +105,8 @@ void main() {
     expect(signatures.length, kinds.length);
   });
 
-  test('perspective auto-fit leaves a transparent margin around every preview', () async {
+  test('perspective auto-fit leaves a transparent margin around every preview',
+      () async {
     const size = Size(140, 120);
     for (final kind in ComponentKind.values) {
       final recorder = ui.PictureRecorder();
@@ -99,14 +116,16 @@ void main() {
         fitPadding: 0.88,
       ).paint(canvas, size);
       final picture = recorder.endRecording();
-      final image = await picture.toImage(size.width.toInt(), size.height.toInt());
+      final image =
+          await picture.toImage(size.width.toInt(), size.height.toInt());
       final data = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
       expect(data, isNotNull);
       final pixels = data!.buffer.asUint8List();
       var borderHasGeometry = false;
       for (var x = 0; x < size.width.toInt(); x++) {
         borderHasGeometry |= pixels[x * 4 + 3] != 0;
-        final bottom = ((size.height.toInt() - 1) * size.width.toInt() + x) * 4 + 3;
+        final bottom =
+            ((size.height.toInt() - 1) * size.width.toInt() + x) * 4 + 3;
         borderHasGeometry |= pixels[bottom] != 0;
       }
       for (var y = 0; y < size.height.toInt(); y++) {
@@ -114,13 +133,15 @@ void main() {
         final right = (y * size.width.toInt() + size.width.toInt() - 1) * 4 + 3;
         borderHasGeometry |= pixels[right] != 0;
       }
-      expect(borderHasGeometry, isFalse, reason: '${kind.name} touches the preview clip');
+      expect(borderHasGeometry, isFalse,
+          reason: '${kind.name} touches the preview clip');
       picture.dispose();
       image.dispose();
     }
   });
 
-  test('PNG export is a real rendered image with terminal and device geometry', () async {
+  test('PNG export is a real rendered image with terminal and device geometry',
+      () async {
     final project = ProjectTemplates.apply(
       ElectricalProject.empty(id: 'png', name: 'PNG', now: testNow),
       ProjectTemplateKind.dcLamp,
@@ -130,7 +151,8 @@ void main() {
     expect(bytes.sublist(0, 8), <int>[137, 80, 78, 71, 13, 10, 26, 10]);
   });
 
-  test('PDF export produces a valid PDF document with embedded schematic', () async {
+  test('PDF export produces a valid PDF document with embedded schematic',
+      () async {
     final project = ProjectTemplates.apply(
       ElectricalProject.empty(id: 'pdf', name: 'مخطط PDF', now: testNow),
       ProjectTemplateKind.dcLamp,
@@ -138,6 +160,7 @@ void main() {
     final bytes = await ProjectExporter.renderPdf(project);
     expect(bytes.length, greaterThan(1500));
     expect(String.fromCharCodes(bytes.take(5)), '%PDF-');
-    expect(String.fromCharCodes(bytes.sublist(bytes.length - 20)), contains('EOF'));
+    expect(String.fromCharCodes(bytes.sublist(bytes.length - 20)),
+        contains('EOF'));
   });
 }

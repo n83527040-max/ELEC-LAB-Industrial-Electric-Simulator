@@ -36,7 +36,8 @@ class EditorScreen extends StatefulWidget {
   State<EditorScreen> createState() => _EditorScreenState();
 }
 
-class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver {
+class _EditorScreenState extends State<EditorScreen>
+    with WidgetsBindingObserver {
   late final EditorController _controller;
   final GlobalKey<CircuitBoardState> _boardKey = GlobalKey<CircuitBoardState>();
   String? _observedWire;
@@ -55,7 +56,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
       unawaited(_controller.flush());
     }
   }
@@ -111,7 +113,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                       : _controller.isRunning
                           ? 'المحاكاة تعمل • ${_controller.result?.time.toStringAsFixed(1) ?? '0'} s'
                           : 'محفوظ محلياً',
-                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.normal),
+                  style: const TextStyle(
+                      fontSize: 10, fontWeight: FontWeight.normal),
                 ),
               ],
             ),
@@ -121,10 +124,13 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                 onPressed: _controller.isRunning
                     ? _controller.stopSimulation
                     : _controller.startSimulation,
-                tooltip: _controller.isRunning ? 'إيقاف المحاكاة' : 'تشغيل المحاكاة',
+                tooltip:
+                    _controller.isRunning ? 'إيقاف المحاكاة' : 'تشغيل المحاكاة',
                 icon: Icon(
                   _controller.isRunning ? Icons.stop_circle : Icons.play_circle,
-                  color: _controller.isRunning ? Colors.red : const Color(0xff00a6ff),
+                  color: _controller.isRunning
+                      ? Colors.red
+                      : const Color(0xff00a6ff),
                   size: 30,
                 ),
               ),
@@ -133,11 +139,13 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                 itemBuilder: (context) => <PopupMenuEntry<String>>[
                   PopupMenuItem(
                     value: 'grid',
-                    child: Text(_controller.showGrid ? 'إخفاء الشبكة' : 'إظهار الشبكة'),
+                    child: Text(
+                        _controller.showGrid ? 'إخفاء الشبكة' : 'إظهار الشبكة'),
                   ),
                   PopupMenuItem(
                     value: 'snap',
-                    child: Text(_controller.snapToGrid ? 'تعطيل Snap' : 'تفعيل Snap'),
+                    child: Text(
+                        _controller.snapToGrid ? 'تعطيل Snap' : 'تفعيل Snap'),
                   ),
                   PopupMenuItem(
                     value: 'surface',
@@ -147,13 +155,19 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                           : 'استعمال لوحة تركيب صناعية',
                     ),
                   ),
-                  const PopupMenuItem(value: 'fit', child: Text('ملاءمة الدائرة للشاشة')),
-                  const PopupMenuItem(value: 'results', child: Text('النتائج والتشخيص')),
-                  const PopupMenuItem(value: 'png', child: Text('تصدير صورة PNG')),
+                  const PopupMenuItem(
+                      value: 'fit', child: Text('ملاءمة الدائرة للشاشة')),
+                  const PopupMenuItem(
+                      value: 'results', child: Text('النتائج والتشخيص')),
+                  const PopupMenuItem(
+                      value: 'png', child: Text('تصدير صورة PNG')),
                   const PopupMenuItem(value: 'pdf', child: Text('تصدير PDF')),
-                  const PopupMenuItem(value: 'project', child: Text('مشاركة ملف المشروع')),
-                  const PopupMenuItem(value: 'learning', child: Text('التحديات والمساعدة')),
-                  const PopupMenuItem(value: 'scope', child: Text('نطاق المحاكاة والسلامة')),
+                  const PopupMenuItem(
+                      value: 'project', child: Text('مشاركة ملف المشروع')),
+                  const PopupMenuItem(
+                      value: 'learning', child: Text('التحديات والمساعدة')),
+                  const PopupMenuItem(
+                      value: 'scope', child: Text('نطاق المحاكاة والسلامة')),
                 ],
               ),
             ],
@@ -177,7 +191,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                     color: const Color(0xe6087ff5),
                     borderRadius: BorderRadius.circular(12),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       child: Row(
                         children: <Widget>[
                           const Expanded(
@@ -188,7 +203,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                           ),
                           TextButton(
                             onPressed: _controller.cancelWire,
-                            child: const Text('إلغاء', style: TextStyle(color: Colors.white)),
+                            child: const Text('إلغاء',
+                                style: TextStyle(color: Colors.white)),
                           ),
                         ],
                       ),
@@ -221,7 +237,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         IconButton(
-                          onPressed: () => _boardKey.currentState?.zoomBy(-0.15),
+                          onPressed: () =>
+                              _boardKey.currentState?.zoomBy(-0.15),
                           icon: const Icon(Icons.remove),
                           tooltip: 'تصغير',
                         ),
@@ -232,7 +249,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
                           tooltip: 'تكبير',
                         ),
                         IconButton(
-                          onPressed: () => _boardKey.currentState?.fitToContent(),
+                          onPressed: () =>
+                              _boardKey.currentState?.fitToContent(),
                           icon: const Icon(Icons.fit_screen),
                           tooltip: 'ملاءمة الدائرة',
                         ),
@@ -374,7 +392,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      builder: (context) => ComponentDetailsSheet(controller: _controller, componentId: id),
+      builder: (context) =>
+          ComponentDetailsSheet(controller: _controller, componentId: id),
     );
   }
 
@@ -426,7 +445,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
       late final File file;
       late final List<int> bytes;
       if (type == 'project') {
-        file = File('${directory.path}/elec-lab-${_controller.project.id}.json');
+        file =
+            File('${directory.path}/elec-lab-${_controller.project.id}.json');
         await file.writeAsString(
           widget.repository.exportProject(_controller.project),
           flush: true,
@@ -435,7 +455,8 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
         bytes = type == 'png'
             ? await ProjectExporter.renderPng(_controller.project)
             : await ProjectExporter.renderPdf(_controller.project);
-        file = File('${directory.path}/elec-lab-${_controller.project.id}.$type');
+        file =
+            File('${directory.path}/elec-lab-${_controller.project.id}.$type');
         await file.writeAsBytes(bytes, flush: true);
       }
       await SharePlus.instance.share(
@@ -469,7 +490,9 @@ class _EditorScreenState extends State<EditorScreen> with WidgetsBindingObserver
           ),
         ),
         actions: <Widget>[
-          FilledButton(onPressed: () => Navigator.pop(context), child: const Text('فهمت')),
+          FilledButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('فهمت')),
         ],
       ),
     );
@@ -496,7 +519,8 @@ class _ComponentContextBar extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(component.label, style: const TextStyle(fontWeight: FontWeight.bold)),
+              child: Text(component.label,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             IconButton(
               onPressed: () => showModalBottomSheet<void>(
@@ -513,30 +537,30 @@ class _ComponentContextBar extends StatelessWidget {
             if (!fixedSupply)
               IconButton(
                 onPressed: () => controller.rotateComponent(component.id),
-              icon: const Icon(Icons.rotate_90_degrees_cw),
-              tooltip: 'تدوير',
-            ),
+                icon: const Icon(Icons.rotate_90_degrees_cw),
+                tooltip: 'تدوير',
+              ),
             if (!fixedSupply)
               IconButton(
                 onPressed: () => controller.duplicateComponent(component.id),
-              icon: const Icon(Icons.copy),
-              tooltip: 'نسخ',
-            ),
+                icon: const Icon(Icons.copy),
+                tooltip: 'نسخ',
+              ),
             if (!fixedSupply)
               IconButton(
                 onPressed: () => controller.resizeComponent(
-                component.id,
-                component.scale >= 1.4 ? 0.8 : component.scale + 0.2,
+                  component.id,
+                  component.scale >= 1.4 ? 0.8 : component.scale + 0.2,
+                ),
+                icon: const Icon(Icons.open_in_full),
+                tooltip: 'تغيير الحجم',
               ),
-              icon: const Icon(Icons.open_in_full),
-              tooltip: 'تغيير الحجم',
-            ),
             if (!fixedSupply)
               IconButton(
                 onPressed: () => controller.deleteComponent(component.id),
-              icon: const Icon(Icons.delete_outline),
-              tooltip: 'حذف مع إمكانية التراجع',
-            ),
+                icon: const Icon(Icons.delete_outline),
+                tooltip: 'حذف مع إمكانية التراجع',
+              ),
           ],
         ),
       ),

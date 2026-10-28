@@ -214,7 +214,8 @@ class EditorController extends ChangeNotifier {
         _isLocked(component.layerId)) {
       return;
     }
-    _replaceComponent(component.copyWith(rotation: (component.rotation + 1) % 4));
+    _replaceComponent(
+        component.copyWith(rotation: (component.rotation + 1) % 4));
   }
 
   void resizeComponent(String id, double scale) {
@@ -441,22 +442,20 @@ class EditorController extends ChangeNotifier {
     final interlockGroup = component.text('interlockGroup').trim();
     _commit(
       _project.copyWith(
-        components: _project.components
-            .where((item) => item.id != id)
-            .map((item) {
-              if (interlockGroup.isEmpty ||
-                  item.text('interlockGroup').trim() != interlockGroup) {
-                return item;
-              }
-              return item.copyWith(
-                properties: <String, Object>{
-                  ...item.properties,
-                  'interlockGroup': '',
-                  'interlockRole': '',
-                },
-              );
-            })
-            .toList(growable: false),
+        components:
+            _project.components.where((item) => item.id != id).map((item) {
+          if (interlockGroup.isEmpty ||
+              item.text('interlockGroup').trim() != interlockGroup) {
+            return item;
+          }
+          return item.copyWith(
+            properties: <String, Object>{
+              ...item.properties,
+              'interlockGroup': '',
+              'interlockRole': '',
+            },
+          );
+        }).toList(growable: false),
         wires: _project.wires
             .where(
               (wire) =>
@@ -507,8 +506,7 @@ class EditorController extends ChangeNotifier {
     final toTerminal = ComponentCatalog.specOf(
       toComponent.kind,
     ).terminal(to.terminalId);
-    final isControl =
-        fromTerminal.kind == TerminalKind.coil ||
+    final isControl = fromTerminal.kind == TerminalKind.coil ||
         fromTerminal.kind == TerminalKind.auxiliary ||
         toTerminal.kind == TerminalKind.coil ||
         toTerminal.kind == TerminalKind.auxiliary;
@@ -618,7 +616,8 @@ class EditorController extends ChangeNotifier {
       name: name.trim(),
       colorValue: colors[_project.layers.length % colors.length],
     );
-    _commit(_project.copyWith(layers: <CircuitLayer>[..._project.layers, layer]));
+    _commit(
+        _project.copyWith(layers: <CircuitLayer>[..._project.layers, layer]));
     return id;
   }
 
@@ -627,7 +626,8 @@ class EditorController extends ChangeNotifier {
     _commit(
       _project.copyWith(
         layers: _project.layers
-            .map((layer) => layer.id == id ? layer.copyWith(name: name.trim()) : layer)
+            .map((layer) =>
+                layer.id == id ? layer.copyWith(name: name.trim()) : layer)
             .toList(growable: false),
       ),
     );
@@ -637,7 +637,8 @@ class EditorController extends ChangeNotifier {
     _commit(
       _project.copyWith(
         layers: _project.layers
-            .map((layer) => layer.id == id ? layer.copyWith(visible: visible) : layer)
+            .map((layer) =>
+                layer.id == id ? layer.copyWith(visible: visible) : layer)
             .toList(growable: false),
       ),
     );
@@ -647,7 +648,8 @@ class EditorController extends ChangeNotifier {
     _commit(
       _project.copyWith(
         layers: _project.layers
-            .map((layer) => layer.id == id ? layer.copyWith(locked: locked) : layer)
+            .map((layer) =>
+                layer.id == id ? layer.copyWith(locked: locked) : layer)
             .toList(growable: false),
       ),
     );
@@ -780,7 +782,8 @@ class EditorController extends ChangeNotifier {
     final key = switch (component.kind) {
       ComponentKind.selectorSwitch ||
       ComponentKind.emergencyStop ||
-      ComponentKind.lightSwitch => 'closed',
+      ComponentKind.lightSwitch =>
+        'closed',
       ComponentKind.intermediateSwitch => 'crossed',
       ComponentKind.sensor ||
       ComponentKind.limitSwitch ||
@@ -791,11 +794,13 @@ class EditorController extends ChangeNotifier {
       ComponentKind.flowSwitch ||
       ComponentKind.proximitySensor ||
       ComponentKind.capacitiveSensor ||
-      ComponentKind.photoelectricSensor => 'active',
+      ComponentKind.photoelectricSensor =>
+        'active',
       _ => null,
     };
     if (key == null) return;
-    _updateOperationalProperties(id, <String, Object>{key: !component.flag(key)});
+    _updateOperationalProperties(
+        id, <String, Object>{key: !component.flag(key)});
     simulateOnce();
   }
 
@@ -818,7 +823,10 @@ class EditorController extends ChangeNotifier {
           .map(
             (item) => item.id == id
                 ? item.copyWith(
-                    properties: <String, Object>{...item.properties, ...changes},
+                    properties: <String, Object>{
+                      ...item.properties,
+                      ...changes
+                    },
                   )
                 : item,
           )
@@ -941,9 +949,9 @@ class EditorController extends ChangeNotifier {
       ComponentCategory.control ||
       ComponentCategory.contactors ||
       ComponentCategory.timers ||
-      ComponentCategory.sensors => 'control',
-      ComponentCategory.signals ||
-      ComponentCategory.measurement => 'signals',
+      ComponentCategory.sensors =>
+        'control',
+      ComponentCategory.signals || ComponentCategory.measurement => 'signals',
       _ => 'power',
     };
     return _project.layerById(preferred)?.id ?? _project.layers.first.id;
@@ -953,16 +961,19 @@ class EditorController extends ChangeNotifier {
     final prefix = switch (kind) {
       ComponentKind.dcSupply ||
       ComponentKind.acSupply ||
-      ComponentKind.threePhaseSupply => 'G',
+      ComponentKind.threePhaseSupply =>
+        'G',
       ComponentKind.circuitBreaker ||
       ComponentKind.differentialBreaker ||
-      ComponentKind.motorBreaker => 'Q',
+      ComponentKind.motorBreaker =>
+        'Q',
       ComponentKind.contactor => 'K',
       ComponentKind.thermalRelay => 'F',
       ComponentKind.auxiliaryRelay => 'KA',
       ComponentKind.pushButtonNO ||
       ComponentKind.pushButtonNC ||
-      ComponentKind.emergencyStop => 'S',
+      ComponentKind.emergencyStop =>
+        'S',
       ComponentKind.selectorSwitch || ComponentKind.rotarySwitch => 'SA',
       ComponentKind.timer || ComponentKind.timerOffDelay => 'KT',
       ComponentKind.sensor || ComponentKind.limitSwitch => 'B',
@@ -975,19 +986,20 @@ class EditorController extends ChangeNotifier {
       ComponentKind.digitalCounter => 'P',
       ComponentKind.fuse => 'FU',
       _ => switch (ComponentCatalog.specOf(kind).category) {
-        ComponentCategory.sources => 'T',
-        ComponentCategory.protection => 'Q',
-        ComponentCategory.contactors => 'K',
-        ComponentCategory.control => 'S',
-        ComponentCategory.timers => 'KT',
-        ComponentCategory.sensors => 'B',
-        ComponentCategory.motors => 'M',
-        ComponentCategory.signals => 'H',
-        ComponentCategory.measurement => 'P',
-        ComponentCategory.terminals => 'X',
-      },
+          ComponentCategory.sources => 'T',
+          ComponentCategory.protection => 'Q',
+          ComponentCategory.contactors => 'K',
+          ComponentCategory.control => 'S',
+          ComponentCategory.timers => 'KT',
+          ComponentCategory.sensors => 'B',
+          ComponentCategory.motors => 'M',
+          ComponentCategory.signals => 'H',
+          ComponentCategory.measurement => 'P',
+          ComponentCategory.terminals => 'X',
+        },
     };
-    final count = _project.components.where((item) => item.kind == kind).length + 1;
+    final count =
+        _project.components.where((item) => item.kind == kind).length + 1;
     return '$prefix$count';
   }
 

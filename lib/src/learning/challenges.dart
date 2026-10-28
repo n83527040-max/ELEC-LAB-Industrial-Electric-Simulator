@@ -50,7 +50,11 @@ abstract final class LocalChallenges {
       title: 'تشغيل وإيقاف مصباح',
       level: ChallengeLevel.beginner,
       objective: 'أنشئ مساراً DC وشغّل Voyant بالضغط على Bouton NO.',
-      criteriaLabels: const <String>['مصدر وزر ومصباح', 'ثلاثة أسلاك على الأقل', 'المصباح يضيء بالحساب'],
+      criteriaLabels: const <String>[
+        'مصدر وزر ومصباح',
+        'ثلاثة أسلاك على الأقل',
+        'المصباح يضيء بالحساب'
+      ],
       hints: const <String>[
         'ابدأ من قالب «تشغيل مصباح DC» إذا أردت مثالاً.',
         'صل +24V بدخل الزر، وخرج الزر بـX1، ثم X2 بـ0V.',
@@ -69,7 +73,11 @@ abstract final class LocalChallenges {
       title: 'التعشيق الذاتي',
       level: ChallengeLevel.intermediate,
       objective: 'أبقِ Contacteur منشطاً بعد تحرير زر التشغيل باستعمال 13/14.',
-      criteriaLabels: const <String>['كونتاكتور وزرا Start/Stop', 'استعمال 13NO و14NO', 'الملف باقٍ منشطاً بعد تحرير Start'],
+      criteriaLabels: const <String>[
+        'كونتاكتور وزرا Start/Stop',
+        'استعمال 13NO و14NO',
+        'الملف باقٍ منشطاً بعد تحرير Start'
+      ],
       hints: const <String>[
         'نقطة 13/14 توضع على التوازي مع Bouton Start.',
         'ضع Bouton Stop NC قبل تفرع Start والتعشيق.',
@@ -81,7 +89,8 @@ abstract final class LocalChallenges {
         );
         final usesAux = project.wires.any(
           (wire) =>
-              (wire.from.terminalId == 'aux13' || wire.from.terminalId == 'aux14') &&
+              (wire.from.terminalId == 'aux13' ||
+                  wire.from.terminalId == 'aux14') &&
               contactors.any((item) => item.id == wire.from.componentId),
         );
         final startReleased = project.components
@@ -102,7 +111,11 @@ abstract final class LocalChallenges {
       title: 'التشغيل بعد زمن',
       level: ChallengeLevel.advanced,
       objective: 'غذِّ Temporisateur وتحقق من إغلاق 15/18 بعد الزمن المحدد.',
-      criteriaLabels: const <String>['مؤقت مع سلك للملف', 'الملف منشط', 'انتهت مهلة ON-delay'],
+      criteriaLabels: const <String>[
+        'مؤقت مع سلك للملف',
+        'الملف منشط',
+        'انتهت مهلة ON-delay'
+      ],
       hints: const <String>[
         'الملف بين A1 وA2، ونقطة الخرج بين 15 و18.',
         'غيّر delaySeconds من خصائص المؤقت.',
@@ -127,7 +140,11 @@ abstract final class LocalChallenges {
       title: 'حماية محرك',
       level: ChallengeLevel.advanced,
       objective: 'شغّل Moteur triphasé عبر Contacteur وRelais thermique.',
-      criteriaLabels: const <String>['الأجهزة المطلوبة موجودة', 'مسارات الأطوار الثلاثة', 'المحرك يعمل والحماية غير مفصولة'],
+      criteriaLabels: const <String>[
+        'الأجهزة المطلوبة موجودة',
+        'مسارات الأطوار الثلاثة',
+        'المحرك يعمل والحماية غير مفصولة'
+      ],
       hints: const <String>[
         'استعمل قالب «حماية محرك ثلاثي الطور».',
         'صل L1/L2/L3 بالتتابع دون تبديل، وPE بـPE.',
@@ -158,7 +175,11 @@ abstract final class LocalChallenges {
       title: 'عكس اتجاه الدوران',
       level: ChallengeLevel.professional,
       objective: 'بدّل طورين فقط لتحصل على اتجاه عكسي محسوب من تسلسل الأطوار.',
-      criteriaLabels: const <String>['محرك ثلاثي الطور', 'المحرك يعمل', 'تسلسل الأطوار عكسي'],
+      criteriaLabels: const <String>[
+        'محرك ثلاثي الطور',
+        'المحرك يعمل',
+        'تسلسل الأطوار عكسي'
+      ],
       hints: const <String>[
         'أوقف المحاكاة قبل تعديل التوصيلات الافتراضية.',
         'بدّل سلكي طورين عند U/V/W، ولا تبدل الأطوار الثلاثة.',
@@ -238,7 +259,8 @@ abstract final class DiagnosticAdvisor {
       'breaker_trip' ||
       'thermal_trip' ||
       'motor_breaker_trip' ||
-      'fuse_blown' => const <String>[
+      'fuse_blown' =>
+        const <String>[
           'افحص القصر أو الحمل الزائد قبل إعادة الضبط.',
           'قارن التيار المحسوب بالتيار المقنن للحماية.',
           'لا ترفع تصنيف الحماية لمجرد إخفاء العطل.',

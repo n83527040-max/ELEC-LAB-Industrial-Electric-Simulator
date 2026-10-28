@@ -44,11 +44,13 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
       builder: (context, _) {
         final currentWire = controller.selectedWire ?? wire;
         return SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(18, 0, 18, MediaQuery.viewInsetsOf(context).bottom + 20),
+          padding: EdgeInsets.fromLTRB(
+              18, 0, 18, MediaQuery.viewInsetsOf(context).bottom + 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Text('خصائص السلك', style: Theme.of(context).textTheme.titleLarge),
+              Text('خصائص السلك',
+                  style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 14),
               const Text('اللون (تمييز بصري قابل للضبط)'),
               const SizedBox(height: 8),
@@ -61,7 +63,9 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
                   0xfffdd835,
                   0xff43a047,
                   0xffeeeeee,
-                ].map((color) => _colorChoice(context, currentWire, color)).toList(),
+                ]
+                    .map((color) => _colorChoice(context, currentWire, color))
+                    .toList(),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -76,7 +80,8 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
                     .map(
                       (section) => DropdownMenuItem<double>(
                         value: section,
-                        child: Text('$section mm²', textDirection: TextDirection.ltr),
+                        child: Text('$section mm²',
+                            textDirection: TextDirection.ltr),
                       ),
                     )
                     .toList(),
@@ -89,9 +94,14 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
                 initialValue: currentWire.conductorType,
                 decoration: const InputDecoration(labelText: 'نوع الموصل'),
                 items: const <DropdownMenuItem<WireConductorType>>[
-                  DropdownMenuItem(value: WireConductorType.solid, child: Text('صلب Solid')),
-                  DropdownMenuItem(value: WireConductorType.stranded, child: Text('مرن Stranded')),
-                  DropdownMenuItem(value: WireConductorType.shielded, child: Text('مغلف Shielded')),
+                  DropdownMenuItem(
+                      value: WireConductorType.solid, child: Text('صلب Solid')),
+                  DropdownMenuItem(
+                      value: WireConductorType.stranded,
+                      child: Text('مرن Stranded')),
+                  DropdownMenuItem(
+                      value: WireConductorType.shielded,
+                      child: Text('مغلف Shielded')),
                 ],
                 onChanged: (value) => controller.updateWire(
                   currentWire.copyWith(conductorType: value),
@@ -100,12 +110,14 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
               const SizedBox(height: 10),
               DropdownButtonFormField<int>(
                 initialValue: currentWire.insulationVoltage,
-                decoration: const InputDecoration(labelText: 'تصنيف العزل المدخل'),
+                decoration:
+                    const InputDecoration(labelText: 'تصنيف العزل المدخل'),
                 items: const <int>[300, 450, 750, 1000]
                     .map(
                       (voltage) => DropdownMenuItem<int>(
                         value: voltage,
-                        child: Text('$voltage V', textDirection: TextDirection.ltr),
+                        child: Text('$voltage V',
+                            textDirection: TextDirection.ltr),
                       ),
                     )
                     .toList(),
@@ -118,9 +130,13 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
               const SizedBox(height: 8),
               SegmentedButton<WireRouteStyle>(
                 segments: const <ButtonSegment<WireRouteStyle>>[
-                  ButtonSegment(value: WireRouteStyle.straight, label: Text('مستقيم')),
-                  ButtonSegment(value: WireRouteStyle.orthogonal, label: Text('زاوية 90°')),
-                  ButtonSegment(value: WireRouteStyle.curved, label: Text('منحني')),
+                  ButtonSegment(
+                      value: WireRouteStyle.straight, label: Text('مستقيم')),
+                  ButtonSegment(
+                      value: WireRouteStyle.orthogonal,
+                      label: Text('زاوية 90°')),
+                  ButtonSegment(
+                      value: WireRouteStyle.curved, label: Text('منحني')),
                 ],
                 selected: <WireRouteStyle>{currentWire.routeStyle},
                 onSelectionChanged: (value) => controller.updateWire(
@@ -161,16 +177,22 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
                 children: <Widget>[
                   TextField(
                     controller: _current,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: const InputDecoration(labelText: 'التيار المتوقع A'),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration:
+                        const InputDecoration(labelText: 'التيار المتوقع A'),
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<ConductorMaterial>(
                     initialValue: _material,
                     decoration: const InputDecoration(labelText: 'مادة الموصل'),
                     items: const <DropdownMenuItem<ConductorMaterial>>[
-                      DropdownMenuItem(value: ConductorMaterial.copper, child: Text('نحاس Cu')),
-                      DropdownMenuItem(value: ConductorMaterial.aluminum, child: Text('ألمنيوم Al')),
+                      DropdownMenuItem(
+                          value: ConductorMaterial.copper,
+                          child: Text('نحاس Cu')),
+                      DropdownMenuItem(
+                          value: ConductorMaterial.aluminum,
+                          child: Text('ألمنيوم Al')),
                     ],
                     onChanged: (value) => setState(() => _material = value!),
                   ),
@@ -186,8 +208,10 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
                     trailing: DropdownButton<CableUsage>(
                       value: _usage,
                       items: const <DropdownMenuItem<CableUsage>>[
-                        DropdownMenuItem(value: CableUsage.control, child: Text('تحكم')),
-                        DropdownMenuItem(value: CableUsage.power, child: Text('قدرة')),
+                        DropdownMenuItem(
+                            value: CableUsage.control, child: Text('تحكم')),
+                        DropdownMenuItem(
+                            value: CableUsage.power, child: Text('قدرة')),
                       ],
                       onChanged: (value) => setState(() => _usage = value!),
                     ),
@@ -203,7 +227,8 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
                         max: 60,
                         divisions: 12,
                         label: '$_temperature°C',
-                        onChanged: (value) => setState(() => _temperature = value),
+                        onChanged: (value) =>
+                            setState(() => _temperature = value),
                       ),
                     ),
                   ),
@@ -242,10 +267,12 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
                     ),
                     Text(
                       _suggestion!.disclaimerAr,
-                      style: const TextStyle(fontSize: 12, color: Colors.orange),
+                      style:
+                          const TextStyle(fontSize: 12, color: Colors.orange),
                     ),
                   ] else if (_current.text.isNotEmpty)
-                    const Text('لا يوجد اقتراح؛ تحقق من المدخلات أو استشر مرجعاً مؤهلاً.'),
+                    const Text(
+                        'لا يوجد اقتراح؛ تحقق من المدخلات أو استشر مرجعاً مؤهلاً.'),
                 ],
               ),
             ],
@@ -257,7 +284,8 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
 
   Widget _colorChoice(BuildContext context, CircuitWire wire, int color) {
     return InkWell(
-      onTap: () => widget.controller.updateWire(wire.copyWith(colorValue: color)),
+      onTap: () =>
+          widget.controller.updateWire(wire.copyWith(colorValue: color)),
       customBorder: const CircleBorder(),
       child: Container(
         width: 34,
@@ -266,7 +294,9 @@ class _WireSettingsSheetState extends State<WireSettingsSheet> {
           shape: BoxShape.circle,
           color: Color(color),
           border: Border.all(
-            color: wire.colorValue == color ? const Color(0xff00a6ff) : Colors.grey,
+            color: wire.colorValue == color
+                ? const Color(0xff00a6ff)
+                : Colors.grey,
             width: wire.colorValue == color ? 3 : 1,
           ),
         ),

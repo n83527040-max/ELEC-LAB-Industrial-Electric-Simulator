@@ -12,7 +12,9 @@ import '../test_helpers.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('fixed board fits phone, rejects background drag and Fit restores it', (tester) async {
+  testWidgets(
+      'fixed board fits phone, rejects background drag and Fit restores it',
+      (tester) async {
     tester.view.physicalSize = const Size(360, 700);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -75,7 +77,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('orientation refits the complete board without losing fixed supplies', (tester) async {
+  testWidgets(
+      'orientation refits the complete board without losing fixed supplies',
+      (tester) async {
     tester.view.physicalSize = const Size(360, 700);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -102,7 +106,8 @@ void main() {
     final expected = math.min((700 - 24) / 1200, (360 - 24) / 900);
     expect(controller.zoom, closeTo(expected, 1e-9));
     expect(controller.viewportOffset.y, greaterThanOrEqualTo(0));
-    expect(controller.project.components.where(SupplyBay.isFixed), hasLength(3));
+    expect(
+        controller.project.components.where(SupplyBay.isFixed), hasLength(3));
     expect(tester.takeException(), isNull);
   });
 }

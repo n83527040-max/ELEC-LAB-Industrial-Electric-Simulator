@@ -11,7 +11,8 @@ abstract final class BoardGeometry {
   static BoardPoint center(CircuitComponent component) {
     final size = ComponentCatalog.specOf(component.kind).size;
     return component.position +
-        BoardPoint(size.width * component.scale / 2, size.height * component.scale / 2);
+        BoardPoint(size.width * component.scale / 2,
+            size.height * component.scale / 2);
   }
 
   static BoardPoint terminalPosition(
@@ -36,7 +37,8 @@ abstract final class BoardGeometry {
       BoardPoint(half.x, -half.y),
       BoardPoint(half.x, half.y),
       BoardPoint(-half.x, half.y),
-    ].map((point) => center(component) + point.rotate(component.rotation.toDouble()));
+    ].map((point) =>
+        center(component) + point.rotate(component.rotation.toDouble()));
     var left = double.infinity;
     var top = double.infinity;
     var right = double.negativeInfinity;
@@ -68,7 +70,8 @@ abstract final class WireRouter {
       wire.from.terminalId,
     );
     final end = BoardGeometry.terminalPosition(toComponent, wire.to.terminalId);
-    if (wire.routeStyle == WireRouteStyle.straight || wire.waypoints.isNotEmpty) {
+    if (wire.routeStyle == WireRouteStyle.straight ||
+        wire.waypoints.isNotEmpty) {
       return _clean(<BoardPoint>[start, ...wire.waypoints, end]);
     }
     if (wire.routeStyle == WireRouteStyle.curved) {
@@ -91,10 +94,14 @@ abstract final class WireRouter {
     final channelsX = <double>{midX};
     final channelsY = <double>{midY};
     for (final rect in obstacles) {
-      channelsX.add((rect.left - 26).clamp(8.0, project.boardWidth - 8).toDouble());
-      channelsX.add((rect.right + 26).clamp(8.0, project.boardWidth - 8).toDouble());
-      channelsY.add((rect.top - 26).clamp(8.0, project.boardHeight - 8).toDouble());
-      channelsY.add((rect.bottom + 26).clamp(8.0, project.boardHeight - 8).toDouble());
+      channelsX
+          .add((rect.left - 26).clamp(8.0, project.boardWidth - 8).toDouble());
+      channelsX
+          .add((rect.right + 26).clamp(8.0, project.boardWidth - 8).toDouble());
+      channelsY
+          .add((rect.top - 26).clamp(8.0, project.boardHeight - 8).toDouble());
+      channelsY.add(
+          (rect.bottom + 26).clamp(8.0, project.boardHeight - 8).toDouble());
     }
     final candidates = <List<BoardPoint>>[
       <BoardPoint>[start, BoardPoint(start.x, end.y), end],
@@ -138,8 +145,7 @@ abstract final class WireRouter {
     BoardPoint b,
     Rect rect,
   ) {
-    if (rect.contains(Offset(a.x, a.y)) ||
-        rect.contains(Offset(b.x, b.y))) {
+    if (rect.contains(Offset(a.x, a.y)) || rect.contains(Offset(b.x, b.y))) {
       return true;
     }
     final edges = <List<BoardPoint>>[
@@ -190,11 +196,9 @@ abstract final class WireRouter {
       final a = result[index - 1];
       final b = result[index];
       final c = result[index + 1];
-      final cross = (b.x - a.x) * (c.y - b.y) -
-          (b.y - a.y) * (c.x - b.x);
+      final cross = (b.x - a.x) * (c.y - b.y) - (b.y - a.y) * (c.x - b.x);
       if (cross.abs() < 0.001) result.removeAt(index);
     }
     return result;
   }
 }
-

@@ -124,7 +124,8 @@ class _ChallengeCardState extends State<_ChallengeCard> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Icon(Icons.lightbulb_outline, size: 20, color: Colors.amber),
+                  const Icon(Icons.lightbulb_outline,
+                      size: 20, color: Colors.amber),
                   const SizedBox(width: 8),
                   Expanded(child: Text(challenge.hints[index])),
                 ],

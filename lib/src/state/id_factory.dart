@@ -1,6 +1,5 @@
 class IdFactory {
-  IdFactory({DateTime Function()? clock})
-      : _clock = clock ?? DateTime.now;
+  IdFactory({DateTime Function()? clock}) : _clock = clock ?? DateTime.now;
 
   final DateTime Function() _clock;
   int _counter = 0;

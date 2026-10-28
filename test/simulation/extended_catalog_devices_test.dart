@@ -8,7 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_helpers.dart';
 
 void main() {
-  test('building switches and intermediate crossover drive a real lamp path', () {
+  test('building switches and intermediate crossover drive a real lamp path',
+      () {
     var project = projectOf(
       <CircuitComponent>[
         device('g1', ComponentKind.dcSupply),
@@ -191,7 +192,8 @@ void main() {
     expect(result['h1']!.active, isFalse);
   });
 
-  test('current transformer solves 100/5 ratio and secondary burden voltage', () {
+  test('current transformer solves 100/5 ratio and secondary burden voltage',
+      () {
     final project = projectOf(
       <CircuitComponent>[
         device(
@@ -286,7 +288,8 @@ void main() {
     );
     final simulator = ElectricalSimulator();
     var result = simulator.step(base);
-    expect(result['q1']!.tripped, isFalse, reason: 'No residual or overcurrent model in RCCB.');
+    expect(result['q1']!.tripped, isFalse,
+        reason: 'No residual or overcurrent model in RCCB.');
     expect(result['h1']!.active, isTrue);
     final faulted = base.copyWith(
       components: <CircuitComponent>[
@@ -311,7 +314,8 @@ void main() {
     );
   });
 
-  test('cable and feed-through accessories use calculated resistance and buses', () {
+  test('cable and feed-through accessories use calculated resistance and buses',
+      () {
     final project = projectOf(
       <CircuitComponent>[
         device('g1', ComponentKind.dcSupply),

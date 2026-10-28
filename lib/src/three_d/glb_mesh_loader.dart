@@ -97,7 +97,8 @@ abstract final class GlbMeshDecoder {
         throw const FormatException('Invalid GLB chunk length.');
       }
       if (type == 0x4e4f534a) {
-        final decoded = jsonDecode(utf8.decode(bytes.sublist(start, start + length)));
+        final decoded =
+            jsonDecode(utf8.decode(bytes.sublist(start, start + length)));
         if (decoded is! Map<String, dynamic>) {
           throw const FormatException('Invalid glTF JSON document.');
         }
@@ -138,13 +139,15 @@ abstract final class GlbMeshDecoder {
         if (rawPrimitive is! Map ||
             rawPrimitive['mode'] != 4 ||
             rawPrimitive['attributes'] is! Map) {
-          throw const FormatException('Only indexed triangle primitives are supported.');
+          throw const FormatException(
+              'Only indexed triangle primitives are supported.');
         }
         final attributes = rawPrimitive['attributes'] as Map;
         final positionIndex = attributes['POSITION'];
         final indexIndex = rawPrimitive['indices'];
         if (positionIndex is! int || indexIndex is! int) {
-          throw const FormatException('Primitive requires positions and indices.');
+          throw const FormatException(
+              'Primitive requires positions and indices.');
         }
         final vertexOffset = accessorOffsets.putIfAbsent(
           positionIndex,
@@ -176,7 +179,8 @@ abstract final class GlbMeshDecoder {
           expectedType: 'SCALAR',
         );
         if (indices.count == 0 || indices.count % 3 != 0) {
-          throw const FormatException('Triangle index count must be a multiple of three.');
+          throw const FormatException(
+              'Triangle index count must be a multiple of three.');
         }
         final color = _materialColor(
           materials,
@@ -190,7 +194,8 @@ abstract final class GlbMeshDecoder {
             vertexOffset + indices.scalar(index + 2),
           ];
           if (triangle.any((value) => value < 0 || value >= vertices.length)) {
-            throw const FormatException('Triangle index outside vertex buffer.');
+            throw const FormatException(
+                'Triangle index outside vertex buffer.');
           }
           faces.add(MeshFace(triangle, color));
         }
@@ -213,7 +218,9 @@ abstract final class GlbMeshDecoder {
   ) {
     var factor = const <double>[1, 1, 1, 1];
     var name = '';
-    if (materialIndex is int && rawMaterials is List && materialIndex < rawMaterials.length) {
+    if (materialIndex is int &&
+        rawMaterials is List &&
+        materialIndex < rawMaterials.length) {
       final material = rawMaterials[materialIndex];
       if (material is Map) {
         name = material['name']?.toString() ?? '';
@@ -250,7 +257,10 @@ class _AccessorReader {
   }) {
     final accessors = json['accessors'];
     final views = json['bufferViews'];
-    if (accessors is! List || index < 0 || index >= accessors.length || views is! List) {
+    if (accessors is! List ||
+        index < 0 ||
+        index >= accessors.length ||
+        views is! List) {
       throw const FormatException('Invalid GLB accessor.');
     }
     final accessor = accessors[index];
@@ -266,7 +276,10 @@ class _AccessorReader {
     if (expectedComponent != null && component != expectedComponent) {
       throw const FormatException('Unsupported GLB component type.');
     }
-    if (expectedType == 'SCALAR' && component != 5121 && component != 5123 && component != 5125) {
+    if (expectedType == 'SCALAR' &&
+        component != 5121 &&
+        component != 5123 &&
+        component != 5125) {
       throw const FormatException('Indices must be unsigned integers.');
     }
     final viewIndex = accessor['bufferView'];
@@ -285,7 +298,8 @@ class _AccessorReader {
     };
     final components = expectedType == 'VEC3' ? 3 : 1;
     final elementSize = componentSize * components;
-    final stride = view['byteStride'] is int ? view['byteStride'] as int : elementSize;
+    final stride =
+        view['byteStride'] is int ? view['byteStride'] as int : elementSize;
     if (stride < elementSize) {
       throw const FormatException('Invalid accessor stride.');
     }

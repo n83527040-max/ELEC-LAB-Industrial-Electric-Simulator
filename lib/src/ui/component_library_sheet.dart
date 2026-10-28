@@ -182,8 +182,14 @@ class _ComponentCard extends StatelessWidget {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: dark
-                            ? const <Color>[Color(0xff1a2a38), Color(0xff101a24)]
-                            : const <Color>[Color(0xfff4f7f9), Color(0xffe4ebf0)],
+                            ? const <Color>[
+                                Color(0xff1a2a38),
+                                Color(0xff101a24)
+                              ]
+                            : const <Color>[
+                                Color(0xfff4f7f9),
+                                Color(0xffe4ebf0)
+                              ],
                       ),
                     ),
                     child: Stack(

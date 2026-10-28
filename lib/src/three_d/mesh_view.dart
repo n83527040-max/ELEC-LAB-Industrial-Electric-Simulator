@@ -75,7 +75,8 @@ class MeshPainter extends CustomPainter {
     final modelCenterX = isFixed ? 0.0 : (minX + maxX) / 2;
     final modelCenterY = isFixed ? 0.0 : (minY + maxY) / 2;
     final center = Offset(size.width / 2, size.height / 2);
-    Offset project(Vector3D vertex) => center +
+    Offset project(Vector3D vertex) =>
+        center +
         Offset(
           (vertex.x - modelCenterX) * fit,
           -(vertex.y - modelCenterY) * fit,
@@ -112,8 +113,8 @@ class MeshPainter extends CustomPainter {
       final normal = (b - a).cross(c - a).normalized;
       final diffuse = normal.dot(light.normalized).abs();
       final edgeLight = math.max(0, normal.dot(rim.normalized));
-      final brightness = (0.36 + diffuse * 0.58 + edgeLight * 0.1)
-          .clamp(0.32, 1.0);
+      final brightness =
+          (0.36 + diffuse * 0.58 + edgeLight * 0.1).clamp(0.32, 1.0);
       faces.add(
         _FaceProjection(points, z, _shade(Color(face.colorValue), brightness)),
       );
@@ -162,8 +163,10 @@ class MeshPainter extends CustomPainter {
           ),
           textDirection: TextDirection.ltr,
         )..layout();
-        final dx = (point.dx + 7).clamp(2.0, math.max(2.0, size.width - text.width - 2));
-        final dy = (point.dy - 17).clamp(2.0, math.max(2.0, size.height - text.height - 2));
+        final dx = (point.dx + 7)
+            .clamp(2.0, math.max(2.0, size.width - text.width - 2));
+        final dy = (point.dy - 17)
+            .clamp(2.0, math.max(2.0, size.height - text.height - 2));
         text.paint(canvas, Offset(dx.toDouble(), dy.toDouble()));
       }
     }
@@ -282,12 +285,14 @@ class _InteractiveMeshViewerState extends State<InteractiveMeshViewer> {
                 onScaleUpdate: (details) {
                   setState(() {
                     if ((details.scale - 1).abs() > 0.005) {
-                      _zoom = (_zoom * details.scale).clamp(0.55, 3.5).toDouble();
+                      _zoom =
+                          (_zoom * details.scale).clamp(0.55, 3.5).toDouble();
                     }
                     _rotationY += details.focalPointDelta.dx * 0.012;
-                    _rotationX = (_rotationX + details.focalPointDelta.dy * 0.012)
-                        .clamp(-1.4, 1.4)
-                        .toDouble();
+                    _rotationX =
+                        (_rotationX + details.focalPointDelta.dy * 0.012)
+                            .clamp(-1.4, 1.4)
+                            .toDouble();
                   });
                 },
                 onDoubleTap: _reset,

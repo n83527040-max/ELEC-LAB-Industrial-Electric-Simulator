@@ -209,9 +209,8 @@ class ElectricalProject {
       simulationSettings: settingsJson.map(
         (key, value) => MapEntry(key.toString(), _setting(value)),
       ),
-      lastSimulation: lastJson == null
-          ? null
-          : Map<String, dynamic>.from(lastJson as Map),
+      lastSimulation:
+          lastJson == null ? null : Map<String, dynamic>.from(lastJson as Map),
     );
     project.validate();
     return project;
@@ -239,7 +238,8 @@ class ElectricalProject {
       if (group.isEmpty) continue;
       if (component.kind != ComponentKind.contactor &&
           component.kind != ComponentKind.contactor4P) {
-        throw FormatException('Interlock requires contactors: ${component.id}.');
+        throw FormatException(
+            'Interlock requires contactors: ${component.id}.');
       }
       if (!const <String>{'star', 'delta'}.contains(
         component.text('interlockRole').trim(),

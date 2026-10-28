@@ -68,10 +68,13 @@ class CircuitBoardState extends State<CircuitBoard> {
   double get _fitScale {
     if (_viewportSize.isEmpty) return 1;
     final project = widget.controller.project;
-    return math.min(
-      (_viewportSize.width - _frameMargin * 2) / project.boardWidth,
-      (_viewportSize.height - _frameMargin * 2) / project.boardHeight,
-    ).clamp(0.08, 2.0).toDouble();
+    return math
+        .min(
+          (_viewportSize.width - _frameMargin * 2) / project.boardWidth,
+          (_viewportSize.height - _frameMargin * 2) / project.boardHeight,
+        )
+        .clamp(0.08, 2.0)
+        .toDouble();
   }
 
   double get _maximumScale =>
@@ -92,7 +95,8 @@ class CircuitBoardState extends State<CircuitBoard> {
   void zoomBy(double delta) {
     if (_viewportSize.isEmpty) return;
     final current = _planeScale(_transformation.value);
-    final next = (current * (1 + delta)).clamp(_fitScale, _maximumScale).toDouble();
+    final next =
+        (current * (1 + delta)).clamp(_fitScale, _maximumScale).toDouble();
     final focal = Offset(_viewportSize.width / 2, _viewportSize.height / 2);
     final translation = _transformation.value.getTranslation();
     final boardFocus = BoardPoint(
@@ -106,15 +110,15 @@ class CircuitBoardState extends State<CircuitBoard> {
     final tx = screenFocus.dx - boardFocus.x * scale;
     final ty = screenFocus.dy - boardFocus.y * scale;
     _transformation.value = _boundedMatrix(
-      Matrix4.diagonal3Values(scale, scale, 1)
-        ..setTranslationRaw(tx, ty, 0),
+      Matrix4.diagonal3Values(scale, scale, 1)..setTranslationRaw(tx, ty, 0),
     );
     _syncController();
   }
 
   Matrix4 _boundedMatrix(Matrix4 candidate) {
     final project = widget.controller.project;
-    final scale = _planeScale(candidate).clamp(_fitScale, _maximumScale).toDouble();
+    final scale =
+        _planeScale(candidate).clamp(_fitScale, _maximumScale).toDouble();
     final translation = candidate.getTranslation();
     final width = project.boardWidth * scale;
     final height = project.boardHeight * scale;
@@ -209,7 +213,8 @@ class CircuitBoardState extends State<CircuitBoard> {
                             component: component,
                             controller: controller,
                             reading: controller.result?[component.id],
-                            onShowDetails: () => widget.onShowDetails(component),
+                            onShowDetails: () =>
+                                widget.onShowDetails(component),
                           ),
                         ),
                     ..._buildWaypoints(),
@@ -356,7 +361,8 @@ class _BoardComponentState extends State<BoardComponent> {
                       component.kind == ComponentKind.pushButtonNC)
               ? (_) => controller.setMomentaryPressed(component.id, false)
               : null,
-          onTapCancel: () => controller.setMomentaryPressed(component.id, false),
+          onTapCancel: () =>
+              controller.setMomentaryPressed(component.id, false),
           onTap: () {
             if (controller.isRunning &&
                 (component.kind == ComponentKind.sensor ||
@@ -412,7 +418,8 @@ class _BoardComponentState extends State<BoardComponent> {
                     boxShadow: active
                         ? <BoxShadow>[
                             BoxShadow(
-                              color: const Color(0xff37d99a).withValues(alpha: 0.35),
+                              color: const Color(0xff37d99a)
+                                  .withValues(alpha: 0.35),
                               blurRadius: 12,
                               spreadRadius: 2,
                             ),
@@ -466,7 +473,8 @@ class _BoardComponentState extends State<BoardComponent> {
                 right: hitOverflow,
                 child: Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                     decoration: BoxDecoration(
                       color: const Color(0xdd101923),
                       borderRadius: BorderRadius.circular(4),
@@ -540,7 +548,8 @@ class _SupplyToggle extends StatelessWidget {
             color: enabled ? const Color(0xff148b62) : const Color(0xff273846),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: enabled ? const Color(0xff65e0ae) : const Color(0xff748897),
+              color:
+                  enabled ? const Color(0xff65e0ae) : const Color(0xff748897),
             ),
           ),
           child: Text(

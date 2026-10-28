@@ -38,7 +38,8 @@ abstract final class DinGeometry {
         ComponentKind.voltageTransformer ||
         ComponentKind.neutralBar ||
         ComponentKind.earthBar ||
-        ComponentKind.distributionBlock => true,
+        ComponentKind.distributionBlock =>
+          true,
         _ => false,
       };
 

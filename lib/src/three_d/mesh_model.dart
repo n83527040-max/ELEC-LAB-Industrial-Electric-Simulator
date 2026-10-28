@@ -16,8 +16,7 @@ class Vector3D {
   Vector3D operator *(double factor) =>
       Vector3D(x * factor, y * factor, z * factor);
 
-  double dot(Vector3D other) =>
-      x * other.x + y * other.y + z * other.z;
+  double dot(Vector3D other) => x * other.x + y * other.y + z * other.z;
 
   Vector3D cross(Vector3D other) => Vector3D(
         y * other.z - z * other.y,
@@ -84,8 +83,8 @@ class MeshBuilder {
     final offset = vertices.length;
     final cos = math.cos(angleZ);
     final sin = math.sin(angleZ);
-    Vector3D point(double px, double py, double pz) => center +
-        Vector3D(px * cos - py * sin, px * sin + py * cos, pz);
+    Vector3D point(double px, double py, double pz) =>
+        center + Vector3D(px * cos - py * sin, px * sin + py * cos, pz);
     vertices.addAll(<Vector3D>[
       point(-x, -y, -z),
       point(x, -y, -z),

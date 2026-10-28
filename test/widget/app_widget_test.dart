@@ -16,14 +16,16 @@ import '../test_helpers.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  Future<ProjectRepository> repository() async => ProjectRepository(MemoryProjectStorage());
+  Future<ProjectRepository> repository() async =>
+      ProjectRepository(MemoryProjectStorage());
 
   Future<SettingsController> settings() async {
     SharedPreferences.setMockInitialValues(<String, Object>{});
     return SettingsController(await SharedPreferences.getInstance());
   }
 
-  testWidgets('home is RTL, offline and theme preference persists', (tester) async {
+  testWidgets('home is RTL, offline and theme preference persists',
+      (tester) async {
     final prefs = await settings();
     await tester.pumpWidget(
       ElecLabApp(repository: await repository(), settings: prefs),
@@ -48,7 +50,8 @@ void main() {
     );
   });
 
-  testWidgets('user can create a project and add a real component from library', (tester) async {
+  testWidgets('user can create a project and add a real component from library',
+      (tester) async {
     await tester.pumpWidget(
       ElecLabApp(repository: await repository(), settings: await settings()),
     );
@@ -91,7 +94,8 @@ void main() {
     expect(find.text('دائرة الاختبار'), findsOneWidget);
   });
 
-  testWidgets('small phone and landscape editor do not overflow', (tester) async {
+  testWidgets('small phone and landscape editor do not overflow',
+      (tester) async {
     tester.view.physicalSize = const Size(360, 700);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -129,7 +133,8 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('play and stop drive the editor from simulation results', (tester) async {
+  testWidgets('play and stop drive the editor from simulation results',
+      (tester) async {
     final project = ProjectTemplates.apply(
       ElectricalProject.empty(id: 'run', name: 'تشغيل', now: testNow),
       ProjectTemplateKind.dcLamp,

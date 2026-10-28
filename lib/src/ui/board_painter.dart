@@ -95,9 +95,11 @@ class BoardPainter extends CustomPainter {
     const step = 44.0;
     for (var y = 246.0; y < size.height - 28; y += step) {
       for (var x = 40.0; x < size.width - 28; x += step) {
-        final rect = Rect.fromCenter(center: Offset(x, y), width: 3.6, height: 5.2);
+        final rect =
+            Rect.fromCenter(center: Offset(x, y), width: 3.6, height: 5.2);
         canvas.drawRRect(
-          RRect.fromRectAndRadius(rect.shift(const Offset(-0.7, -0.7)), const Radius.circular(0.8)),
+          RRect.fromRectAndRadius(
+              rect.shift(const Offset(-0.7, -0.7)), const Radius.circular(0.8)),
           rim,
         );
         canvas.drawRRect(
@@ -146,7 +148,8 @@ class BoardPainter extends CustomPainter {
       );
     }
     for (final x in <double>[left - 12, right + 12]) {
-      final bracket = Rect.fromCenter(center: Offset(x, centerY), width: 15, height: 42);
+      final bracket =
+          Rect.fromCenter(center: Offset(x, centerY), width: 15, height: 42);
       canvas.drawRRect(
         RRect.fromRectAndRadius(bracket, const Radius.circular(3)),
         Paint()..color = const Color(0xff87949d),
@@ -199,7 +202,8 @@ class BoardPainter extends CustomPainter {
       }
       return;
     }
-    final dot = Paint()..color = const Color(0xff8797a3).withValues(alpha: 0.55);
+    final dot = Paint()
+      ..color = const Color(0xff8797a3).withValues(alpha: 0.55);
     for (var y = step; y < size.height; y += step) {
       for (var x = step; x < size.width; x += step) {
         canvas.drawCircle(Offset(x, y), 0.9, dot);
@@ -253,7 +257,8 @@ class BoardPainter extends CustomPainter {
         while (distance < metric.length) {
           final tangent = metric.getTangentForOffset(distance);
           if (tangent != null) {
-            canvas.drawCircle(tangent.position, 1.7, glow..style = PaintingStyle.fill);
+            canvas.drawCircle(
+                tangent.position, 1.7, glow..style = PaintingStyle.fill);
           }
           distance += 28;
         }
@@ -342,7 +347,8 @@ class BoardPainter extends CustomPainter {
     final points = WireRouter.route(project, wire);
     var minimum = double.infinity;
     for (var index = 0; index < points.length - 1; index++) {
-      minimum = math.min(minimum, _distanceToSegment(point, points[index], points[index + 1]));
+      minimum = math.min(
+          minimum, _distanceToSegment(point, points[index], points[index + 1]));
     }
     return minimum;
   }
@@ -355,9 +361,9 @@ class BoardPainter extends CustomPainter {
     final dx = b.x - a.x;
     final dy = b.y - a.y;
     if (dx == 0 && dy == 0) return point.distanceTo(a);
-    final t = (((point.x - a.x) * dx + (point.y - a.y) * dy) /
-            (dx * dx + dy * dy))
-        .clamp(0.0, 1.0);
+    final t =
+        (((point.x - a.x) * dx + (point.y - a.y) * dy) / (dx * dx + dy * dy))
+            .clamp(0.0, 1.0);
     return point.distanceTo(BoardPoint(a.x + t * dx, a.y + t * dy));
   }
 

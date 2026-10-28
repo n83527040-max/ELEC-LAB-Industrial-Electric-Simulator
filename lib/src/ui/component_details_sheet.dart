@@ -34,7 +34,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
     return AnimatedBuilder(
       animation: widget.controller,
       builder: (context, _) {
-        final component = widget.controller.project.componentById(widget.componentId);
+        final component =
+            widget.controller.project.componentById(widget.componentId);
         if (component == null) return const SizedBox.shrink();
         final spec = ComponentCatalog.specOf(component.kind);
         final reading = widget.controller.result?[component.id];
@@ -52,7 +53,9 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(spec.nameAr, style: Theme.of(context).textTheme.headlineSmall),
+                            Text(spec.nameAr,
+                                style:
+                                    Theme.of(context).textTheme.headlineSmall),
                             Text(
                               '${component.label} • ${spec.nameFr}',
                               textDirection: TextDirection.ltr,
@@ -114,11 +117,13 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                           Text('${reading.current.toStringAsFixed(3)} A'),
                           Text('${reading.activePower.toStringAsFixed(2)} W'),
                           if (reading.residualCurrent > 0)
-                            Text('ΔI ${(reading.residualCurrent * 1000).toStringAsFixed(1)} mA'),
+                            Text(
+                                'ΔI ${(reading.residualCurrent * 1000).toStringAsFixed(1)} mA'),
                           if (reading.energyKwh > 0)
                             Text('${reading.energyKwh.toStringAsFixed(6)} kWh'),
                           if (reading.secondaryCurrent > 0)
-                            Text('Is ${reading.secondaryCurrent.toStringAsFixed(3)} A'),
+                            Text(
+                                'Is ${reading.secondaryCurrent.toStringAsFixed(3)} A'),
                           if (reading.frequency > 0)
                             Text('${reading.frequency.toStringAsFixed(2)} Hz'),
                           if (reading.connectionMode.isNotEmpty)
@@ -187,7 +192,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                 title: Text(_propertyName(entry.key)),
                 subtitle: Text(entry.key, textDirection: TextDirection.ltr),
                 value: value,
-                onChanged: (changed) => widget.controller.updateComponentProperties(
+                onChanged: (changed) =>
+                    widget.controller.updateComponentProperties(
                   componentId,
                   <String, Object>{...component.properties, entry.key: changed},
                 ),
@@ -244,14 +250,18 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
               ],
               onChanged: (value) => widget.controller.updateComponentProperties(
                 componentId,
-                <String, Object>{...component.properties, 'color': value ?? 'red'},
+                <String, Object>{
+                  ...component.properties,
+                  'color': value ?? 'red'
+                },
               ),
             ),
           if (component.kind == ComponentKind.rotarySwitch ||
               component.kind == ComponentKind.twoWaySwitch)
             DropdownButtonFormField<int>(
               initialValue: component.number('position').round(),
-              decoration: const InputDecoration(labelText: 'وضعية المفتاح الدوار'),
+              decoration:
+                  const InputDecoration(labelText: 'وضعية المفتاح الدوار'),
               items: const <DropdownMenuItem<int>>[
                 DropdownMenuItem(value: 0, child: Text('0 — فصل')),
                 DropdownMenuItem(value: 1, child: Text('1 — COM إلى 1')),
@@ -259,7 +269,10 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
               ],
               onChanged: (value) => widget.controller.updateComponentProperties(
                 componentId,
-                <String, Object>{...component.properties, 'position': value ?? 0},
+                <String, Object>{
+                  ...component.properties,
+                  'position': value ?? 0
+                },
               ),
             ),
           const SizedBox(height: 12),
@@ -270,7 +283,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
               final properties = <String, Object>{...component.properties};
               _numbers.forEach((key, value) => properties[key] = value);
               _strings.forEach((key, value) => properties[key] = value);
-              widget.controller.updateComponentProperties(componentId, properties);
+              widget.controller
+                  .updateComponentProperties(componentId, properties);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('تم تطبيق الخصائص.')),
               );
@@ -281,15 +295,21 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
           const SizedBox(height: 20),
           if (component.properties.containsKey('fault')) ...<Widget>[
             DropdownButtonFormField<String>(
-              initialValue: component.text('fault').isEmpty ? 'none' : component.text('fault'),
+              initialValue: component.text('fault').isEmpty
+                  ? 'none'
+                  : component.text('fault'),
               decoration: const InputDecoration(labelText: 'حقن عطل افتراضي'),
               items: const <DropdownMenuItem<String>>[
                 DropdownMenuItem(value: 'none', child: Text('لا يوجد عطل')),
-                DropdownMenuItem(value: 'open', child: Text('انقطاع Open circuit')),
-                DropdownMenuItem(value: 'short', child: Text('قصر Short circuit')),
-                DropdownMenuItem(value: 'coilOpen', child: Text('انقطاع الملف Coil open')),
+                DropdownMenuItem(
+                    value: 'open', child: Text('انقطاع Open circuit')),
+                DropdownMenuItem(
+                    value: 'short', child: Text('قصر Short circuit')),
+                DropdownMenuItem(
+                    value: 'coilOpen', child: Text('انقطاع الملف Coil open')),
               ],
-              onChanged: (value) => widget.controller.injectFault(componentId, value!),
+              onChanged: (value) =>
+                  widget.controller.injectFault(componentId, value!),
             ),
             const SizedBox(height: 12),
             const Text(
@@ -369,7 +389,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
             DropdownButtonFormField<String>(
               key: ValueKey<String>('peer-${_interlockPeerId ?? 'none'}'),
               initialValue: _interlockPeerId,
-              decoration: const InputDecoration(labelText: 'الكونتاكتور المقابل'),
+              decoration:
+                  const InputDecoration(labelText: 'الكونتاكتور المقابل'),
               items: candidates
                   .map(
                     (candidate) => DropdownMenuItem<String>(
@@ -381,9 +402,9 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
               onChanged: candidates.isEmpty
                   ? null
                   : (value) => setState(() {
-                      _interlockPeerId = value;
-                      _interlockDirty = true;
-                    }),
+                        _interlockPeerId = value;
+                        _interlockDirty = true;
+                      }),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
@@ -391,7 +412,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
               decoration: const InputDecoration(labelText: 'دور هذا الجهاز'),
               items: const <DropdownMenuItem<String>>[
                 DropdownMenuItem(value: 'star', child: Text('Étoile / نجمة')),
-                DropdownMenuItem(value: 'delta', child: Text('Triangle / مثلث')),
+                DropdownMenuItem(
+                    value: 'delta', child: Text('Triangle / مثلث')),
               ],
               onChanged: (value) => setState(() {
                 _interlockRole = value ?? 'star';
@@ -427,12 +449,14 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
                 ),
                 OutlinedButton.icon(
                   onPressed: () {
-                    final error = widget.controller.clearInterlockPair(componentId);
+                    final error =
+                        widget.controller.clearInterlockPair(componentId);
                     if (error == null) {
                       setState(() => _interlockDirty = false);
                     }
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(error ?? 'تم فك التعشيق للطرفين.')),
+                      SnackBar(
+                          content: Text(error ?? 'تم فك التعشيق للطرفين.')),
                     );
                   },
                   icon: const Icon(Icons.link_off),
@@ -452,7 +476,8 @@ class _ComponentDetailsSheetState extends State<ComponentDetailsSheet> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: <Widget>[
-        const Text('هذه الأطراف هي نفسها المستعملة في اللوحة والمجسم ومحرك MNA.'),
+        const Text(
+            'هذه الأطراف هي نفسها المستعملة في اللوحة والمجسم ومحرك MNA.'),
         const SizedBox(height: 12),
         ...spec.terminals.map(
           (terminal) => ListTile(

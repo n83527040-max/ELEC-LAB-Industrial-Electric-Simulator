@@ -10,8 +10,7 @@ class ComplexNumber {
   static const zero = ComplexNumber(0);
   static const one = ComplexNumber(1);
 
-  factory ComplexNumber.polar(double magnitude, double angle) =>
-      ComplexNumber(
+  factory ComplexNumber.polar(double magnitude, double angle) => ComplexNumber(
         magnitude * math.cos(angle),
         magnitude * math.sin(angle),
       );
@@ -32,8 +31,8 @@ class ComplexNumber {
       );
 
   ComplexNumber operator /(ComplexNumber other) {
-    final denominator = other.real * other.real +
-        other.imaginary * other.imaginary;
+    final denominator =
+        other.real * other.real + other.imaginary * other.imaginary;
     if (denominator == 0) throw StateError('Complex division by zero.');
     return ComplexNumber(
       (real * other.real + imaginary * other.imaginary) / denominator,

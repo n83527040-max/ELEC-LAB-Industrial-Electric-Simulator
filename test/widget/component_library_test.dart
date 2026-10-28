@@ -14,7 +14,8 @@ import '../test_helpers.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('component library fits a small phone and filters real devices', (tester) async {
+  testWidgets('component library fits a small phone and filters real devices',
+      (tester) async {
     tester.view.physicalSize = const Size(320, 640);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -46,7 +47,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('all library cards layout in landscape without clipping exceptions', (tester) async {
+  testWidgets(
+      'all library cards layout in landscape without clipping exceptions',
+      (tester) async {
     tester.view.physicalSize = const Size(800, 450);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
@@ -75,7 +78,8 @@ void main() {
     }
   });
 
-  testWidgets('board terminals are hidden until selection and accept real taps', (tester) async {
+  testWidgets('board terminals are hidden until selection and accept real taps',
+      (tester) async {
     final component = device('k1', ComponentKind.contactor, x: 400, y: 300);
     final project = ElectricalProject.empty(
       id: 'terminals',
@@ -121,7 +125,9 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('permanent supply bay toggles a real source and accepts L1 wiring', (tester) async {
+  testWidgets(
+      'permanent supply bay toggles a real source and accepts L1 wiring',
+      (tester) async {
     final controller = EditorController(
       project: ElectricalProject.empty(
         id: 'supply_widget',
@@ -157,7 +163,8 @@ void main() {
       find.byKey(const Key('terminal-${SupplyBay.threePhaseId}-pe')),
       findsOneWidget,
     );
-    await tester.tap(find.byKey(const Key('supply-toggle-${SupplyBay.threePhaseId}')));
+    await tester
+        .tap(find.byKey(const Key('supply-toggle-${SupplyBay.threePhaseId}')));
     await tester.pump(const Duration(milliseconds: 350));
     await tester.pumpAndSettle();
     expect(

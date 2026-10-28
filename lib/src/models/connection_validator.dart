@@ -28,8 +28,8 @@ abstract final class ConnectionValidator {
       return const ConnectionIssue('أحد الجهازين غير موجود.', 'missing_device');
     }
     try {
-      final fromTerminal = ComponentCatalog.specOf(fromComponent.kind)
-          .terminal(from.terminalId);
+      final fromTerminal =
+          ComponentCatalog.specOf(fromComponent.kind).terminal(from.terminalId);
       final toTerminal =
           ComponentCatalog.specOf(toComponent.kind).terminal(to.terminalId);
       if ((fromTerminal.kind == TerminalKind.earth) !=

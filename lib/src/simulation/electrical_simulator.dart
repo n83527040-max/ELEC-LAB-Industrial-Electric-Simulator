@@ -205,8 +205,8 @@ class ElectricalSimulator {
             overload = math.max(0, overload - dt * 0.5);
           }
           final residualTrip = residual > threshold;
-          final overcurrentTrip = isRcbo &&
-              (current > rated * 6 || overload >= 2);
+          final overcurrentTrip =
+              isRcbo && (current > rated * 6 || overload >= 2);
           if (residualTrip || overcurrentTrip) {
             runtime.update(
               component.id,
@@ -241,9 +241,8 @@ class ElectricalSimulator {
           final tripTime = math.max(0.2, component.number('tripTime'));
           var stress = state.thermalStress;
           if (current > rated) {
-            stress += dt *
-                (math.pow(current / rated, 2).toDouble() - 1) /
-                tripTime;
+            stress +=
+                dt * (math.pow(current / rated, 2).toDouble() - 1) / tripTime;
           } else {
             stress -= dt / (tripTime * 2);
           }
@@ -400,9 +399,11 @@ class ElectricalSimulator {
           if (source != null) {
             voltage = network
                 .voltage(
-                  _key(component.id, component.kind == ComponentKind.dcSupply
-                      ? 'positive'
-                      : 'line'),
+                  _key(
+                      component.id,
+                      component.kind == ComponentKind.dcSupply
+                          ? 'positive'
+                          : 'line'),
                   _key(
                     component.id,
                     component.kind == ComponentKind.dcSupply
@@ -488,13 +489,12 @@ class ElectricalSimulator {
           final expected = component.number('nominalVoltage') / math.sqrt(3);
           final balanced = average > 0 && (maximum - minimum) / average < 0.25;
           active = balanced && minimum >= expected * 0.55;
-          voltage = ((u - v).magnitude +
-                  (v - w).magnitude +
-                  (w - u).magnitude) /
-              3;
+          voltage =
+              ((u - v).magnitude + (v - w).magnitude + (w - u).magnitude) / 3;
           current = maximumCurrent(motor);
           if (active && up > 1 && vp > 1) {
-            final phaseDifference = _wrapAngle((v - neutral).angle - (u - neutral).angle);
+            final phaseDifference =
+                _wrapAngle((v - neutral).angle - (u - neutral).angle);
             direction = math.sin(phaseDifference) < 0 ? 1 : -1;
           }
         case ComponentKind.motor6Terminal:
@@ -504,10 +504,8 @@ class ElectricalSimulator {
           final u = network.nodeVoltage(_key(component.id, 'u1'));
           final v = network.nodeVoltage(_key(component.id, 'v1'));
           final w = network.nodeVoltage(_key(component.id, 'w1'));
-          voltage = ((u - v).magnitude +
-                  (v - w).magnitude +
-                  (w - u).magnitude) /
-              3;
+          voltage =
+              ((u - v).magnitude + (v - w).magnitude + (w - u).magnitude) / 3;
           if (windingVoltages.length == 3) {
             final average = windingVoltages.fold<double>(
                   0,
@@ -534,8 +532,8 @@ class ElectricalSimulator {
                     ? 'star'
                     : 'delta';
             final windingCurrent = maximumCurrent(motor);
-            current = windingCurrent *
-                (connectionMode == 'delta' ? math.sqrt(3) : 1);
+            current =
+                windingCurrent * (connectionMode == 'delta' ? math.sqrt(3) : 1);
             if (active && u.magnitude > 1 && v.magnitude > 1) {
               final phaseDifference = _wrapAngle(v.angle - u.angle);
               direction = math.sin(phaseDifference) < 0 ? 1 : -1;
@@ -545,9 +543,7 @@ class ElectricalSimulator {
         case ComponentKind.fan:
         case ComponentKind.solenoidValve:
           if (motor.isNotEmpty) {
-            voltage = network
-                .voltage(motor.first.a, motor.first.b)
-                .magnitude;
+            voltage = network.voltage(motor.first.a, motor.first.b).magnitude;
             current = maximumCurrent(motor);
             final nominal = math.max(1, component.number('nominalVoltage'));
             active = voltage >= nominal * 0.55 && voltage <= nominal * 1.5;
@@ -555,12 +551,10 @@ class ElectricalSimulator {
         case ComponentKind.transformer:
         case ComponentKind.bellTransformer:
         case ComponentKind.voltageTransformer:
-          final primary = branches
-              .where((item) => item.role == 'primary')
-              .firstOrNull;
-          final secondary = branches
-              .where((item) => item.role == 'secondary')
-              .firstOrNull;
+          final primary =
+              branches.where((item) => item.role == 'primary').firstOrNull;
+          final secondary =
+              branches.where((item) => item.role == 'secondary').firstOrNull;
           if (primary != null && secondary != null) {
             final primaryVoltage = network.voltage(
               _key(component.id, 'primaryLine'),
@@ -578,9 +572,8 @@ class ElectricalSimulator {
             active = primaryVoltage.magnitude > 1 && voltage > 1;
           }
         case ComponentKind.currentTransformer:
-          final primary = branches
-              .where((item) => item.role == 'primary')
-              .firstOrNull;
+          final primary =
+              branches.where((item) => item.role == 'primary').firstOrNull;
           final secondary = branches
               .where((item) => item.role == 'secondaryWinding')
               .firstOrNull;
@@ -625,9 +618,9 @@ class ElectricalSimulator {
                 .voltage(measurement.first.a, measurement.first.b)
                 .magnitude;
             current = network.current(measurement.first).magnitude;
-            validMeasurement =
-                current <= component.number('maxCurrent') * 1.1 &&
-                    voltage < math.max(1.0, component.number('maxCurrent') * 0.02);
+            validMeasurement = current <=
+                    component.number('maxCurrent') * 1.1 &&
+                voltage < math.max(1.0, component.number('maxCurrent') * 0.02);
           }
         case ComponentKind.digitalCounter:
         case ComponentKind.wattmeter:
@@ -647,14 +640,15 @@ class ElectricalSimulator {
             current = measuredCurrent.magnitude;
             power = measuredVoltage.real * measuredCurrent.real +
                 measuredVoltage.imaginary * measuredCurrent.imaginary;
-            validMeasurement = voltage <= component.number('maxVoltage') * 1.1 &&
-                current <= component.number('maxCurrent') * 1.1 &&
-                network.current(voltageBranch).magnitude < 0.1 &&
-                network.validVoltmeterConnection(
-                  voltageBranch.a,
-                  voltageBranch.b,
-                  component.id,
-                );
+            validMeasurement =
+                voltage <= component.number('maxVoltage') * 1.1 &&
+                    current <= component.number('maxCurrent') * 1.1 &&
+                    network.current(voltageBranch).magnitude < 0.1 &&
+                    network.validVoltmeterConnection(
+                      voltageBranch.a,
+                      voltageBranch.b,
+                      component.id,
+                    );
             active = validMeasurement && current > 0.000001;
           }
         case ComponentKind.pushButtonNO:
@@ -721,7 +715,8 @@ class ElectricalSimulator {
         const SimulationDiagnostic(
           code: 'not_converged',
           severity: DiagnosticSeverity.error,
-          messageAr: 'لم تستقر حالة الملفات؛ راجع التعشيق أو نقاط NC المتعارضة.',
+          messageAr:
+              'لم تستقر حالة الملفات؛ راجع التعشيق أو نقاط NC المتعارضة.',
         ),
       );
     }
@@ -776,7 +771,8 @@ class ElectricalSimulator {
         const SimulationDiagnostic(
           code: 'no_supply',
           severity: DiagnosticSeverity.warning,
-          messageAr: 'لا يوجد مصدر تغذية. فعّل مصدراً من منطقة Alimentation أعلى اللوحة.',
+          messageAr:
+              'لا يوجد مصدر تغذية. فعّل مصدراً من منطقة Alimentation أعلى اللوحة.',
         ),
       );
     } else if (!supplies.any((item) => item.flag('enabled'))) {
@@ -784,7 +780,8 @@ class ElectricalSimulator {
         const SimulationDiagnostic(
           code: 'supply_disabled',
           severity: DiagnosticSeverity.warning,
-          messageAr: 'مصادر التغذية غير مفعلة. اختر 3~ أو 1~ أو DC من منطقة Alimentation.',
+          messageAr:
+              'مصادر التغذية غير مفعلة. اختر 3~ أو 1~ أو DC من منطقة Alimentation.',
         ),
       );
     }
@@ -816,7 +813,8 @@ class ElectricalSimulator {
             code: 'protection_open',
             componentId: component.id,
             severity: DiagnosticSeverity.warning,
-            messageAr: '${component.label} في وضع الفصل/التعطيل. تحقق من الحمل ثم أعد الضبط.',
+            messageAr:
+                '${component.label} في وضع الفصل/التعطيل. تحقق من الحمل ثم أعد الضبط.',
           ),
         );
       }
@@ -838,7 +836,8 @@ class ElectricalSimulator {
               code: 'coil_overvoltage',
               componentId: component.id,
               severity: DiagnosticSeverity.error,
-              messageAr: 'جهد ملف ${component.label} أعلى من ${rated.toStringAsFixed(0)}V.',
+              messageAr:
+                  'جهد ملف ${component.label} أعلى من ${rated.toStringAsFixed(0)}V.',
             ),
           );
         }
@@ -854,7 +853,8 @@ class ElectricalSimulator {
               code: 'lamp_overvoltage',
               componentId: component.id,
               severity: DiagnosticSeverity.error,
-              messageAr: '${component.label}: الجهد أعلى بكثير من التصنيف؛ المصباح معطّل افتراضياً.',
+              messageAr:
+                  '${component.label}: الجهد أعلى بكثير من التصنيف؛ المصباح معطّل افتراضياً.',
             ),
           );
         }
@@ -870,7 +870,8 @@ class ElectricalSimulator {
               code: 'motor_phase_problem',
               componentId: component.id,
               severity: DiagnosticSeverity.error,
-              messageAr: 'المحرك لا يعمل: تحقق من فقدان طور أو عدم توازن الجهد أو التوصيلات.',
+              messageAr:
+                  'المحرك لا يعمل: تحقق من فقدان طور أو عدم توازن الجهد أو التوصيلات.',
             ),
           );
         }
@@ -897,7 +898,8 @@ class ElectricalSimulator {
               code: 'phase_relay_fault',
               componentId: component.id,
               severity: DiagnosticSeverity.error,
-              messageAr: 'Relais de phases: طور مفقود أو تسلسل الأطوار معكوس؛ افحص L1/L2/L3.',
+              messageAr:
+                  'Relais de phases: طور مفقود أو تسلسل الأطوار معكوس؛ افحص L1/L2/L3.',
             ),
           );
         } else if (reading.energized) {
@@ -925,8 +927,8 @@ class ElectricalSimulator {
                         component.kind == ComponentKind.wattmeter
                     ? 'Mesure: راجع توصيل الجهد على التوازي والتيار على التسلسل ومدى القياس.'
                     : isVolt
-                    ? 'Voltmètre في وضع قياس غير صالح؛ وصله على التوازي مع نقطتين من الدائرة.'
-                    : 'Ampèremètre في وضع غير صالح أو تجاوز المدى؛ وصله على التسلسل وليس على التوازي.',
+                        ? 'Voltmètre في وضع قياس غير صالح؛ وصله على التوازي مع نقطتين من الدائرة.'
+                        : 'Ampèremètre في وضع غير صالح أو تجاوز المدى؛ وصله على التسلسل وليس على التوازي.',
           ),
         );
       }
@@ -972,8 +974,7 @@ class ElectricalSimulator {
     );
   }
 
-  Map<String, double> _wireCurrents(_Network network) =>
-      <String, double>{
+  Map<String, double> _wireCurrents(_Network network) => <String, double>{
         for (final branch in network.wireBranches)
           branch.ownerId: network.current(branch).magnitude,
       };
@@ -998,8 +999,8 @@ class ElectricalSimulator {
   }
 
   double _coilVoltage(_Network network, CircuitComponent component) {
-    final branches = network.branches[component.id]
-        ?.where((item) => item.role == 'coil');
+    final branches =
+        network.branches[component.id]?.where((item) => item.role == 'coil');
     if (branches == null || branches.isEmpty) return 0;
     return network.voltage(branches.first.a, branches.first.b).magnitude;
   }
@@ -1120,7 +1121,8 @@ class _Network {
   ) {
     final allNodes = <String>{};
     for (final component in project.components) {
-      for (final terminal in ComponentCatalog.specOf(component.kind).terminals) {
+      for (final terminal
+          in ComponentCatalog.specOf(component.kind).terminals) {
         allNodes.add('${component.id}::${terminal.id}');
       }
       if (component.kind == ComponentKind.motor3Phase ||
@@ -1390,14 +1392,18 @@ class _Network {
           contact('common', 'no', state.energized, role: 'auxiliary');
           contact('common', 'nc', !state.energized, role: 'auxiliary');
         case ComponentKind.pushButtonNO:
-          contact('input', 'output', component.flag('pressed'), role: 'auxiliary');
+          contact('input', 'output', component.flag('pressed'),
+              role: 'auxiliary');
         case ComponentKind.pushButtonNC:
-          contact('input', 'output', !component.flag('pressed'), role: 'auxiliary');
+          contact('input', 'output', !component.flag('pressed'),
+              role: 'auxiliary');
         case ComponentKind.emergencyStop:
-          contact('input', 'output', component.flag('closed'), role: 'auxiliary');
+          contact('input', 'output', component.flag('closed'),
+              role: 'auxiliary');
         case ComponentKind.selectorSwitch:
         case ComponentKind.lightSwitch:
-          contact('input', 'output', component.flag('closed'), role: 'auxiliary');
+          contact('input', 'output', component.flag('closed'),
+              role: 'auxiliary');
         case ComponentKind.thermostat:
           contact('input', 'output', state.latched, role: 'auxiliary');
         case ComponentKind.twoWaySwitch:
@@ -1419,7 +1425,8 @@ class _Network {
         case ComponentKind.floatSwitch:
         case ComponentKind.pressureSwitch:
         case ComponentKind.flowSwitch:
-          contact('input', 'output', component.flag('active'), role: 'auxiliary');
+          contact('input', 'output', component.flag('active'),
+              role: 'auxiliary');
         case ComponentKind.proximitySensor:
         case ComponentKind.capacitiveSensor:
         case ComponentKind.photoelectricSensor:
@@ -1452,7 +1459,8 @@ class _Network {
           if (!openFault) {
             final rated = math.max(0.1, component.number('ratedVoltage'));
             final watts = math.max(0.01, component.number('powerWatts'));
-            resistor('x1', 'x2', shortFault ? 0.001 : rated * rated / watts, 'main');
+            resistor(
+                'x1', 'x2', shortFault ? 0.001 : rated * rated / watts, 'main');
           }
         case ComponentKind.ledLamp:
           if (!openFault) {
@@ -1468,8 +1476,10 @@ class _Network {
         case ComponentKind.motor3Phase:
         case ComponentKind.pump:
         case ComponentKind.heater3Phase:
-          final nominalPhase = component.number('nominalVoltage') / math.sqrt(3);
-          final nominalCurrent = math.max(0.05, component.number('nominalCurrent'));
+          final nominalPhase =
+              component.number('nominalVoltage') / math.sqrt(3);
+          final nominalCurrent =
+              math.max(0.05, component.number('nominalCurrent'));
           final pf = component.number('powerFactor').clamp(0.2, 1.0).toDouble();
           final impedanceMagnitude = nominalPhase / nominalCurrent;
           final resistance = impedanceMagnitude * pf;
@@ -1485,18 +1495,22 @@ class _Network {
               component.id,
               key(phase),
               neutral,
-              shortFault && phase == 'u' ? const ComplexNumber(0.001) : impedance,
+              shortFault && phase == 'u'
+                  ? const ComplexNumber(0.001)
+                  : impedance,
               'motor',
             );
             _addBranch(branch);
           }
         case ComponentKind.motor6Terminal:
-          final nominalWinding = math.max(1, component.number('nominalVoltage'));
+          final nominalWinding =
+              math.max(1, component.number('nominalVoltage'));
           final nominalLineCurrent = math.max(
             0.05,
             component.number('nominalCurrent'),
           );
-          final pf6 = component.number('powerFactor').clamp(0.2, 1.0).toDouble();
+          final pf6 =
+              component.number('powerFactor').clamp(0.2, 1.0).toDouble();
           final magnitude6 = math.sqrt(3) * nominalWinding / nominalLineCurrent;
           final resistance6 = magnitude6 * pf6;
           final reactance6 = magnitude6 * math.sqrt(1 - pf6 * pf6);
@@ -1531,7 +1545,8 @@ class _Network {
               0.05,
               component.number('nominalCurrent'),
             );
-            final pf = component.number('powerFactor').clamp(0.2, 1.0).toDouble();
+            final pf =
+                component.number('powerFactor').clamp(0.2, 1.0).toDouble();
             final magnitude = nominal / nominalCurrent;
             final resistance = magnitude * pf;
             final reactance = magnitude * math.sqrt(1 - pf * pf);
@@ -1712,8 +1727,7 @@ class _Network {
 
   void _addLeakage(String node) {
     final index = nodes[node]!;
-    matrix[index][index] =
-        matrix[index][index] + const ComplexNumber(1e-9);
+    matrix[index][index] = matrix[index][index] + const ComplexNumber(1e-9);
   }
 
   void _addVoltageSource(
@@ -1774,10 +1788,10 @@ class _Network {
     void stamp(String node, double kcl, double equation) {
       final index = nodes[node];
       if (index == null) return;
-      matrix[index][branchIndex] = matrix[index][branchIndex] +
-          ComplexNumber(kcl);
-      matrix[branchIndex][index] = matrix[branchIndex][index] +
-          ComplexNumber(equation);
+      matrix[index][branchIndex] =
+          matrix[index][branchIndex] + ComplexNumber(kcl);
+      matrix[branchIndex][index] =
+          matrix[branchIndex][index] + ComplexNumber(equation);
     }
 
     stamp(primaryA, 1, 1);
@@ -1812,10 +1826,10 @@ class _Network {
     void stamp(String node, double kcl, double equation) {
       final index = nodes[node];
       if (index == null) return;
-      matrix[index][branchIndex] = matrix[index][branchIndex] +
-          ComplexNumber(kcl);
-      matrix[branchIndex][index] = matrix[branchIndex][index] +
-          ComplexNumber(equation);
+      matrix[index][branchIndex] =
+          matrix[index][branchIndex] + ComplexNumber(kcl);
+      matrix[branchIndex][index] =
+          matrix[branchIndex][index] + ComplexNumber(equation);
     }
 
     stamp(primaryA, 1, 1);
@@ -1846,11 +1860,11 @@ class _Network {
     return true;
   }
 
-  ComplexNumber nodeVoltage(String node) =>
-      node == ground ? ComplexNumber.zero : _voltages[node] ?? ComplexNumber.zero;
+  ComplexNumber nodeVoltage(String node) => node == ground
+      ? ComplexNumber.zero
+      : _voltages[node] ?? ComplexNumber.zero;
 
-  ComplexNumber voltage(String a, String b) =>
-      nodeVoltage(a) - nodeVoltage(b);
+  ComplexNumber voltage(String a, String b) => nodeVoltage(a) - nodeVoltage(b);
 
   ComplexNumber current(_Branch branch) =>
       voltage(branch.a, branch.b) / branch.impedance;

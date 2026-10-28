@@ -32,13 +32,15 @@ class SimulationPanel extends StatelessWidget {
                       ),
                     ),
                     if (result != null)
-                      Text('t = ${result.time.toStringAsFixed(1)} s', textDirection: TextDirection.ltr),
+                      Text('t = ${result.time.toStringAsFixed(1)} s',
+                          textDirection: TextDirection.ltr),
                   ],
                 ),
               ),
               if (result == null)
                 const Expanded(
-                  child: Center(child: Text('شغّل المحاكاة لعرض القياسات والأخطاء.')),
+                  child: Center(
+                      child: Text('شغّل المحاكاة لعرض القياسات والأخطاء.')),
                 )
               else ...<Widget>[
                 Material(
@@ -46,9 +48,12 @@ class SimulationPanel extends StatelessWidget {
                       ? Colors.green.withValues(alpha: 0.12)
                       : Colors.red.withValues(alpha: 0.12),
                   child: ListTile(
-                    leading: Icon(result.success ? Icons.check_circle : Icons.error),
-                    title: Text(result.success ? 'تم حل الشبكة' : 'فشل حل الشبكة'),
-                    subtitle: Text('${controller.project.wires.length} أسلاك • ${result.devices.length} أجهزة'),
+                    leading:
+                        Icon(result.success ? Icons.check_circle : Icons.error),
+                    title:
+                        Text(result.success ? 'تم حل الشبكة' : 'فشل حل الشبكة'),
+                    subtitle: Text(
+                        '${controller.project.wires.length} أسلاك • ${result.devices.length} أجهزة'),
                     trailing: IconButton(
                       onPressed: controller.resetSimulation,
                       icon: const Icon(Icons.restart_alt),
@@ -66,7 +71,8 @@ class SimulationPanel extends StatelessWidget {
                         padding: EdgeInsets.all(16),
                         child: Text(
                           'أجهزة القياس والأحمال',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                       ),
                       ...controller.project.components
@@ -81,10 +87,12 @@ class SimulationPanel extends StatelessWidget {
                                 : Icons.warning_amber,
                             color: reading.measurementValid ? null : Colors.red,
                           ),
-                          title: Text('${component.label} • ${ComponentCatalog.specOf(component.kind).nameFr}'),
+                          title: Text(
+                              '${component.label} • ${ComponentCatalog.specOf(component.kind).nameFr}'),
                           subtitle: Text(_readingText(component.kind, reading)),
                           trailing: reading.active
-                              ? const Icon(Icons.play_circle, color: Colors.green)
+                              ? const Icon(Icons.play_circle,
+                                  color: Colors.green)
                               : null,
                         );
                       }),
@@ -158,8 +166,11 @@ class SimulationPanel extends StatelessWidget {
       ComponentKind.timer ||
       ComponentKind.staircaseTimer ||
       ComponentKind.timerOffDelay =>
-        reading.active ? 'النقطة مغلقة • المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s' : 'المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s',
-      _ => '${reading.voltage.toStringAsFixed(1)} V • ${reading.activePower.toStringAsFixed(2)} W',
+        reading.active
+            ? 'النقطة مغلقة • المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s'
+            : 'المتبقي ${reading.timerRemaining.toStringAsFixed(1)} s',
+      _ =>
+        '${reading.voltage.toStringAsFixed(1)} V • ${reading.activePower.toStringAsFixed(2)} W',
     };
   }
 }

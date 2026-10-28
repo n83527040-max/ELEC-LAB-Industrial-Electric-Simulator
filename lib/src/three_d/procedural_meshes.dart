@@ -28,7 +28,8 @@ abstract final class ProceduralMeshes {
     MeshDetail detail = MeshDetail.preview,
   }) {
     final spec = ComponentCatalog.specOf(kind);
-    return _cached(kind, detail, spec.defaultProperties['color']?.toString() ?? '');
+    return _cached(
+        kind, detail, spec.defaultProperties['color']?.toString() ?? '');
   }
 
   /// Terminal metadata is shared with GLB assets without building a legacy
@@ -136,7 +137,8 @@ abstract final class ProceduralMeshes {
     for (final terminal in spec.terminals) {
       final position = _terminalPosition(terminal, spec, depth);
       terminals.add(
-        MeshTerminal(id: terminal.id, label: terminal.label, position: position),
+        MeshTerminal(
+            id: terminal.id, label: terminal.label, position: position),
       );
       _terminalHardware(
         context,
@@ -158,15 +160,19 @@ abstract final class ProceduralMeshes {
     b.addBox(Vector3D(0, 0, -d * 0.58), Vector3D(w * 0.7, h * 0.16, 0.14),
         c.graphite);
     b.addBeveledBox(Vector3D(0, h * 0.37, d * 0.35),
-        Vector3D(w * 0.98, h * 0.25, d * 0.35), c.graphite, bevel: 0.045);
+        Vector3D(w * 0.98, h * 0.25, d * 0.35), c.graphite,
+        bevel: 0.045);
     b.addBeveledBox(Vector3D(0, -h * 0.39, d * 0.34),
-        Vector3D(w * 0.98, h * 0.19, d * 0.32), c.graphite, bevel: 0.04);
+        Vector3D(w * 0.98, h * 0.19, d * 0.32), c.graphite,
+        bevel: 0.04);
     b.addBeveledBox(Vector3D(-w * 0.43, -h * 0.02, d * 0.35),
-        Vector3D(w * 0.16, h * 0.52, d * 0.25), c.lightGrey, bevel: 0.025);
+        Vector3D(w * 0.16, h * 0.52, d * 0.25), c.lightGrey,
+        bevel: 0.025);
     b.addBeveledBox(Vector3D(0, h * 0.02, d * 0.55),
-        Vector3D(w * 0.59, h * 0.35, 0.2), c.black, bevel: 0.045);
-    b.addBox(Vector3D(0, h * 0.02, d * 0.7),
-        Vector3D(w * 0.39, h * 0.12, 0.13), c.blue);
+        Vector3D(w * 0.59, h * 0.35, 0.2), c.black,
+        bevel: 0.045);
+    b.addBox(Vector3D(0, h * 0.02, d * 0.7), Vector3D(w * 0.39, h * 0.12, 0.13),
+        c.blue);
     b.addBox(Vector3D(0, -h * 0.18, d * 0.62),
         Vector3D(w * 0.47, h * 0.09, 0.035), c.label);
     if (c.detail != MeshDetail.board) {
@@ -188,13 +194,15 @@ abstract final class ProceduralMeshes {
     b.addBox(Vector3D(0, 0, -d * 0.58), Vector3D(w * 0.72, h * 0.12, 0.15),
         c.graphite);
     b.addBeveledBox(Vector3D(0, h * 0.04, d * 0.47),
-        Vector3D(w * 0.78, h * 0.58, 0.18), c.lightGrey, bevel: 0.04);
+        Vector3D(w * 0.78, h * 0.58, 0.18), c.lightGrey,
+        bevel: 0.04);
     b.addBox(Vector3D(0, h * 0.29, d * 0.58),
         Vector3D(w * 0.63, h * 0.1, 0.035), c.label);
-    b.addBox(Vector3D(0, h * 0.02, d * 0.62),
-        Vector3D(w * 0.4, h * 0.29, 0.12), c.black);
+    b.addBox(Vector3D(0, h * 0.02, d * 0.62), Vector3D(w * 0.4, h * 0.29, 0.12),
+        c.black);
     b.addBeveledBox(Vector3D(0, h * 0.04, d * 0.78),
-        Vector3D(w * 0.24, h * 0.25, 0.22), c.blue, bevel: 0.035);
+        Vector3D(w * 0.24, h * 0.25, 0.22), c.blue,
+        bevel: 0.035);
     b.addBox(Vector3D(0, -h * 0.24, d * 0.58),
         Vector3D(w * 0.62, h * 0.055, 0.035), c.graphite);
     if (c.detail == MeshDetail.detailed) {
@@ -212,17 +220,19 @@ abstract final class ProceduralMeshes {
     final d = c.depth;
     b.addBeveledBox(Vector3D(0, 0, 0), Vector3D(w, h, d), c.white, bevel: 0.08);
     b.addBeveledBox(Vector3D(0, 0, d * 0.46),
-        Vector3D(w * 0.82, h * 0.72, 0.18), c.graphite, bevel: 0.045);
-    b.addBox(Vector3D(0, 0, d * 0.59), Vector3D(w * 0.54, h * 0.51, 0.07),
-        c.black);
+        Vector3D(w * 0.82, h * 0.72, 0.18), c.graphite,
+        bevel: 0.045);
+    b.addBox(
+        Vector3D(0, 0, d * 0.59), Vector3D(w * 0.54, h * 0.51, 0.07), c.black);
     b.addCylinder(Vector3D(0, 0, d * 0.65), w * 0.16, h * 0.36, c.glass,
         axis: MeshAxis.y, segments: c.segments);
     for (final side in <double>[-1, 1]) {
-      b.addCylinder(Vector3D(0, side * h * 0.2, d * 0.65), w * 0.19,
-          h * 0.07, c.metal, axis: MeshAxis.y, segments: c.segments);
+      b.addCylinder(
+          Vector3D(0, side * h * 0.2, d * 0.65), w * 0.19, h * 0.07, c.metal,
+          axis: MeshAxis.y, segments: c.segments);
     }
-    b.addBox(Vector3D(w * 0.34, 0, d * 0.72),
-        Vector3D(w * 0.1, h * 0.34, 0.12), c.lightGrey);
+    b.addBox(Vector3D(w * 0.34, 0, d * 0.72), Vector3D(w * 0.1, h * 0.34, 0.12),
+        c.lightGrey);
     b.addSphere(Vector3D(-w * 0.25, -h * 0.31, d * 0.65), w * 0.055, c.red,
         segments: c.segments, rings: c.rings);
   }
@@ -237,11 +247,14 @@ abstract final class ProceduralMeshes {
     b.addBox(Vector3D(0, h * 0.36, d * 0.36),
         Vector3D(w * 0.96, h * 0.25, d * 0.3), c.black);
     b.addBeveledBox(Vector3D(0, -h * 0.11, d * 0.46),
-        Vector3D(w * 0.9, h * 0.55, 0.18), c.lightGrey, bevel: 0.04);
-    b.addCylinder(Vector3D(-w * 0.19, -h * 0.08, d * 0.65), w * 0.16, 0.14,
-        c.blue, segments: c.segments);
-    b.addCylinder(Vector3D(-w * 0.19, -h * 0.08, d * 0.74), w * 0.06, 0.04,
-        c.metal, segments: c.segments);
+        Vector3D(w * 0.9, h * 0.55, 0.18), c.lightGrey,
+        bevel: 0.04);
+    b.addCylinder(
+        Vector3D(-w * 0.19, -h * 0.08, d * 0.65), w * 0.16, 0.14, c.blue,
+        segments: c.segments);
+    b.addCylinder(
+        Vector3D(-w * 0.19, -h * 0.08, d * 0.74), w * 0.06, 0.04, c.metal,
+        segments: c.segments);
     b.addBox(Vector3D(w * 0.2, h * 0.02, d * 0.65),
         Vector3D(w * 0.18, h * 0.11, 0.13), c.red);
     b.addBox(Vector3D(w * 0.2, -h * 0.17, d * 0.65),
@@ -267,12 +280,14 @@ abstract final class ProceduralMeshes {
     final w = c.width;
     final h = c.height;
     final d = c.depth;
-    b.addBeveledBox(Vector3D(0, -h * 0.34, 0),
-        Vector3D(w, h * 0.32, d), c.graphite, bevel: 0.07);
+    b.addBeveledBox(
+        Vector3D(0, -h * 0.34, 0), Vector3D(w, h * 0.32, d), c.graphite,
+        bevel: 0.07);
     b.addBeveledBox(Vector3D(0, h * 0.12, -0.02),
-        Vector3D(w * 0.91, h * 0.7, d * 0.9), c.relayBlue, bevel: 0.09);
-    b.addBox(Vector3D(0, h * 0.14, d * 0.47),
-        Vector3D(w * 0.67, h * 0.3, 0.06), c.label);
+        Vector3D(w * 0.91, h * 0.7, d * 0.9), c.relayBlue,
+        bevel: 0.09);
+    b.addBox(Vector3D(0, h * 0.14, d * 0.47), Vector3D(w * 0.67, h * 0.3, 0.06),
+        c.label);
     b.addBox(Vector3D(0, -h * 0.09, d * 0.53),
         Vector3D(w * 0.43, h * 0.07, 0.05), c.blue);
     for (final side in <double>[-1, 1]) {
@@ -286,18 +301,22 @@ abstract final class ProceduralMeshes {
     final w = c.width;
     final h = c.height;
     final d = c.depth;
-    b.addBeveledBox(Vector3D(0, 0, 0), Vector3D(w, h, d), c.white, bevel: 0.085);
+    b.addBeveledBox(Vector3D(0, 0, 0), Vector3D(w, h, d), c.white,
+        bevel: 0.085);
     b.addBeveledBox(Vector3D(0, h * 0.25, d * 0.47),
-        Vector3D(w * 0.76, h * 0.21, 0.13), c.graphite, bevel: 0.025);
+        Vector3D(w * 0.76, h * 0.21, 0.13), c.graphite,
+        bevel: 0.025);
     b.addBox(Vector3D(0, h * 0.25, d * 0.56),
         Vector3D(w * 0.55, h * 0.07, 0.035), c.displayGreen);
-    b.addCylinder(Vector3D(0, -h * 0.09, d * 0.57), w * 0.24, 0.18,
-        c.graphite, segments: c.segments);
-    b.addBox(Vector3D(0, -h * 0.09, d * 0.69),
-        Vector3D(0.055, w * 0.29, 0.055), c.orange, angleZ: -0.5);
+    b.addCylinder(Vector3D(0, -h * 0.09, d * 0.57), w * 0.24, 0.18, c.graphite,
+        segments: c.segments);
+    b.addBox(Vector3D(0, -h * 0.09, d * 0.69), Vector3D(0.055, w * 0.29, 0.055),
+        c.orange,
+        angleZ: -0.5);
     for (final side in <double>[-1, 1]) {
       b.addBeveledBox(Vector3D(side * w * 0.22, -h * 0.35, d * 0.54),
-          Vector3D(w * 0.22, h * 0.1, 0.12), c.lightGrey, bevel: 0.02);
+          Vector3D(w * 0.22, h * 0.1, 0.12), c.lightGrey,
+          bevel: 0.02);
     }
     if (c.detail != MeshDetail.board) {
       for (var i = -2; i <= 2; i++) {
@@ -313,7 +332,8 @@ abstract final class ProceduralMeshes {
     final h = c.height;
     final d = c.depth;
     b.addBeveledBox(Vector3D(0, -h * 0.17, -d * 0.24),
-        Vector3D(w * 0.68, h * 0.57, d * 0.58), c.contactBlock, bevel: 0.06);
+        Vector3D(w * 0.68, h * 0.57, d * 0.58), c.contactBlock,
+        bevel: 0.06);
     b.addBox(Vector3D(0, -h * 0.17, d * 0.08),
         Vector3D(w * 0.5, h * 0.28, 0.12), c.blue);
     b.addCylinder(Vector3D(0, h * 0.13, d * 0.3), w * 0.41, 0.18, c.metal,
@@ -321,20 +341,23 @@ abstract final class ProceduralMeshes {
     b.addCylinder(Vector3D(0, h * 0.13, d * 0.41), w * 0.34, 0.13, c.black,
         segments: c.segments);
     if (c.spec.kind == ComponentKind.selectorSwitch) {
-      b.addCylinder(Vector3D(0, h * 0.13, d * 0.55), w * 0.18, 0.2,
-          c.graphite, segments: c.segments);
+      b.addCylinder(Vector3D(0, h * 0.13, d * 0.55), w * 0.18, 0.2, c.graphite,
+          segments: c.segments);
       b.addBeveledBox(Vector3D(0, h * 0.13, d * 0.71),
-          Vector3D(w * 0.17, h * 0.47, 0.18), c.graphite, bevel: 0.04);
+          Vector3D(w * 0.17, h * 0.47, 0.18), c.graphite,
+          bevel: 0.04);
     } else if (c.spec.kind == ComponentKind.pushButtonNC) {
-      b.addFrustum(Vector3D(0, h * 0.13, d * 0.59), w * 0.27, w * 0.41,
-          0.35, c.red, segments: c.segments);
+      b.addFrustum(
+          Vector3D(0, h * 0.13, d * 0.59), w * 0.27, w * 0.41, 0.35, c.red,
+          segments: c.segments);
       b.addCylinder(Vector3D(0, h * 0.13, d * 0.79), w * 0.41, 0.1, c.red,
           segments: c.segments);
     } else {
-      b.addFrustum(Vector3D(0, h * 0.13, d * 0.57), w * 0.31, w * 0.29,
-          0.28, c.green, segments: c.segments);
-      b.addCylinder(Vector3D(0, h * 0.13, d * 0.73), w * 0.29, 0.07,
-          c.green, segments: c.segments);
+      b.addFrustum(
+          Vector3D(0, h * 0.13, d * 0.57), w * 0.31, w * 0.29, 0.28, c.green,
+          segments: c.segments);
+      b.addCylinder(Vector3D(0, h * 0.13, d * 0.73), w * 0.29, 0.07, c.green,
+          segments: c.segments);
     }
   }
 
@@ -346,15 +369,17 @@ abstract final class ProceduralMeshes {
     b.addCylinder(Vector3D(0, 0, 0), w * 0.3, h * 0.63, c.metal,
         axis: MeshAxis.y, segments: c.segments);
     for (var i = -3; i <= 3; i++) {
-      b.addCylinder(Vector3D(0, i * h * 0.065, 0), w * 0.315, h * 0.018,
-          c.midGrey, axis: MeshAxis.y, segments: c.segments);
+      b.addCylinder(
+          Vector3D(0, i * h * 0.065, 0), w * 0.315, h * 0.018, c.midGrey,
+          axis: MeshAxis.y, segments: c.segments);
     }
     b.addCylinder(Vector3D(0, h * 0.33, 0), w * 0.31, h * 0.06, c.cyan,
         axis: MeshAxis.y, segments: c.segments);
-    b.addCylinder(Vector3D(0, -h * 0.31, 0), w * 0.38, h * 0.11,
-        c.graphite, axis: MeshAxis.y, segments: c.segments);
+    b.addCylinder(Vector3D(0, -h * 0.31, 0), w * 0.38, h * 0.11, c.graphite,
+        axis: MeshAxis.y, segments: c.segments);
     b.addBeveledBox(Vector3D(0, -h * 0.41, -d * 0.08),
-        Vector3D(w * 0.58, h * 0.18, d * 0.6), c.contactBlock, bevel: 0.04);
+        Vector3D(w * 0.58, h * 0.18, d * 0.6), c.contactBlock,
+        bevel: 0.04);
   }
 
   static void _indicator(_MeshContext c) {
@@ -367,17 +392,19 @@ abstract final class ProceduralMeshes {
       'yellow' => c.yellow,
       _ => c.red,
     };
-    final lensDark = c.colorName == 'red' || c.colorName.isEmpty
-        ? c.redDark
-        : c.graphite;
+    final lensDark =
+        c.colorName == 'red' || c.colorName.isEmpty ? c.redDark : c.graphite;
     b.addBeveledBox(Vector3D(0, -h * 0.25, -d * 0.18),
-        Vector3D(w * 0.6, h * 0.43, d * 0.55), c.contactBlock, bevel: 0.05);
+        Vector3D(w * 0.6, h * 0.43, d * 0.55), c.contactBlock,
+        bevel: 0.05);
     b.addCylinder(Vector3D(0, h * 0.1, d * 0.23), w * 0.39, 0.2, c.metal,
         segments: c.segments);
     b.addCylinder(Vector3D(0, h * 0.1, d * 0.38), w * 0.32, 0.16, lensDark,
         segments: c.segments);
     b.addSphere(Vector3D(0, h * 0.1, d * 0.49), w * 0.31, lens,
-        segments: c.segments, rings: c.rings, scale: const Vector3D(1, 1, 0.58));
+        segments: c.segments,
+        rings: c.rings,
+        scale: const Vector3D(1, 1, 0.58));
     b.addSphere(Vector3D(-w * 0.09, h * 0.2, d * 0.65), w * 0.07, c.label,
         segments: c.segments, rings: c.rings);
   }
@@ -393,7 +420,8 @@ abstract final class ProceduralMeshes {
         axis: MeshAxis.x, segments: c.segments);
     for (final side in <double>[-1, 1]) {
       b.addCylinder(Vector3D(side * w * 0.32, centerY, 0), radius * 1.06,
-          w * 0.1, c.motorDark, axis: MeshAxis.x, segments: c.segments);
+          w * 0.1, c.motorDark,
+          axis: MeshAxis.x, segments: c.segments);
     }
     for (final side in <double>[-1, 1]) {
       b.addBox(Vector3D(0, centerY + side * radius * 0.78, 0),
@@ -401,18 +429,23 @@ abstract final class ProceduralMeshes {
       b.addBox(Vector3D(0, centerY, side * radius * 0.83),
           Vector3D(w * 0.51, h * 0.38, d * 0.07), c.motorDark);
     }
-    b.addCylinder(Vector3D(w * 0.43, centerY, 0), radius * 0.34, w * 0.22,
-        c.metal, axis: MeshAxis.x, segments: c.segments);
-    b.addCylinder(Vector3D(w * 0.55, centerY, 0), radius * 0.2, w * 0.08,
-        c.lightGrey, axis: MeshAxis.x, segments: c.segments);
-    b.addCylinder(Vector3D(-w * 0.4, centerY, 0), radius * 0.9, w * 0.08,
-        c.graphite, axis: MeshAxis.x, segments: c.segments);
+    b.addCylinder(
+        Vector3D(w * 0.43, centerY, 0), radius * 0.34, w * 0.22, c.metal,
+        axis: MeshAxis.x, segments: c.segments);
+    b.addCylinder(
+        Vector3D(w * 0.55, centerY, 0), radius * 0.2, w * 0.08, c.lightGrey,
+        axis: MeshAxis.x, segments: c.segments);
+    b.addCylinder(
+        Vector3D(-w * 0.4, centerY, 0), radius * 0.9, w * 0.08, c.graphite,
+        axis: MeshAxis.x, segments: c.segments);
     for (final side in <double>[-1, 1]) {
       b.addBeveledBox(Vector3D(side * w * 0.22, -h * 0.43, 0),
-          Vector3D(w * 0.22, h * 0.13, d * 0.63), c.motorDark, bevel: 0.035);
+          Vector3D(w * 0.22, h * 0.13, d * 0.63), c.motorDark,
+          bevel: 0.035);
     }
     b.addBeveledBox(Vector3D(0, h * 0.35, 0),
-        Vector3D(w * 0.43, h * 0.24, d * 0.58), c.motorDark, bevel: 0.06);
+        Vector3D(w * 0.43, h * 0.24, d * 0.58), c.motorDark,
+        bevel: 0.06);
     b.addBox(Vector3D(0, h * 0.35, d * 0.31),
         Vector3D(w * 0.32, h * 0.14, 0.05), c.graphite);
     if (c.detail == MeshDetail.detailed) {
@@ -433,7 +466,8 @@ abstract final class ProceduralMeshes {
     b.addBox(Vector3D(0, 0, -d * 0.58), Vector3D(w * 0.7, h * 0.12, 0.14),
         c.graphite);
     b.addBeveledBox(Vector3D(0, h * 0.17, d * 0.47),
-        Vector3D(w * 0.72, h * 0.29, 0.14), c.black, bevel: 0.03);
+        Vector3D(w * 0.72, h * 0.29, 0.14), c.black,
+        bevel: 0.03);
     b.addBox(Vector3D(0, h * 0.17, d * 0.56),
         Vector3D(w * 0.5, h * 0.06, 0.035), c.cyan);
     if (c.spec.kind == ComponentKind.dcSupply) {
@@ -442,10 +476,10 @@ abstract final class ProceduralMeshes {
             Vector3D(w * 0.055, h * 0.22, 0.055), c.graphite);
       }
     } else if (c.spec.kind == ComponentKind.acSupply) {
-      b.addCylinder(Vector3D(0, -h * 0.2, d * 0.52), w * 0.23, 0.12,
-          c.graphite, segments: c.segments);
-      b.addCylinder(Vector3D(0, -h * 0.2, d * 0.61), w * 0.1, 0.08,
-          c.metal, segments: c.segments);
+      b.addCylinder(Vector3D(0, -h * 0.2, d * 0.52), w * 0.23, 0.12, c.graphite,
+          segments: c.segments);
+      b.addCylinder(Vector3D(0, -h * 0.2, d * 0.61), w * 0.1, 0.08, c.metal,
+          segments: c.segments);
     } else {
       for (var i = -1; i <= 1; i++) {
         b.addSphere(Vector3D(i * w * 0.22, -h * 0.16, d * 0.54), w * 0.07,
@@ -465,20 +499,23 @@ abstract final class ProceduralMeshes {
     b.addBeveledBox(Vector3D(0, 0, 0), Vector3D(w, h, d), c.graphite,
         bevel: 0.1);
     b.addBeveledBox(Vector3D(0, h * 0.08, d * 0.46),
-        Vector3D(w * 0.82, h * 0.52, 0.16), c.black, bevel: 0.045);
+        Vector3D(w * 0.82, h * 0.52, 0.16), c.black,
+        bevel: 0.045);
     b.addBox(Vector3D(0, h * 0.08, d * 0.56),
         Vector3D(w * 0.64, h * 0.34, 0.04), c.displayDark);
     for (var i = -1; i <= 1; i++) {
-      b.addBox(Vector3D(i * w * 0.17, h * 0.08, d * 0.6),
+      b.addBox(
+          Vector3D(i * w * 0.17, h * 0.08, d * 0.6),
           Vector3D(w * 0.1, h * 0.055, 0.025),
           c.spec.kind == ComponentKind.voltmeter ? c.displayGreen : c.cyan);
-      b.addBox(Vector3D(i * w * 0.17, h * 0.16, d * 0.6),
+      b.addBox(
+          Vector3D(i * w * 0.17, h * 0.16, d * 0.6),
           Vector3D(w * 0.1, h * 0.025, 0.025),
           c.spec.kind == ComponentKind.voltmeter ? c.displayGreen : c.cyan);
     }
     if (c.spec.kind == ComponentKind.voltmeter) {
-      b.addCylinder(Vector3D(0, -h * 0.31, d * 0.51), w * 0.12, 0.12,
-          c.midGrey, segments: c.segments);
+      b.addCylinder(Vector3D(0, -h * 0.31, d * 0.51), w * 0.12, 0.12, c.midGrey,
+          segments: c.segments);
     } else {
       b.addBox(Vector3D(0, -h * 0.3, -d * 0.43),
           Vector3D(w * 0.74, h * 0.18, d * 0.3), c.metal);
@@ -494,10 +531,10 @@ abstract final class ProceduralMeshes {
         bevel: 0.09);
     b.addBox(Vector3D(0, 0, -d * 0.56), Vector3D(w * 0.7, h * 0.16, 0.12),
         c.graphite);
-    b.addBox(Vector3D(0, 0, d * 0.48), Vector3D(w * 0.28, h * 0.7, 0.1),
-        c.metal);
-    b.addBox(Vector3D(0, 0, d * 0.57), Vector3D(w * 0.54, h * 0.22, 0.05),
-        c.label);
+    b.addBox(
+        Vector3D(0, 0, d * 0.48), Vector3D(w * 0.28, h * 0.7, 0.1), c.metal);
+    b.addBox(
+        Vector3D(0, 0, d * 0.57), Vector3D(w * 0.54, h * 0.22, 0.05), c.label);
     for (final side in <double>[-1, 1]) {
       b.addBox(Vector3D(side * w * 0.39, 0, d * 0.25),
           Vector3D(w * 0.09, h * 0.66, d * 0.35), c.bornierDark);
@@ -598,7 +635,8 @@ abstract final class ProceduralMeshes {
       for (var i = 0; i < 4; i++) {
         final angle = i * math.pi / 2;
         b.addCylinder(
-          Vector3D(math.cos(angle) * w * 0.37, math.sin(angle) * h * 0.31, d * 0.16),
+          Vector3D(
+              math.cos(angle) * w * 0.37, math.sin(angle) * h * 0.31, d * 0.16),
           0.045,
           0.04,
           c.metal,
@@ -853,24 +891,30 @@ abstract final class ProceduralMeshes {
             c.motorDark,
           );
         }
-        b.addCylinder(Vector3D(w * 0.42, 0, 0), h * 0.1, w * 0.22,
-            c.metal, axis: MeshAxis.x, segments: c.segments);
+        b.addCylinder(Vector3D(w * 0.42, 0, 0), h * 0.1, w * 0.22, c.metal,
+            axis: MeshAxis.x, segments: c.segments);
       case ComponentCategory.signals:
-        b.addBeveledBox(Vector3D(0, 0, -0.1), Vector3D(w * 0.8, h * 0.85, d * 0.6),
-            c.graphite, bevel: 0.05);
+        b.addBeveledBox(Vector3D(0, 0, -0.1),
+            Vector3D(w * 0.8, h * 0.85, d * 0.6), c.graphite,
+            bevel: 0.05);
         b.addSphere(Vector3D(0, 0, d * 0.35), math.min(w, h) * 0.3,
-            variant.isEven ? c.red : c.green, segments: c.segments, rings: c.rings);
+            variant.isEven ? c.red : c.green,
+            segments: c.segments, rings: c.rings);
       case ComponentCategory.sensors:
-        b.addBeveledBox(const Vector3D(0, 0, 0), Vector3D(w * 0.65, h * 0.7, d * 0.7),
-            c.midGrey, bevel: 0.06);
+        b.addBeveledBox(const Vector3D(0, 0, 0),
+            Vector3D(w * 0.65, h * 0.7, d * 0.7), c.midGrey,
+            bevel: 0.06);
         b.addCylinder(Vector3D(0, h * 0.12, d * 0.4), math.min(w, h) * 0.2,
-            0.14, variant.isEven ? c.glass : c.brass, segments: c.segments);
+            0.14, variant.isEven ? c.glass : c.brass,
+            segments: c.segments);
       default:
-        b.addBeveledBox(const Vector3D(0, 0, 0), Vector3D(w, h, d), c.white, bevel: 0.08);
+        b.addBeveledBox(const Vector3D(0, 0, 0), Vector3D(w, h, d), c.white,
+            bevel: 0.08);
         b.addBox(Vector3D(0, 0, -d * 0.56), Vector3D(w * 0.7, h * 0.14, 0.14),
             c.graphite);
         b.addBeveledBox(Vector3D(0, h * 0.05, d * 0.45),
-            Vector3D(w * 0.76, h * 0.56, 0.16), c.lightGrey, bevel: 0.035);
+            Vector3D(w * 0.76, h * 0.56, 0.16), c.lightGrey,
+            bevel: 0.035);
         for (var index = 0; index <= variant; index++) {
           b.addBox(
             Vector3D((index - variant / 2) * w * 0.12, h * 0.06, d * 0.58),
@@ -896,8 +940,9 @@ abstract final class ProceduralMeshes {
       TerminalKind.neutral => c.blue,
       _ => c.brass,
     };
-    b.addCylinder(position - const Vector3D(0, 0, 0.035), radius * 1.35,
-        0.055, c.graphite, segments: c.segments);
+    b.addCylinder(position - const Vector3D(0, 0, 0.035), radius * 1.35, 0.055,
+        c.graphite,
+        segments: c.segments);
     b.addCylinder(position, radius, 0.09, color, segments: c.segments);
     if (c.detail == MeshDetail.detailed) {
       b.addBox(position + const Vector3D(0, 0, 0.052),
@@ -915,7 +960,8 @@ abstract final class ProceduralMeshes {
         ComponentKind.pushButtonNC ||
         ComponentKind.emergencyStop ||
         ComponentKind.selectorSwitch ||
-        ComponentKind.rotarySwitch => 1.05,
+        ComponentKind.rotarySwitch =>
+          1.05,
         ComponentKind.sensor || ComponentKind.limitSwitch => 0.9,
         _ => 0.82,
       };

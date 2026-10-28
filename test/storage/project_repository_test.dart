@@ -13,12 +13,14 @@ void main() {
 
   setUp(() {
     project = ProjectTemplates.apply(
-      ElectricalProject.empty(id: 'storage_test', name: 'مشروع التخزين', now: testNow),
+      ElectricalProject.empty(
+          id: 'storage_test', name: 'مشروع التخزين', now: testNow),
       ProjectTemplateKind.dcLamp,
     );
   });
 
-  test('memory repository renames, duplicates and retains circuit content', () async {
+  test('memory repository renames, duplicates and retains circuit content',
+      () async {
     final repository = ProjectRepository(MemoryProjectStorage());
     await repository.saveProject(project);
     final renamed = await repository.renameProject(project.id, 'اسم جديد');
@@ -30,7 +32,9 @@ void main() {
     expect(await repository.listProjects(), hasLength(2));
   });
 
-  test('checksummed project import detects tampering and avoids overwriting ids', () async {
+  test(
+      'checksummed project import detects tampering and avoids overwriting ids',
+      () async {
     final repository = ProjectRepository(MemoryProjectStorage());
     await repository.saveProject(project);
     final exported = repository.exportProject(project);
@@ -67,7 +71,8 @@ void main() {
     late LocalProjectStorage storage;
 
     setUp(() async {
-      directory = await Directory.systemTemp.createTemp('elec_lab_storage_test');
+      directory =
+          await Directory.systemTemp.createTemp('elec_lab_storage_test');
       storage = LocalProjectStorage(directory);
     });
 
@@ -82,7 +87,8 @@ void main() {
       expect(loaded, isNotNull);
       expect(loaded!.encode(), project.encode());
       expect(await reopened.list(), hasLength(1));
-      final files = await directory.list().where((entity) => entity is File).toList();
+      final files =
+          await directory.list().where((entity) => entity is File).toList();
       expect(files, isNotEmpty);
       await reopened.delete(project.id);
       expect(await reopened.load(project.id), isNull);

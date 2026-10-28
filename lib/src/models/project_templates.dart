@@ -23,8 +23,7 @@ abstract final class ProjectTemplates {
         ProjectTemplateKind.motorProtection => 'حماية محرك ثلاثي الطور',
         ProjectTemplateKind.directOnLine =>
           'Démarrage direct — تشغيل مباشر مثلث',
-        ProjectTemplateKind.starDelta =>
-          'Étoile-triangle — تشغيل نجمة/مثلث',
+        ProjectTemplateKind.starDelta => 'Étoile-triangle — تشغيل نجمة/مثلث',
       };
 
   static ElectricalProject apply(
@@ -151,7 +150,8 @@ abstract final class ProjectTemplates {
         add('h1', ComponentKind.indicator, 'H1', 610, 280, 'signals');
         connect(SupplyBay.dcId, 'positive', 's1', 'input', 'power');
         connect('s1', 'output', 'h1', 'x1', 'control', color: 0xff1e88e5);
-        connect('h1', 'x2', SupplyBay.dcId, 'negative', 'power', color: 0xff3949ab);
+        connect('h1', 'x2', SupplyBay.dcId, 'negative', 'power',
+            color: 0xff3949ab);
       case ProjectTemplateKind.selfHolding:
         add('s0', ComponentKind.pushButtonNC, 'S0', 280, 270, 'control');
         add('s1', ComponentKind.pushButtonNO, 'S1', 280, 490, 'control');
@@ -160,41 +160,52 @@ abstract final class ProjectTemplates {
         connect(SupplyBay.dcId, 'positive', 's0', 'input', 'power');
         connect('s0', 'output', 's1', 'input', 'control', color: 0xff1e88e5);
         connect('s1', 'output', 'k1', 'a1', 'control', color: 0xff1e88e5);
-        connect('k1', 'a2', SupplyBay.dcId, 'negative', 'control', color: 0xff3949ab);
+        connect('k1', 'a2', SupplyBay.dcId, 'negative', 'control',
+            color: 0xff3949ab);
         connect('s0', 'output', 'k1', 'aux13', 'control', color: 0xff1e88e5);
         connect('k1', 'aux14', 's1', 'output', 'control', color: 0xff1e88e5);
         connect(SupplyBay.dcId, 'positive', 'k1', 'l1', 'power');
         connect('k1', 't1', 'h1', 'x1', 'power');
-        connect('h1', 'x2', SupplyBay.dcId, 'negative', 'power', color: 0xff3949ab);
+        connect('h1', 'x2', SupplyBay.dcId, 'negative', 'power',
+            color: 0xff3949ab);
       case ProjectTemplateKind.motorProtection:
         add('k1', ComponentKind.contactor, 'K1', 300, 261, 'power');
-        add('f2', ComponentKind.thermalRelay, 'F2', 550, 276, 'power', <String, Object>{
+        add('f2', ComponentKind.thermalRelay, 'F2', 550, 276,
+            'power', <String, Object>{
           'ratedCurrent': 1.5,
         });
         add('m1', ComponentKind.motor3Phase, 'M1', 820, 280, 'power');
         connect(SupplyBay.threePhaseId, 'l1', 'k1', 'l1', 'power');
-        connect(SupplyBay.threePhaseId, 'l2', 'k1', 'l2', 'power', color: 0xfffdd835);
-        connect(SupplyBay.threePhaseId, 'l3', 'k1', 'l3', 'power', color: 0xff1e88e5);
+        connect(SupplyBay.threePhaseId, 'l2', 'k1', 'l2', 'power',
+            color: 0xfffdd835);
+        connect(SupplyBay.threePhaseId, 'l3', 'k1', 'l3', 'power',
+            color: 0xff1e88e5);
         connect('k1', 't1', 'f2', 'l1', 'power');
         connect('k1', 't2', 'f2', 'l2', 'power', color: 0xfffdd835);
         connect('k1', 't3', 'f2', 'l3', 'power', color: 0xff1e88e5);
         connect('f2', 't1', 'm1', 'u', 'power');
         connect('f2', 't2', 'm1', 'v', 'power', color: 0xfffdd835);
         connect('f2', 't3', 'm1', 'w', 'power', color: 0xff1e88e5);
-        connect(SupplyBay.threePhaseId, 'pe', 'm1', 'earth', 'power', color: 0xff43a047);
-        connect(SupplyBay.singlePhaseId, 'line', 'f2', 'nc95', 'control', color: 0xff1e88e5);
+        connect(SupplyBay.threePhaseId, 'pe', 'm1', 'earth', 'power',
+            color: 0xff43a047);
+        connect(SupplyBay.singlePhaseId, 'line', 'f2', 'nc95', 'control',
+            color: 0xff1e88e5);
         connect('f2', 'nc96', 'k1', 'a1', 'control', color: 0xff1e88e5);
-        connect('k1', 'a2', SupplyBay.singlePhaseId, 'neutral', 'control', color: 0xff3949ab);
+        connect('k1', 'a2', SupplyBay.singlePhaseId, 'neutral', 'control',
+            color: 0xff3949ab);
       case ProjectTemplateKind.directOnLine:
-        add('q1', ComponentKind.motorBreaker, 'Q1', 60, 300, 'power', <String, Object>{
+        add('q1', ComponentKind.motorBreaker, 'Q1', 60, 300,
+            'power', <String, Object>{
           'ratedCurrent': 4.0,
         });
         add('km1', ComponentKind.contactor, 'KM1', 260, 300, 'power', coil230);
-        add('f2', ComponentKind.thermalRelay, 'F2', 490, 312, 'power', <String, Object>{
+        add('f2', ComponentKind.thermalRelay, 'F2', 490, 312,
+            'power', <String, Object>{
           'ratedCurrent': 2.5,
           'tripTime': 5.0,
         });
-        add('m1', ComponentKind.motor6Terminal, 'M1', 810, 320, 'power', motor400);
+        add('m1', ComponentKind.motor6Terminal, 'M1', 810, 320, 'power',
+            motor400);
         add('s0', ComponentKind.pushButtonNC, 'S0 STOP', 130, 680, 'control');
         add('s1', ComponentKind.pushButtonNO, 'S1 START', 310, 680, 'control');
         for (var index = 0; index < 3; index++) {
@@ -212,28 +223,36 @@ abstract final class ProjectTemplates {
         phase('f2', 't2', 'm1', 'u2', 1);
         phase('f2', 't3', 'm1', 'w1', 2);
         phase('f2', 't3', 'm1', 'v2', 2);
-        connect(SupplyBay.threePhaseId, 'pe', 'm1', 'earth', 'power', color: 0xff43a047);
+        connect(SupplyBay.threePhaseId, 'pe', 'm1', 'earth', 'power',
+            color: 0xff43a047);
         startStopControl('km1', 'f2');
       case ProjectTemplateKind.starDelta:
-        add('q1', ComponentKind.motorBreaker, 'Q1', 45, 282, 'power', <String, Object>{
+        add('q1', ComponentKind.motorBreaker, 'Q1', 45, 282,
+            'power', <String, Object>{
           'ratedCurrent': 4.0,
         });
-        add('km1', ComponentKind.contactor, 'KM1 MAIN', 230, 282, 'power', coil230);
-        add('f2', ComponentKind.thermalRelay, 'F2', 450, 294, 'power', <String, Object>{
+        add('km1', ComponentKind.contactor, 'KM1 MAIN', 230, 282, 'power',
+            coil230);
+        add('f2', ComponentKind.thermalRelay, 'F2', 450, 294,
+            'power', <String, Object>{
           'ratedCurrent': 2.5,
           'tripTime': 5.0,
         });
-        add('kt1', ComponentKind.timer, 'KT1', 690, 282, 'control', <String, Object>{
+        add('kt1', ComponentKind.timer, 'KT1', 690, 282,
+            'control', <String, Object>{
           ...coil230,
           'delaySeconds': 3.0,
         });
-        add('m1', ComponentKind.motor6Terminal, 'M1', 880, 400, 'power', motor400);
-        add('km2', ComponentKind.contactor, 'KM2 STAR', 235, 560, 'power', <String, Object>{
+        add('m1', ComponentKind.motor6Terminal, 'M1', 880, 400, 'power',
+            motor400);
+        add('km2', ComponentKind.contactor, 'KM2 STAR', 235, 560,
+            'power', <String, Object>{
           ...coil230,
           'interlockGroup': 'm1_star_delta',
           'interlockRole': 'star',
         });
-        add('km3', ComponentKind.contactor, 'KM3 DELTA', 480, 560, 'power', <String, Object>{
+        add('km3', ComponentKind.contactor, 'KM3 DELTA', 480, 560,
+            'power', <String, Object>{
           ...coil230,
           'interlockGroup': 'm1_star_delta',
           'interlockRole': 'delta',
@@ -262,27 +281,33 @@ abstract final class ProjectTemplates {
         phase('km2', 't1', 'x1', 'a', 0);
         phase('km2', 't2', 'x1', 'a', 0);
         phase('km2', 't3', 'x1', 'a', 0);
-        connect(SupplyBay.threePhaseId, 'pe', 'm1', 'earth', 'power', color: 0xff43a047);
+        connect(SupplyBay.threePhaseId, 'pe', 'm1', 'earth', 'power',
+            color: 0xff43a047);
         startStopControl('km1', 'f2');
         // The timer starts with KM1. Its changeover contact transfers the
         // control supply from the star coil to the delta coil after the delay.
         control('s1', 'output', 'kt1', 'a1');
-        control('kt1', 'a2', SupplyBay.singlePhaseId, 'neutral', color: 0xff3949ab);
+        control('kt1', 'a2', SupplyBay.singlePhaseId, 'neutral',
+            color: 0xff3949ab);
         control('s1', 'output', 'kt1', 't15');
         control('kt1', 't16', 'km3', 'aux21');
         control('km3', 'aux22', 'km2', 'a1');
-        control('km2', 'a2', SupplyBay.singlePhaseId, 'neutral', color: 0xff3949ab);
+        control('km2', 'a2', SupplyBay.singlePhaseId, 'neutral',
+            color: 0xff3949ab);
         control('kt1', 't18', 'km2', 'aux21');
         control('km2', 'aux22', 'km3', 'a1');
-        control('km3', 'a2', SupplyBay.singlePhaseId, 'neutral', color: 0xff3949ab);
+        control('km3', 'a2', SupplyBay.singlePhaseId, 'neutral',
+            color: 0xff3949ab);
     }
     final installed = SupplyBay.install(empty);
     final enabledSources = switch (kind) {
       ProjectTemplateKind.dcLamp ||
-      ProjectTemplateKind.selfHolding => const <String>{SupplyBay.dcId},
+      ProjectTemplateKind.selfHolding =>
+        const <String>{SupplyBay.dcId},
       ProjectTemplateKind.motorProtection ||
       ProjectTemplateKind.directOnLine ||
-      ProjectTemplateKind.starDelta => const <String>{
+      ProjectTemplateKind.starDelta =>
+        const <String>{
           SupplyBay.threePhaseId,
           SupplyBay.singlePhaseId,
         },

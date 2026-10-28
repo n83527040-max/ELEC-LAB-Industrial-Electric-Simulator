@@ -63,7 +63,8 @@ class LocalProjectStorage implements ProjectStorage {
     project.validate();
     await directory.create(recursive: true);
     final file = _file(project.id);
-    final temporary = File('${file.path}.${DateTime.now().microsecondsSinceEpoch}.tmp');
+    final temporary =
+        File('${file.path}.${DateTime.now().microsecondsSinceEpoch}.tmp');
     await temporary.writeAsString(project.encode(), flush: true);
     if (await file.exists()) {
       await file.copy('${file.path}.bak');

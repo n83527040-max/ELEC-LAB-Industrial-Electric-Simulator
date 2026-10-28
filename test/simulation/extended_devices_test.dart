@@ -26,7 +26,8 @@ void main() {
     );
   });
 
-  test('transformer solves coupled ratio, secondary load and primary power', () {
+  test('transformer solves coupled ratio, secondary load and primary power',
+      () {
     final project = projectOf(
       <CircuitComponent>[
         device(
@@ -54,7 +55,8 @@ void main() {
     expect(result['h1']!.active, isTrue);
   });
 
-  test('OFF-delay keeps an independently powered output then opens after delay', () {
+  test('OFF-delay keeps an independently powered output then opens after delay',
+      () {
     var project = projectOf(
       <CircuitComponent>[
         device('g1', ComponentKind.dcSupply),
@@ -94,7 +96,9 @@ void main() {
     expect(result['h1']!.active, isFalse);
   });
 
-  test('differential breaker measures residual current and trips on neutral bypass', () {
+  test(
+      'differential breaker measures residual current and trips on neutral bypass',
+      () {
     final base = projectOf(
       <CircuitComponent>[
         device('g1', ComponentKind.acSupply),
@@ -183,7 +187,8 @@ void main() {
     );
   });
 
-  test('emergency stop and three-position rotary switch drive real contacts', () {
+  test('emergency stop and three-position rotary switch drive real contacts',
+      () {
     var emergency = projectOf(
       <CircuitComponent>[
         device('g1', ComponentKind.dcSupply),
@@ -231,7 +236,8 @@ void main() {
     expect(result['h2']!.active, isTrue);
   });
 
-  test('sensor, limit switch and selector form a real series control chain', () {
+  test('sensor, limit switch and selector form a real series control chain',
+      () {
     var project = projectOf(
       <CircuitComponent>[
         device('g1', ComponentKind.dcSupply),

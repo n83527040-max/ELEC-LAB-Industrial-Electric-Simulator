@@ -33,14 +33,28 @@ void main() {
       final spec = ComponentCatalog.specOf(ComponentKind.contactor);
       expect(
         spec.terminals.map((item) => item.id),
-        containsAll(<String>['l1', 'l2', 'l3', 't1', 't2', 't3', 'a1', 'a2', 'aux13', 'aux14', 'aux21', 'aux22']),
+        containsAll(<String>[
+          'l1',
+          'l2',
+          'l3',
+          't1',
+          't2',
+          't3',
+          'a1',
+          'a2',
+          'aux13',
+          'aux14',
+          'aux21',
+          'aux22'
+        ]),
       );
       expect(spec.terminal('a1').kind, TerminalKind.coil);
       expect(spec.terminal('t3').phase, 'L3');
     });
 
     test('terminal positions rotate around the actual device centre', () {
-      final component = device('k1', ComponentKind.contactor).copyWith(rotation: 1);
+      final component =
+          device('k1', ComponentKind.contactor).copyWith(rotation: 1);
       final spec = ComponentCatalog.specOf(ComponentKind.contactor);
       final original = BoardGeometry.terminalPosition(
         device('k1', ComponentKind.contactor),
@@ -55,7 +69,8 @@ void main() {
       expect(spec.size.width, greaterThan(0));
     });
 
-    test('scaled and rotated terminals use the same centre as board rendering', () {
+    test('scaled and rotated terminals use the same centre as board rendering',
+        () {
       final component = device('k1', ComponentKind.contactor, x: 120, y: 80)
           .copyWith(scale: 1.4, rotation: 1);
       final spec = ComponentCatalog.specOf(component.kind);
@@ -75,7 +90,8 @@ void main() {
     test('round trip preserves components, layers, wires and manual path', () {
       final source = projectOf(
         <CircuitComponent>[
-          device('g1', ComponentKind.dcSupply).copyWith(rotation: 2, scale: 1.2),
+          device('g1', ComponentKind.dcSupply)
+              .copyWith(rotation: 2, scale: 1.2),
           device('h1', ComponentKind.indicator, layer: 'signals'),
         ],
         <CircuitWire>[
@@ -85,7 +101,10 @@ void main() {
             'positive',
             'h1',
             'x1',
-            waypoints: const <BoardPoint>[BoardPoint(220, 80), BoardPoint(280, 130)],
+            waypoints: const <BoardPoint>[
+              BoardPoint(220, 80),
+              BoardPoint(280, 130)
+            ],
           ),
           connection('w2', 'h1', 'x2', 'g1', 'negative'),
         ],
@@ -94,12 +113,14 @@ void main() {
         jsonDecode(source.encode()) as Map<String, dynamic>,
       );
       expect(decoded.encode(), source.encode());
-      expect(decoded.wires.singleWhere((wire) => wire.id == 'w1').waypoints, hasLength(2));
+      expect(decoded.wires.singleWhere((wire) => wire.id == 'w1').waypoints,
+          hasLength(2));
       expect(decoded.components.first.rotation, 2);
       expect(decoded.layers, hasLength(4));
     });
 
-    test('permanent supply bay has real disabled sources and persists N and PE', () {
+    test('permanent supply bay has real disabled sources and persists N and PE',
+        () {
       final empty = ElectricalProject.empty(
         id: 'supply_bay',
         name: 'Supply bay',
@@ -107,11 +128,16 @@ void main() {
       );
       final project = SupplyBay.install(empty);
       expect(project.components, hasLength(3));
-      expect(SupplyBay.ids.every(project.components.map((item) => item.id).contains), isTrue);
+      expect(
+          SupplyBay.ids
+              .every(project.components.map((item) => item.id).contains),
+          isTrue);
       expect(project.components.every((item) => !item.flag('enabled')), isTrue);
       final threePhase = project.componentById(SupplyBay.threePhaseId)!;
       expect(
-        ComponentCatalog.specOf(threePhase.kind).terminals.map((item) => item.id),
+        ComponentCatalog.specOf(threePhase.kind)
+            .terminals
+            .map((item) => item.id),
         containsAll(<String>['l1', 'l2', 'l3', 'neutral', 'pe']),
       );
       expect(identical(SupplyBay.install(project), project), isTrue);
@@ -134,13 +160,15 @@ void main() {
         jsonDecode(wired.encode()) as Map<String, dynamic>,
       );
       expect(decoded.componentById(SupplyBay.dcId)?.flag('enabled'), isFalse);
-      expect(decoded.componentById(SupplyBay.threePhaseId)?.position, threePhase.position);
+      expect(decoded.componentById(SupplyBay.threePhaseId)?.position,
+          threePhase.position);
       expect(decoded.wires.single.from.componentId, SupplyBay.threePhaseId);
       expect(decoded.wires.single.from.terminalId, 'pe');
       expect(decoded.wires.single.to.componentId, 'm1');
     });
 
-    test('supply installation restores a missing power layer in legacy blanks', () {
+    test('supply installation restores a missing power layer in legacy blanks',
+        () {
       final legacy = ElectricalProject.empty(
         id: 'legacy_blank',
         name: 'Legacy blank',
@@ -260,7 +288,8 @@ void main() {
       );
     });
 
-    test('six-lead motor bridges are allowed only between distinct terminals', () {
+    test('six-lead motor bridges are allowed only between distinct terminals',
+        () {
       final motor = device('m1', ComponentKind.motor6Terminal);
       final bridge = connection('bridge', 'm1', 'u2', 'm1', 'v2');
       expect(
@@ -313,8 +342,10 @@ void main() {
         <CircuitWire>[connection('w1', 'g1', 'positive', 'x1', 'a')],
       );
       final points = WireRouter.route(project, project.wires.single);
-      expect(points.first, BoardGeometry.terminalPosition(project.components[0], 'positive'));
-      expect(points.last, BoardGeometry.terminalPosition(project.components[1], 'a'));
+      expect(points.first,
+          BoardGeometry.terminalPosition(project.components[0], 'positive'));
+      expect(points.last,
+          BoardGeometry.terminalPosition(project.components[1], 'a'));
       expect(points.toSet().length, points.length);
       expect(points.length, greaterThanOrEqualTo(2));
     });

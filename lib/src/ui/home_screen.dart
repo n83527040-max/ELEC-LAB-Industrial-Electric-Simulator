@@ -78,7 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text('ELEC LAB', textDirection: TextDirection.ltr),
                   Text(
                     'المختبر الكهربائي الصناعي',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.normal),
+                    style:
+                        TextStyle(fontSize: 11, fontWeight: FontWeight.normal),
                   ),
                 ],
               ),
@@ -89,15 +90,19 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             onPressed: widget.settings.toggleTheme,
             tooltip: 'تبديل الوضع الداكن والفاتح',
-            icon: Icon(widget.settings.darkMode ? Icons.light_mode : Icons.dark_mode),
+            icon: Icon(
+                widget.settings.darkMode ? Icons.light_mode : Icons.dark_mode),
           ),
           PopupMenuButton<String>(
             onSelected: _handleMenu,
             itemBuilder: (context) => const <PopupMenuEntry<String>>[
               PopupMenuItem(value: 'import', child: Text('استيراد مشروع')),
-              PopupMenuItem(value: 'backup', child: Text('إنشاء نسخة احتياطية')),
-              PopupMenuItem(value: 'restore', child: Text('استعادة نسخة احتياطية')),
-              PopupMenuItem(value: 'learning', child: Text('التحديات والمساعدة')),
+              PopupMenuItem(
+                  value: 'backup', child: Text('إنشاء نسخة احتياطية')),
+              PopupMenuItem(
+                  value: 'restore', child: Text('استعادة نسخة احتياطية')),
+              PopupMenuItem(
+                  value: 'learning', child: Text('التحديات والمساعدة')),
               PopupMenuItem(value: 'about', child: Text('حول ونطاق المحاكاة')),
             ],
           ),
@@ -141,7 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('مشاريعي', style: Theme.of(context).textTheme.titleLarge),
+                  Text('مشاريعي',
+                      style: Theme.of(context).textTheme.titleLarge),
                   Text('${_projects.length} مشروع'),
                 ],
               ),
@@ -238,7 +244,8 @@ class _HomeScreenState extends State<HomeScreen> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('حذف المشروع؟'),
-            content: Text('سيتم حذف «${summary.name}» ونسخته المحلية. لا يمكن التراجع.'),
+            content: Text(
+                'سيتم حذف «${summary.name}» ونسخته المحلية. لا يمكن التراجع.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
@@ -271,7 +278,9 @@ class _HomeScreenState extends State<HomeScreen> {
           onSubmitted: (value) => Navigator.pop(context, value),
         ),
         actions: <Widget>[
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('إلغاء')),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('إلغاء')),
           FilledButton(
             onPressed: () => Navigator.pop(context, controller.text),
             child: const Text('حفظ'),
@@ -287,7 +296,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _shareProject(ElectricalProject project) async {
     final directory = await getTemporaryDirectory();
     final file = File('${directory.path}/elec-lab-${project.id}.json');
-    await file.writeAsString(widget.repository.exportProject(project), flush: true);
+    await file.writeAsString(widget.repository.exportProject(project),
+        flush: true);
     await SharePlus.instance.share(
       ShareParams(
         files: <XFile>[XFile(file.path)],
@@ -347,10 +357,15 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('استعادة النسخة؟'),
-          content: const Text('ستُستبدل المشاريع التي لها نفس المعرّف بمحتوى النسخة الاحتياطية.'),
+          content: const Text(
+              'ستُستبدل المشاريع التي لها نفس المعرّف بمحتوى النسخة الاحتياطية.'),
           actions: <Widget>[
-            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('إلغاء')),
-            FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('استعادة')),
+            TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('إلغاء')),
+            FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('استعادة')),
           ],
         ),
       );
@@ -389,11 +404,13 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       applicationName: 'ELEC LAB',
       applicationVersion: '0.3.0',
-      applicationIcon: Image.asset('assets/icon/app_icon.png', width: 64, height: 64),
+      applicationIcon:
+          Image.asset('assets/icon/app_icon.png', width: 64, height: 64),
       children: const <Widget>[
         Text('مختبر تعليمي يعمل دون إنترنت لدوائر DC وAC الجيبية الخطية.'),
         SizedBox(height: 8),
-        Text('لا يحسب العابرات أو harmonics أو نموذج عزم المحرك الميكانيكي، ولا يصلح مرجعاً لتنفيذ دائرة حقيقية.'),
+        Text(
+            'لا يحسب العابرات أو harmonics أو نموذج عزم المحرك الميكانيكي، ولا يصلح مرجعاً لتنفيذ دائرة حقيقية.'),
       ],
     );
   }
@@ -544,12 +561,14 @@ class _NewProjectSheetState extends State<_NewProjectSheet> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, 0, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
+      padding: EdgeInsets.fromLTRB(
+          20, 0, 20, MediaQuery.viewInsetsOf(context).bottom + 20),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Text('مشروع جديد', style: Theme.of(context).textTheme.headlineSmall),
+            Text('مشروع جديد',
+                style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 18),
             TextField(
               controller: _name,
@@ -591,14 +610,16 @@ class _NewProjectSheetState extends State<_NewProjectSheet> {
                 }
               },
               child: Column(
-                children: ProjectTemplateKind.values.map(
-                  (template) => RadioListTile<ProjectTemplateKind>(
-                    value: template,
-                    title: Text(ProjectTemplates.name(template)),
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ).toList(growable: false),
+                children: ProjectTemplateKind.values
+                    .map(
+                      (template) => RadioListTile<ProjectTemplateKind>(
+                        value: template,
+                        title: Text(ProjectTemplates.name(template)),
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    )
+                    .toList(growable: false),
               ),
             ),
             const SizedBox(height: 12),
@@ -658,9 +679,12 @@ class _EmptyProjects extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 40),
       child: Column(
         children: <Widget>[
-          const Icon(Icons.dashboard_customize_outlined, size: 64, color: Colors.blueGrey),
+          const Icon(Icons.dashboard_customize_outlined,
+              size: 64, color: Colors.blueGrey),
           const SizedBox(height: 12),
-          Text(hasProjects ? 'لا توجد نتيجة لهذا البحث.' : 'لا توجد مشاريع بعد. أنشئ أول لوحة كهربائية.'),
+          Text(hasProjects
+              ? 'لا توجد نتيجة لهذا البحث.'
+              : 'لا توجد مشاريع بعد. أنشئ أول لوحة كهربائية.'),
         ],
       ),
     );
@@ -681,7 +705,9 @@ class _ErrorCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(message),
-            TextButton(onPressed: () => unawaited(onRetry()), child: const Text('إعادة المحاولة')),
+            TextButton(
+                onPressed: () => unawaited(onRetry()),
+                child: const Text('إعادة المحاولة')),
           ],
         ),
       ),

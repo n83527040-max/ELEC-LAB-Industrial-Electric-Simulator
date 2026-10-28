@@ -29,7 +29,8 @@ void main() {
       expect(result['h1']!.voltage, greaterThan(20));
       expect(result['h1']!.current, closeTo(24 / 288, 0.002));
       expect(result['h1']!.activePower, greaterThan(1.5));
-      expect(result.wireCurrents.values.every((current) => current > 0.07), isTrue);
+      expect(result.wireCurrents.values.every((current) => current > 0.07),
+          isTrue);
 
       project = setProperty(project, 's1', 'pressed', false);
       result = simulator.step(project);
@@ -61,7 +62,8 @@ void main() {
       expect(
         result['a1']!.current,
         closeTo(result['h1']!.current + result['v1']!.current, 1e-6),
-        reason: 'The series ammeter measures lamp + parallel voltmeter current.',
+        reason:
+            'The series ammeter measures lamp + parallel voltmeter current.',
       );
       expect(result['v1']!.voltage, greaterThan(20));
     });
@@ -80,7 +82,9 @@ void main() {
       final result = ElectricalSimulator().step(project);
       expect(result['a1']!.measurementValid, isFalse);
       expect(result['a1']!.current, greaterThan(10));
-      expect(result.diagnostics.any((item) => item.code == 'invalid_measurement'), isTrue);
+      expect(
+          result.diagnostics.any((item) => item.code == 'invalid_measurement'),
+          isTrue);
     });
 
     test('series voltmeter is marked invalid by alternate-path analysis', () {
@@ -99,10 +103,14 @@ void main() {
       final result = ElectricalSimulator().step(project);
       expect(result['v1']!.measurementValid, isFalse);
       expect(result['h1']!.active, isFalse);
-      expect(result.diagnostics.any((item) => item.code == 'invalid_measurement'), isTrue);
+      expect(
+          result.diagnostics.any((item) => item.code == 'invalid_measurement'),
+          isTrue);
     });
 
-    test('open fault removes current without changing the model to a fake value', () {
+    test(
+        'open fault removes current without changing the model to a fake value',
+        () {
       var project = projectOf(
         <CircuitComponent>[
           device('g1', ComponentKind.dcSupply),
@@ -117,18 +125,21 @@ void main() {
       final result = ElectricalSimulator().step(project);
       expect(result['h1']!.current, closeTo(0, 1e-8));
       expect(result['h1']!.active, isFalse);
-      expect(result.diagnostics.any((item) => item.code == 'injected_open'), isTrue);
+      expect(result.diagnostics.any((item) => item.code == 'injected_open'),
+          isTrue);
     });
   });
 
   group('Contactor, self-holding and timer', () {
-    test('contactor picks up, self-holds after release, and drops with Stop NC', () {
+    test('contactor picks up, self-holds after release, and drops with Stop NC',
+        () {
       final empty = ElectricalProject.empty(
         id: 'holding',
         name: 'Holding',
         now: testNow,
       );
-      var project = ProjectTemplates.apply(empty, ProjectTemplateKind.selfHolding);
+      var project =
+          ProjectTemplates.apply(empty, ProjectTemplateKind.selfHolding);
       final simulator = ElectricalSimulator();
       var result = simulator.step(project);
       expect(result['k1']!.energized, isFalse);
@@ -140,7 +151,8 @@ void main() {
 
       project = setProperty(project, 's1', 'pressed', false);
       result = simulator.step(project);
-      expect(result['k1']!.energized, isTrue, reason: '13/14 must maintain the coil');
+      expect(result['k1']!.energized, isTrue,
+          reason: '13/14 must maintain the coil');
       expect(result['h1']!.active, isTrue);
 
       project = setProperty(project, 's0', 'pressed', true);
@@ -155,7 +167,8 @@ void main() {
         name: 'Coil fault',
         now: testNow,
       );
-      var project = ProjectTemplates.apply(empty, ProjectTemplateKind.selfHolding);
+      var project =
+          ProjectTemplates.apply(empty, ProjectTemplateKind.selfHolding);
       project = setProperty(project, 'k1', 'fault', 'coilOpen');
       project = setProperty(project, 's1', 'pressed', true);
       final result = ElectricalSimulator().step(project);
@@ -164,7 +177,9 @@ void main() {
       expect(result['k1']!.current, closeTo(0, 1e-8));
     });
 
-    test('ON-delay timer uses explicit simulation time and resets on power loss', () {
+    test(
+        'ON-delay timer uses explicit simulation time and resets on power loss',
+        () {
       var project = projectOf(
         <CircuitComponent>[
           device('g1', ComponentKind.dcSupply),

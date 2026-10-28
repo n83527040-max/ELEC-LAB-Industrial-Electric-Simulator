@@ -156,7 +156,8 @@ class _ProjectThumbnailState extends State<ProjectThumbnail> {
           );
         }
         return CustomPaint(
-          painter: SchematicExportPainter(project: widget.project, meshes: meshes),
+          painter:
+              SchematicExportPainter(project: widget.project, meshes: meshes),
         );
       },
     );
@@ -187,7 +188,8 @@ abstract final class ProjectExporter {
     ElectricalProject project, {
     int maxDimension = 1800,
   }) async {
-    final scale = maxDimension / math.max(project.boardWidth, project.boardHeight);
+    final scale =
+        maxDimension / math.max(project.boardWidth, project.boardHeight);
     final width = (project.boardWidth * scale).round();
     final height = (project.boardHeight * scale).round();
     final meshes = await loadMeshes(project);
@@ -209,7 +211,8 @@ abstract final class ProjectExporter {
 
   static Future<Uint8List> renderPdf(ElectricalProject project) async {
     final png = await renderPng(project);
-    final font = pw.Font.ttf(await rootBundle.load('assets/fonts/Amiri-Regular.ttf'));
+    final font =
+        pw.Font.ttf(await rootBundle.load('assets/fonts/Amiri-Regular.ttf'));
     final document = pw.Document(
       title: 'ELEC LAB — ${project.name}',
       author: 'ELEC LAB Industrial Electric Simulator',

@@ -20,7 +20,8 @@ class LayersSheet extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: Text('الطبقات', style: Theme.of(context).textTheme.titleLarge),
+                    child: Text('الطبقات',
+                        style: Theme.of(context).textTheme.titleLarge),
                   ),
                   IconButton(
                     onPressed: () => _addLayer(context),
@@ -40,7 +41,8 @@ class LayersSheet extends StatelessWidget {
                       .where((item) => item.layerId == layer.id)
                       .length;
                   return ListTile(
-                    leading: CircleAvatar(backgroundColor: Color(layer.colorValue)),
+                    leading:
+                        CircleAvatar(backgroundColor: Color(layer.colorValue)),
                     title: Text(layer.name),
                     subtitle: Text('$componentCount عناصر'),
                     onTap: () => _renameLayer(context, layer.id, layer.name),
@@ -52,12 +54,16 @@ class LayersSheet extends StatelessWidget {
                             layer.id,
                             !layer.visible,
                           ),
-                          icon: Icon(layer.visible ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(layer.visible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
                           tooltip: 'إظهار/إخفاء',
                         ),
                         IconButton(
-                          onPressed: () => controller.setLayerLocked(layer.id, !layer.locked),
-                          icon: Icon(layer.locked ? Icons.lock : Icons.lock_open),
+                          onPressed: () => controller.setLayerLocked(
+                              layer.id, !layer.locked),
+                          icon:
+                              Icon(layer.locked ? Icons.lock : Icons.lock_open),
                           tooltip: 'قفل/فك القفل',
                         ),
                         IconButton(
@@ -86,12 +92,14 @@ class LayersSheet extends StatelessWidget {
     if (name != null) controller.addLayer(name);
   }
 
-  Future<void> _renameLayer(BuildContext context, String id, String oldName) async {
+  Future<void> _renameLayer(
+      BuildContext context, String id, String oldName) async {
     final name = await _askName(context, 'إعادة تسمية الطبقة', oldName);
     if (name != null) controller.renameLayer(id, name);
   }
 
-  Future<String?> _askName(BuildContext context, String title, String initial) async {
+  Future<String?> _askName(
+      BuildContext context, String title, String initial) async {
     final text = TextEditingController(text: initial);
     final result = await showDialog<String>(
       context: context,

@@ -9,7 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_helpers.dart';
 
 void main() {
-  ElectricalProject template(ProjectTemplateKind kind) => ProjectTemplates.apply(
+  ElectricalProject template(ProjectTemplateKind kind) =>
+      ProjectTemplates.apply(
         ElectricalProject.empty(
           id: 'starter_${kind.name}',
           name: kind.name,
@@ -54,7 +55,8 @@ void main() {
     expect(result.success, isTrue);
     expect(result['km1']!.energized, isTrue);
     expect(result['km2']!.energized, isTrue, reason: 'Star coil before delay.');
-    expect(result['km3']!.energized, isFalse, reason: 'Delta NO is still open.');
+    expect(result['km3']!.energized, isFalse,
+        reason: 'Delta NO is still open.');
     expect(result['m1']!.active, isTrue);
     expect(result['m1']!.connectionMode, 'star');
     expect(result['m1']!.current, closeTo(2 / 3, 0.12));
@@ -62,7 +64,8 @@ void main() {
 
     project = setProperty(project, 's1', 'pressed', false);
     result = simulator.step(project);
-    expect(result['km1']!.energized, isTrue, reason: 'Main contactor seals in.');
+    expect(result['km1']!.energized, isTrue,
+        reason: 'Main contactor seals in.');
     expect(result['km2']!.energized, isTrue);
 
     for (var index = 0; index < 32; index++) {
@@ -70,7 +73,8 @@ void main() {
     }
     expect(result['kt1']!.active, isTrue);
     expect(result['km2']!.energized, isFalse, reason: 'Timer NC opens star.');
-    expect(result['km3']!.energized, isTrue, reason: 'Timer NO energizes delta.');
+    expect(result['km3']!.energized, isTrue,
+        reason: 'Timer NO energizes delta.');
     expect(result['m1']!.active, isTrue);
     expect(result['m1']!.connectionMode, 'delta');
     expect(result['m1']!.current, greaterThan(starCurrent * 2.5));
@@ -112,7 +116,8 @@ void main() {
     );
   });
 
-  test('mechanical interlock blocks power contacts only for assigned instances', () {
+  test('mechanical interlock blocks power contacts only for assigned instances',
+      () {
     const starAssignment = <String, Object>{
       'interlockGroup': 'test_pair',
       'interlockRole': 'star',
@@ -149,8 +154,10 @@ void main() {
     expect(result.success, isTrue);
     expect(result['km2']!.energized, isTrue);
     expect(result['km3']!.energized, isTrue);
-    expect(result['h1']!.active, isFalse, reason: 'Star power is mechanically blocked.');
-    expect(result['h2']!.active, isFalse, reason: 'Delta power is mechanically blocked.');
+    expect(result['h1']!.active, isFalse,
+        reason: 'Star power is mechanically blocked.');
+    expect(result['h2']!.active, isFalse,
+        reason: 'Delta power is mechanically blocked.');
     expect(
       result.diagnostics.any((item) => item.code == 'interlock_conflict'),
       isTrue,
@@ -163,13 +170,13 @@ void main() {
       wires: project.wires
           .where(
             (wire) =>
-                wire.from.componentId != 'km3' &&
-                wire.to.componentId != 'km3',
+                wire.from.componentId != 'km3' && wire.to.componentId != 'km3',
           )
           .toList(growable: false),
     );
     result = simulator.step(dangling);
-    expect(result['h1']!.active, isFalse, reason: 'Invalid groups fail safe open.');
+    expect(result['h1']!.active, isFalse,
+        reason: 'Invalid groups fail safe open.');
     expect(
       result.diagnostics.any((item) => item.code == 'interlock_config'),
       isTrue,

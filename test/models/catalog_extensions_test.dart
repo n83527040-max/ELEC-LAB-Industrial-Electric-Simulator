@@ -8,21 +8,29 @@ import 'package:flutter_test/flutter_test.dart';
 import '../test_helpers.dart';
 
 void main() {
-  test('catalog contains 41 unique extensions without replacing legacy motor', () {
+  test('catalog contains 41 unique extensions without replacing legacy motor',
+      () {
     expect(ComponentKind.values, hasLength(68));
     expect(ExtendedComponentCatalog.byKind, hasLength(41));
     expect(ExtendedComponentCatalog.byKind.keys.toSet(), hasLength(41));
     expect(
-      ComponentCatalog.specOf(ComponentKind.motor3Phase).terminals.map((t) => t.id).toSet(),
+      ComponentCatalog.specOf(ComponentKind.motor3Phase)
+          .terminals
+          .map((t) => t.id)
+          .toSet(),
       <String>{'u1', 'v1', 'w1', 'pe'},
     );
     expect(
-      ComponentCatalog.specOf(ComponentKind.motor6Terminal).terminals.map((t) => t.id).toSet(),
+      ComponentCatalog.specOf(ComponentKind.motor6Terminal)
+          .terminals
+          .map((t) => t.id)
+          .toSet(),
       <String>{'u1', 'v1', 'w1', 'u2', 'v2', 'w2', 'pe'},
     );
   });
 
-  test('every model has unique finite terminals and a solvable isolated stamp', () {
+  test('every model has unique finite terminals and a solvable isolated stamp',
+      () {
     for (final kind in ComponentKind.values) {
       final spec = ComponentCatalog.specOf(kind);
       expect(spec.terminals, isNotEmpty, reason: kind.name);
@@ -33,9 +41,12 @@ void main() {
       );
       for (final terminal in spec.terminals) {
         expect(terminal.id, isNotEmpty, reason: kind.name);
-        expect(terminal.localPosition.x.isFinite, isTrue, reason: '${kind.name}/${terminal.id}');
-        expect(terminal.localPosition.y.isFinite, isTrue, reason: '${kind.name}/${terminal.id}');
-        expect(terminal.localPosition.z.isFinite, isTrue, reason: '${kind.name}/${terminal.id}');
+        expect(terminal.localPosition.x.isFinite, isTrue,
+            reason: '${kind.name}/${terminal.id}');
+        expect(terminal.localPosition.y.isFinite, isTrue,
+            reason: '${kind.name}/${terminal.id}');
+        expect(terminal.localPosition.z.isFinite, isTrue,
+            reason: '${kind.name}/${terminal.id}');
       }
       for (final entry in spec.defaultProperties.entries) {
         final value = entry.value;
@@ -81,7 +92,8 @@ void main() {
 
     final delta = star.copyWith(
       wires: <CircuitWire>[
-        ...star.wires.where((wire) => wire.id == 'w1' || wire.id == 'w2' || wire.id == 'w3'),
+        ...star.wires.where(
+            (wire) => wire.id == 'w1' || wire.id == 'w2' || wire.id == 'w3'),
         connection('w4', 'm1', 'u2', 'm1', 'v1'),
         connection('w5', 'm1', 'v2', 'm1', 'w1'),
         connection('w6', 'm1', 'w2', 'm1', 'u1'),

@@ -10,7 +10,8 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('all bundled GLB assets decode and match manifest and terminals', () async {
+  test('all bundled GLB assets decode and match manifest and terminals',
+      () async {
     final manifest = jsonDecode(
       await rootBundle.loadString('assets/models/manifest.json'),
     ) as Map<String, dynamic>;
@@ -21,7 +22,8 @@ void main() {
       'allUsed': true,
     });
     final sourceAssets = models
-        .expand((dynamic model) => (model as Map<String, dynamic>)['sourceAssets'] as List)
+        .expand((dynamic model) =>
+            (model as Map<String, dynamic>)['sourceAssets'] as List)
         .map((dynamic source) => (source as Map<String, dynamic>)['file'])
         .toSet();
     expect(sourceAssets, hasLength(30));
@@ -63,7 +65,8 @@ void main() {
     expect(files, ComponentKind.values.length * 3);
   });
 
-  test('GLB indicator material follows real component color property', () async {
+  test('GLB indicator material follows real component color property',
+      () async {
     final red = await DeviceMeshRepository.forKind(
       ComponentKind.indicator,
       color: 'red',
@@ -72,8 +75,10 @@ void main() {
       ComponentKind.indicator,
       color: 'green',
     );
-    expect(red.faces.map((face) => face.colorValue).toSet(), contains(0xffdb3b36));
-    expect(green.faces.map((face) => face.colorValue).toSet(), contains(0xff25a66a));
+    expect(
+        red.faces.map((face) => face.colorValue).toSet(), contains(0xffdb3b36));
+    expect(green.faces.map((face) => face.colorValue).toSet(),
+        contains(0xff25a66a));
     expect(identical(red, green), isFalse);
   });
 
