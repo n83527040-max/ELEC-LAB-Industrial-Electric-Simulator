@@ -25,7 +25,8 @@ flutter build apk --release
 | المحرر | `test/state/editor_controller_test.dart` | الإضافة والسحب والتوصيل وDIN snap والمصادر الثابتة والمسارات والطبقات والحفظ وUndo/Redo |
 | التخزين | `test/storage/project_repository_test.dart` | ملفات حقيقية، فتح بعد الإغلاق، .bak، checksum، backup وpath traversal |
 | ملفات GLB | `test/three_d/glb_asset_test.dart` | فك كل الملفات الـ81 من asset bundle، manifest والأحجام والمثلثات والفهارس والأطراف، لون المصباح ورفض الملف غير الصالح |
-| 3D والتصدير | `test/export/export_and_mesh_test.dart` | LOD لكل الأنواع، تفرد الهندسة، تطابق الأطراف، هامش بلا قص بعد perspective، تدوير المجسم، PNG وPDF |
+| 3D والتصدير | `test/export/export_and_mesh_test.dart` | LOD لكل الأنواع، تفرد الهندسة، تطابق الأطراف، هامش بلا قص بعد perspective، PNG وPDF |
+| العارض التفاعلي | `test/three_d/interactive_mesh_viewer_test.dart` | تحميل GLB المفصل قبل تركيب الواجهة، السحب والتدوير ودورة حياة الإيماءات في suite مستقلة عن raster async |
 | ثبات اللوحة | `test/widget/board_viewport_test.dart` | Fit كامل على الهاتف، منع سحب الخلفية، Zoom وFit، تغيير الاتجاه وثبات المصادر |
 | التحديات | `test/learning/challenges_test.dart` | النجاح مرتبط بالحالة الكهربائية وتحرير Start |
 | الواجهة | `test/widget/app_widget_test.dart` | RTL، dark/light، إنشاء مشروع وإضافة جهاز، هاتف صغير/landscape، Play/Stop |
