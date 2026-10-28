@@ -110,7 +110,6 @@ class _ComponentLibrarySheetState extends State<ComponentLibrarySheet> {
                                     : 2;
                         return GridView.builder(
                           key: const Key('component-grid'),
-                          scrollCacheExtent: const ScrollCacheExtent.pixels(160),
                           padding: const EdgeInsets.fromLTRB(12, 8, 12, 20),
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
