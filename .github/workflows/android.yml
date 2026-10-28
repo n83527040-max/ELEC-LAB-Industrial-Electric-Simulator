@@ -50,18 +50,8 @@ jobs:
       - name: Resolve dependencies
         run: flutter pub get
 
-      - name: Synchronize Dart formatting once
-        run: |
-          dart format lib test
-          if ! git diff --quiet -- lib test; then
-            git config user.name 'arena-format'
-            git config user.email 'arena-format@users.noreply.github.com'
-            git add lib test
-            git commit -m 'style: format final 0.5.0 sources'
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-            echo '::error::Formatting was synchronized; rerun strict verification.'
-            exit 1
-          fi
+      - name: Verify Dart formatting
+        run: dart format --output=none --set-exit-if-changed lib test
 
       - name: Static analysis
         run: |
