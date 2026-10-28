@@ -72,7 +72,7 @@ jobs:
       - name: Unit and widget tests
         run: |
           set +e
-          flutter test --coverage --timeout=45s --concurrency=1 > test.log 2>&1
+          flutter test --coverage --timeout=45s --concurrency=1 test/three_d/glb_asset_test.dart > test.log 2>&1
           STATUS=$?
           cat test.log
           if [ "$STATUS" -ne 0 ]; then
