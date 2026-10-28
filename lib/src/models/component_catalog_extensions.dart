@@ -71,7 +71,8 @@ abstract final class ExtendedComponentCatalog {
         'powerFactor': 0.8,
         'fault': 'none',
       },
-      description: 'ثلاث ملفات مستقلة U1/U2 وV1/V2 وW1/W2 داخل MNA؛ التوصيل الخارجي يحدد نجمة أو مثلث والتيار من الحل.',
+      description:
+          'ثلاث ملفات مستقلة U1/U2 وV1/V2 وW1/W2 داخل MNA؛ التوصيل الخارجي يحدد نجمة أو مثلث والتيار من الحل.',
     ),
     ComponentKind.mcb2P: ComponentSpec(
       kind: ComponentKind.mcb2P,
@@ -275,7 +276,8 @@ abstract final class ExtendedComponentCatalog {
         'closed': true,
         'fault': 'none',
       },
-      description: 'يقيس مجموع تياري L وN ويفصل التسرب فقط؛ يحتاج حماية مستقلة ضد الحمل الزائد والقصر.',
+      description:
+          'يقيس مجموع تياري L وN ويفصل التسرب فقط؛ يحتاج حماية مستقلة ضد الحمل الزائد والقصر.',
     ),
     ComponentKind.isolator3P: ComponentSpec(
       kind: ComponentKind.isolator3P,
@@ -497,7 +499,8 @@ abstract final class ExtendedComponentCatalog {
         'interlockGroup': '',
         'interlockRole': '',
       },
-      description: 'أربع نقاط قدرة NO بما فيها المحايد، مع ملف ونقاط NO/NC مساعدة.',
+      description:
+          'أربع نقاط قدرة NO بما فيها المحايد، مع ملف ونقاط NO/NC مساعدة.',
     ),
     ComponentKind.lightSwitch: ComponentSpec(
       kind: ComponentKind.lightSwitch,
@@ -593,7 +596,8 @@ abstract final class ExtendedComponentCatalog {
         'crossed': false,
         'fault': 'none',
       },
-      description: 'أربعة أطراف؛ يبدّل بين التوصيل المستقيم والمتقاطع لدارة الدرج.',
+      description:
+          'أربعة أطراف؛ يبدّل بين التوصيل المستقيم والمتقاطع لدارة الدرج.',
     ),
     ComponentKind.impulseRelay: ComponentSpec(
       kind: ComponentKind.impulseRelay,
@@ -640,7 +644,8 @@ abstract final class ExtendedComponentCatalog {
         'dropoutRatio': 0.35,
         'fault': 'none',
       },
-      description: 'يكتشف الجبهة الصاعدة للملف ويبدّل حالة مخرجات محفوظة بين NO وNC.',
+      description:
+          'يكتشف الجبهة الصاعدة للملف ويبدّل حالة مخرجات محفوظة بين NO وNC.',
     ),
     ComponentKind.staircaseTimer: ComponentSpec(
       kind: ComponentKind.staircaseTimer,
@@ -686,7 +691,8 @@ abstract final class ExtendedComponentCatalog {
         'delaySeconds': 60.0,
         'fault': 'none',
       },
-      description: 'يغلق مع النبضة ويحافظ على الإنارة لمدة محددة بعد زوالها، مع نقطة تبديل.',
+      description:
+          'يغلق مع النبضة ويحافظ على الإنارة لمدة محددة بعد زوالها، مع نقطة تبديل.',
     ),
     ComponentKind.socketOutlet: ComponentSpec(
       kind: ComponentKind.socketOutlet,
@@ -735,7 +741,8 @@ abstract final class ExtendedComponentCatalog {
       defaultProperties: const <String, Object>{
         'fault': 'none',
       },
-      description: 'ثلاث وصلات مستقلة L وN وPE بين المدخل والمخرج؛ الحمل الخارجي يوصل بالمقبس.',
+      description:
+          'ثلاث وصلات مستقلة L وN وPE بين المدخل والمخرج؛ الحمل الخارجي يوصل بالمقبس.',
     ),
     ComponentKind.industrialSocket: ComponentSpec(
       kind: ComponentKind.industrialSocket,
@@ -814,7 +821,8 @@ abstract final class ExtendedComponentCatalog {
       defaultProperties: const <String, Object>{
         'fault': 'none',
       },
-      description: 'خمس قنوات تغذية عابرة مستقلة؛ PE لا يحمل تيار الحمل العادي.',
+      description:
+          'خمس قنوات تغذية عابرة مستقلة؛ PE لا يحمل تيار الحمل العادي.',
     ),
     ComponentKind.ledLamp: ComponentSpec(
       kind: ComponentKind.ledLamp,
@@ -971,7 +979,8 @@ abstract final class ExtendedComponentCatalog {
         'heating': true,
         'fault': 'none',
       },
-      description: 'منطق حرارة/تبريد مع histérésis وحالة تماس حقيقية من الحرارة ونقطة الضبط.',
+      description:
+          'منطق حرارة/تبريد مع histérésis وحالة تماس حقيقية من الحرارة ونقطة الضبط.',
     ),
     ComponentKind.motionSensor: ComponentSpec(
       kind: ComponentKind.motionSensor,
@@ -1135,7 +1144,8 @@ abstract final class ExtendedComponentCatalog {
         'powerWatts': 0.5,
         'fault': 'none',
       },
-      description: 'حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.',
+      description:
+          'حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.',
     ),
     ComponentKind.capacitiveSensor: ComponentSpec(
       kind: ComponentKind.capacitiveSensor,
@@ -1169,7 +1179,8 @@ abstract final class ExtendedComponentCatalog {
         'powerWatts': 0.5,
         'fault': 'none',
       },
-      description: 'حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.',
+      description:
+          'حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.',
     ),
     ComponentKind.photoelectricSensor: ComponentSpec(
       kind: ComponentKind.photoelectricSensor,
@@ -1203,7 +1214,8 @@ abstract final class ExtendedComponentCatalog {
         'powerWatts': 0.5,
         'fault': 'none',
       },
-      description: 'حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.',
+      description:
+          'حساس PNP بثلاثة أسلاك: استهلاك تغذية ومخرج يتصل بـ+24V أو 0V حسب الحالة.',
     ),
     ComponentKind.phaseRelay: ComponentSpec(
       kind: ComponentKind.phaseRelay,
@@ -1256,7 +1268,8 @@ abstract final class ExtendedComponentCatalog {
         'minVoltage': 320.0,
         'fault': 'none',
       },
-      description: 'يفحص وجود الجهود الثلاثة وتسلسلها ويحرّك NO/NC؛ يكشف فقدان طور أو عكس التسلسل.',
+      description:
+          'يفحص وجود الجهود الثلاثة وتسلسلها ويحرّك NO/NC؛ يكشف فقدان طور أو عكس التسلسل.',
     ),
     ComponentKind.currentTransformer: ComponentSpec(
       kind: ComponentKind.currentTransformer,
@@ -1298,7 +1311,8 @@ abstract final class ExtendedComponentCatalog {
         'maxSecondaryVoltage': 30.0,
         'fault': 'none',
       },
-      description: 'CT 100/5A افتراضي: علاقة تيار مثالية داخل MNA مع عبء ثانوي 2Ω وتحذير الجهد الزائد.',
+      description:
+          'CT 100/5A افتراضي: علاقة تيار مثالية داخل MNA مع عبء ثانوي 2Ω وتحذير الجهد الزائد.',
     ),
     ComponentKind.voltageTransformer: ComponentSpec(
       kind: ComponentKind.voltageTransformer,
@@ -1339,7 +1353,8 @@ abstract final class ExtendedComponentCatalog {
         'secondaryResistance': 0.2,
         'fault': 'none',
       },
-      description: 'محول قياس بنسبة جهد حقيقية داخل MNA ومعزول كهربائياً بين الملفين.',
+      description:
+          'محول قياس بنسبة جهد حقيقية داخل MNA ومعزول كهربائياً بين الملفين.',
     ),
     ComponentKind.wattmeter: ComponentSpec(
       kind: ComponentKind.wattmeter,
@@ -1377,7 +1392,8 @@ abstract final class ExtendedComponentCatalog {
         'maxVoltage': 600.0,
         'maxCurrent': 20.0,
       },
-      description: 'قياس رباعي الأطراف يحسب القدرة الفعالة من الجهد والتيار وطورهما.',
+      description:
+          'قياس رباعي الأطراف يحسب القدرة الفعالة من الجهد والتيار وطورهما.',
     ),
     ComponentKind.frequencyMeter: ComponentSpec(
       kind: ComponentKind.frequencyMeter,
@@ -1402,7 +1418,8 @@ abstract final class ExtendedComponentCatalog {
       defaultProperties: const <String, Object>{
         'maxVoltage': 600.0,
       },
-      description: 'مقاومة دخل 1MΩ وقراءة تردد المصدر الفعلي عند وجود جهد صالح.',
+      description:
+          'مقاومة دخل 1MΩ وقراءة تردد المصدر الفعلي عند وجود جهد صالح.',
     ),
     ComponentKind.neutralBar: ComponentSpec(
       kind: ComponentKind.neutralBar,
@@ -1445,7 +1462,8 @@ abstract final class ExtendedComponentCatalog {
       defaultProperties: const <String, Object>{
         'fault': 'none',
       },
-      description: 'نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.',
+      description:
+          'نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.',
     ),
     ComponentKind.earthBar: ComponentSpec(
       kind: ComponentKind.earthBar,
@@ -1488,7 +1506,8 @@ abstract final class ExtendedComponentCatalog {
       defaultProperties: const <String, Object>{
         'fault': 'none',
       },
-      description: 'نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.',
+      description:
+          'نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.',
     ),
     ComponentKind.distributionBlock: ComponentSpec(
       kind: ComponentKind.distributionBlock,
@@ -1531,7 +1550,8 @@ abstract final class ExtendedComponentCatalog {
       defaultProperties: const <String, Object>{
         'fault': 'none',
       },
-      description: 'نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.',
+      description:
+          'نقاط موصلة داخلياً بمقاومة منخفضة؛ كل الأطراف على نفس العقدة الكهربائية.',
     ),
     ComponentKind.fan: ComponentSpec(
       kind: ComponentKind.fan,
@@ -1565,7 +1585,8 @@ abstract final class ExtendedComponentCatalog {
         'powerFactor': 0.8,
         'fault': 'none',
       },
-      description: 'حمل محرك أحادي الطور بمعاوقة steady-state وحالة دوران من الجهد.',
+      description:
+          'حمل محرك أحادي الطور بمعاوقة steady-state وحالة دوران من الجهد.',
     ),
     ComponentKind.pump: ComponentSpec(
       kind: ComponentKind.pump,
@@ -1608,7 +1629,8 @@ abstract final class ExtendedComponentCatalog {
         'powerFactor': 0.82,
         'fault': 'none',
       },
-      description: 'حمل مضخة ثلاثي الطور بنموذج واي متوازن وتسلسل طور وتيار من MNA.',
+      description:
+          'حمل مضخة ثلاثي الطور بنموذج واي متوازن وتسلسل طور وتيار من MNA.',
     ),
     ComponentKind.heater3Phase: ComponentSpec(
       kind: ComponentKind.heater3Phase,
@@ -1651,7 +1673,8 @@ abstract final class ExtendedComponentCatalog {
         'powerFactor': 1.0,
         'fault': 'none',
       },
-      description: 'ثلاث مقاومات تسخين واي؛ القدرة الحرارية الكهربائية محسوبة من الحل.',
+      description:
+          'ثلاث مقاومات تسخين واي؛ القدرة الحرارية الكهربائية محسوبة من الحل.',
     ),
     ComponentKind.solenoidValve: ComponentSpec(
       kind: ComponentKind.solenoidValve,
@@ -1685,7 +1708,8 @@ abstract final class ExtendedComponentCatalog {
         'powerFactor': 0.7,
         'fault': 'none',
       },
-      description: 'ملف صمام أحادي الطور بمعاوقة حقيقية؛ الجهد المناسب يفتح الصمام افتراضياً.',
+      description:
+          'ملف صمام أحادي الطور بمعاوقة حقيقية؛ الجهد المناسب يفتح الصمام افتراضياً.',
     ),
     ComponentKind.cableSegment: ComponentSpec(
       kind: ComponentKind.cableSegment,
@@ -1713,7 +1737,8 @@ abstract final class ExtendedComponentCatalog {
         'resistivity': 0.0175,
         'fault': 'none',
       },
-      description: 'مقاومة R=ρL/S من الطول والمقطع؛ مستقل عن سلك الرسم المنطقي.',
+      description:
+          'مقاومة R=ρL/S من الطول والمقطع؛ مستقل عن سلك الرسم المنطقي.',
     ),
   };
 }
