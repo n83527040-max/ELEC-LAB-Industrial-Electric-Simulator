@@ -24,7 +24,9 @@ flutter build apk --release
 | الأجهزة الموسعة | `test/simulation/extended_devices_test.dart` | المحول، OFF-delay، ΔI وRCD، قاطع المحرك، المحرك الأحادي، العداد، Emergency/Rotary، الحساسات، ودائرة محرك Start/Stop مع PE |
 | المحرر | `test/state/editor_controller_test.dart` | الإضافة والسحب والتوصيل وDIN snap والمصادر الثابتة والمسارات والطبقات والحفظ وUndo/Redo |
 | التخزين | `test/storage/project_repository_test.dart` | ملفات حقيقية، فتح بعد الإغلاق، .bak، checksum، backup وpath traversal |
+| ملفات GLB | `test/three_d/glb_asset_test.dart` | فك كل الملفات الـ81 من asset bundle، manifest والأحجام والمثلثات والفهارس والأطراف، لون المصباح ورفض الملف غير الصالح |
 | 3D والتصدير | `test/export/export_and_mesh_test.dart` | LOD لكل الأنواع، تفرد الهندسة، تطابق الأطراف، هامش بلا قص بعد perspective، تدوير المجسم، PNG وPDF |
+| ثبات اللوحة | `test/widget/board_viewport_test.dart` | Fit كامل على الهاتف، منع سحب الخلفية، Zoom وFit، تغيير الاتجاه وثبات المصادر |
 | التحديات | `test/learning/challenges_test.dart` | النجاح مرتبط بالحالة الكهربائية وتحرير Start |
 | الواجهة | `test/widget/app_widget_test.dart` | RTL، dark/light، إنشاء مشروع وإضافة جهاز، هاتف صغير/landscape، Play/Stop |
 | المكتبة واللوحة | `test/widget/component_library_test.dart` | بحث وتصفية، المرور على كل بطاقات الأنواع الـ27 في landscape، إخفاء/إظهار الأطراف ولمسها بعد التحجيم والتدوير، وتفعيل Supply Bay وبدء سلك من L1 |

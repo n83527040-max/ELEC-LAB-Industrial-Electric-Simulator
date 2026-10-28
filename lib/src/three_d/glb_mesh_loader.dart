@@ -89,7 +89,7 @@ abstract final class GlbMeshDecoder {
     var binaryLength = 0;
     var offset = 12;
     while (offset + 8 <= bytes.length) {
-      final chunkHeader = ByteData.sublistView(bytes, offset, 8);
+      final chunkHeader = ByteData.sublistView(bytes, offset, offset + 8);
       final length = chunkHeader.getUint32(0, Endian.little);
       final type = chunkHeader.getUint32(4, Endian.little);
       final start = offset + 8;
