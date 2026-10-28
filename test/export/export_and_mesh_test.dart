@@ -126,18 +126,17 @@ void main() {
       ProjectTemplateKind.selfHolding,
     );
     final component = project.componentById('k1')!;
+    final mesh = await DeviceMeshRepository.forComponent(
+      component,
+      detail: MeshDetail.detailed,
+    );
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: SizedBox(
             width: 400,
             height: 400,
-            child: InteractiveMeshViewer(
-              mesh: await DeviceMeshRepository.forComponent(
-                component,
-                detail: MeshDetail.detailed,
-              ),
-            ),
+            child: InteractiveMeshViewer(mesh: mesh),
           ),
         ),
       ),
