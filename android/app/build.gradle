@@ -27,10 +27,9 @@ android {
     }
 
     signingConfigs {
-        evaluation {
-            // Reuse the CI debug identity for this sideloaded evaluation app.
+        debug {
+            // Keep AGP's automatic debug-keystore creation for CI evaluation.
             // Explicit v1 is required by Android 6 / API 23; v2 covers Android 7+.
-            initWith(signingConfigs.debug)
             enableV1Signing = true
             enableV2Signing = true
             enableV3Signing = false
@@ -40,8 +39,8 @@ android {
 
     buildTypes {
         release {
-            // Replace the evaluation identity with a private upload key for stores.
-            signingConfig = signingConfigs.evaluation
+            // Replace the debug identity with a private upload key for stores.
+            signingConfig = signingConfigs.debug
             minifyEnabled = false
             shrinkResources = false
         }
