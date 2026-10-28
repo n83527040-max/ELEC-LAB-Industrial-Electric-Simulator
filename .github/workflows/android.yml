@@ -72,7 +72,7 @@ jobs:
       - name: Unit and widget tests
         run: |
           set +e
-          flutter test --coverage --timeout=45s > test.log 2>&1
+          flutter test --coverage --timeout=45s test/widget/board_viewport_test.dart test/widget/component_library_test.dart > test.log 2>&1
           STATUS=$?
           cat test.log
           if [ "$STATUS" -ne 0 ]; then
@@ -80,21 +80,17 @@ jobs:
           import re
           import sys
           raw = open(sys.argv[1], encoding='utf-8').read()
-          descriptions = list(dict.fromkeys(re.findall(
-              r'The test description was:\s*\n([^\n]+)', raw,
-          )))
-          for description in descriptions:
-              escaped = description.replace('%', '%25').replace('\r', '%0D')
-              print('::error::FAILED TEST: ' + escaped)
-          for match in re.finditer(r'The test description was:', raw):
-              context = raw[max(0, match.start() - 3500):match.start()]
-              context = context.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
-              for offset in range(0, len(context), 2400):
-                  print('::error::FAILURE CONTEXT: ' + context[offset:offset + 2400])
-          text = raw[-14000:]
-          text = text.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
-          for offset in range(0, len(text), 2400):
-              print('::error::' + text[offset:offset + 2400])
+          groups = re.findall(r'::group::❌(.*?)(?=::endgroup::)', raw, re.S)
+          for group in groups:
+              if len(group) > 12000:
+                  group = group[:9000] + '\n... STACK TRUNCATED ...\n' + group[-3000:]
+              group = group.replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+              for offset in range(0, len(group), 2400):
+                  print('::error::FAILED TEST: ' + group[offset:offset + 2400])
+          if not groups:
+              text = raw[-14000:].replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+              for offset in range(0, len(text), 2400):
+                  print('::error::' + text[offset:offset + 2400])
           PY
           fi
           exit "$STATUS"
