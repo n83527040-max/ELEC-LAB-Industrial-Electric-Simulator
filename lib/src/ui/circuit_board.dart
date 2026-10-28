@@ -66,6 +66,7 @@ class CircuitBoardState extends State<CircuitBoard> {
   /// Fits the complete fixed mounting plate, including its frame, DIN rails and
   /// supply bay. It never focuses on a subset that could crop the enclosure.
   void fitToContent() {
+    debugPrint('FIT request viewport=$_viewportSize scale=$_fitScale');
     if (_viewportSize.isEmpty) return;
     final project = widget.controller.project;
     _applyViewport(
@@ -116,6 +117,7 @@ class CircuitBoardState extends State<CircuitBoard> {
 
   void _syncController() {
     final matrix = _transformation.value;
+    debugPrint('FIT sync scale=${matrix.getMaxScaleOnAxis()} viewport=$_viewportSize');
     widget.controller.setViewport(
       scale: matrix.getMaxScaleOnAxis(),
       offset: BoardPoint(matrix.storage[12], matrix.storage[13]),
