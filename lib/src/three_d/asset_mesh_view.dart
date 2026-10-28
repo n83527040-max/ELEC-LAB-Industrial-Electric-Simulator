@@ -120,11 +120,7 @@ class _AssetMeshFutureView extends StatelessWidget {
         }
         if (fixedScale != null) return const SizedBox.expand();
         return const Center(
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(strokeWidth: 1.8),
-          ),
+          child: Icon(Icons.bolt, size: 20, color: Colors.white38),
         );
       },
     );

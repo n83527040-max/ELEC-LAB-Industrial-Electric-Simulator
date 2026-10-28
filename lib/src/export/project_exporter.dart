@@ -140,10 +140,10 @@ class _ProjectThumbnailState extends State<ProjectThumbnail> {
             child: Center(
               child: snapshot.hasError
                   ? const Icon(Icons.error_outline, color: Colors.orange)
-                  : const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 1.6),
+                  : const Icon(
+                      Icons.electrical_services,
+                      size: 24,
+                      color: Colors.white38,
                     ),
             ),
           );
