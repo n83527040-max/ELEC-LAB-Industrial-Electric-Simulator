@@ -121,15 +121,18 @@ void main() {
   });
 
   testWidgets('3D viewer responds to rotation gestures', (tester) async {
+    debugPrint('VIEWER project');
     final project = ProjectTemplates.apply(
       ElectricalProject.empty(id: 'viewer', name: 'Viewer', now: testNow),
       ProjectTemplateKind.selfHolding,
     );
     final component = project.componentById('k1')!;
+    debugPrint('VIEWER loading cached mesh');
     final mesh = await DeviceMeshRepository.forComponent(
       component,
       detail: MeshDetail.detailed,
     );
+    debugPrint('VIEWER mesh loaded ${mesh.vertices.length}/${mesh.faces.length}');
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -141,10 +144,14 @@ void main() {
         ),
       ),
     );
+    debugPrint('VIEWER mounted');
     await tester.drag(find.byType(InteractiveMeshViewer), const Offset(80, 30));
+    debugPrint('VIEWER dragged');
     await tester.pump();
+    debugPrint('VIEWER pumped');
     // Let the double-tap recognition timeout finish before tree disposal.
     await tester.pump(const Duration(milliseconds: 400));
+    debugPrint('VIEWER complete');
     expect(find.byType(CustomPaint), findsWidgets);
     expect(tester.takeException(), isNull);
   }, timeout: const Timeout(Duration(seconds: 45)));
