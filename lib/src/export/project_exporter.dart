@@ -101,15 +101,37 @@ class SchematicExportPainter extends CustomPainter {
       oldDelegate.project != project || oldDelegate.meshes != meshes;
 }
 
-class ProjectThumbnail extends StatelessWidget {
+class ProjectThumbnail extends StatefulWidget {
   const ProjectThumbnail({required this.project, super.key});
 
   final ElectricalProject project;
 
   @override
+  State<ProjectThumbnail> createState() => _ProjectThumbnailState();
+}
+
+class _ProjectThumbnailState extends State<ProjectThumbnail> {
+  late Future<Map<String, DeviceMesh>> _meshes;
+
+  @override
+  void initState() {
+    super.initState();
+    _meshes = ProjectExporter.loadMeshes(widget.project);
+  }
+
+  @override
+  void didUpdateWidget(ProjectThumbnail oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.project.id != widget.project.id ||
+        oldWidget.project.updatedAt != widget.project.updatedAt) {
+      _meshes = ProjectExporter.loadMeshes(widget.project);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, DeviceMesh>>(
-      future: ProjectExporter.loadMeshes(project),
+      future: _meshes,
       builder: (context, snapshot) {
         final meshes = snapshot.data;
         if (meshes == null) {
@@ -127,7 +149,7 @@ class ProjectThumbnail extends StatelessWidget {
           );
         }
         return CustomPaint(
-          painter: SchematicExportPainter(project: project, meshes: meshes),
+          painter: SchematicExportPainter(project: widget.project, meshes: meshes),
         );
       },
     );
