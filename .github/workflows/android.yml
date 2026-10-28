@@ -72,7 +72,7 @@ jobs:
       - name: Unit and widget tests
         run: |
           set +e
-          flutter test --coverage --timeout=45s test/widget/board_viewport_test.dart > test.log 2>&1
+          flutter test --coverage --timeout=45s > test.log 2>&1
           STATUS=$?
           cat test.log
           if [ "$STATUS" -ne 0 ]; then
@@ -91,9 +91,6 @@ jobs:
               text = raw[-14000:].replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
               for offset in range(0, len(text), 2400):
                   print('::error::' + text[offset:offset + 2400])
-          diagnostics = raw[-6000:].replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
-          for offset in range(0, len(diagnostics), 2400):
-              print('::error::DIAGNOSTICS: ' + diagnostics[offset:offset + 2400])
           PY
           fi
           exit "$STATUS"

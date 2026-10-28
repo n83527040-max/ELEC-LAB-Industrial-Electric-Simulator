@@ -41,7 +41,7 @@ class CircuitBoardState extends State<CircuitBoard> {
 
   BoardPoint get visibleCenter {
     final matrix = _transformation.value;
-    final scale = math.max(0.08, matrix.getMaxScaleOnAxis());
+    final scale = math.max(0.08, _planeScale(matrix));
     final translation = matrix.getTranslation();
     return BoardPoint(
       (_viewportSize.width / 2 - translation.x) / scale,
@@ -50,6 +50,20 @@ class CircuitBoardState extends State<CircuitBoard> {
   }
 
   static const double _frameMargin = 12;
+
+  // InteractiveViewer uses a 4x4 matrix whose Z scale stays at 1. Using
+  // getMaxScaleOnAxis() therefore reports 1 whenever a phone Fit is below 1.
+  // Only the board's X/Y plane participates in this two-dimensional viewport.
+  double _planeScale(Matrix4 matrix) {
+    final storage = matrix.storage;
+    final x = storage[0] * storage[0] +
+        storage[1] * storage[1] +
+        storage[2] * storage[2];
+    final y = storage[4] * storage[4] +
+        storage[5] * storage[5] +
+        storage[6] * storage[6];
+    return math.sqrt(math.max(x, y));
+  }
 
   double get _fitScale {
     if (_viewportSize.isEmpty) return 1;
@@ -66,7 +80,6 @@ class CircuitBoardState extends State<CircuitBoard> {
   /// Fits the complete fixed mounting plate, including its frame, DIN rails and
   /// supply bay. It never focuses on a subset that could crop the enclosure.
   void fitToContent() {
-    debugPrint('FIT request viewport=$_viewportSize scale=$_fitScale');
     if (_viewportSize.isEmpty) return;
     final project = widget.controller.project;
     _applyViewport(
@@ -78,7 +91,7 @@ class CircuitBoardState extends State<CircuitBoard> {
 
   void zoomBy(double delta) {
     if (_viewportSize.isEmpty) return;
-    final current = _transformation.value.getMaxScaleOnAxis();
+    final current = _planeScale(_transformation.value);
     final next = (current * (1 + delta)).clamp(_fitScale, _maximumScale).toDouble();
     final focal = Offset(_viewportSize.width / 2, _viewportSize.height / 2);
     final translation = _transformation.value.getTranslation();
@@ -90,12 +103,10 @@ class CircuitBoardState extends State<CircuitBoard> {
   }
 
   void _applyViewport(double scale, BoardPoint boardFocus, Offset screenFocus) {
-    debugPrint('APPLY scale=$scale focus=$boardFocus screen=$screenFocus');
     final tx = screenFocus.dx - boardFocus.x * scale;
     final ty = screenFocus.dy - boardFocus.y * scale;
     _transformation.value = _boundedMatrix(
-      Matrix4.identity()
-        ..scaleByDouble(scale, scale, 1, 1)
+      Matrix4.diagonal3Values(scale, scale, 1)
         ..setTranslationRaw(tx, ty, 0),
     );
     _syncController();
@@ -103,7 +114,7 @@ class CircuitBoardState extends State<CircuitBoard> {
 
   Matrix4 _boundedMatrix(Matrix4 candidate) {
     final project = widget.controller.project;
-    final scale = candidate.getMaxScaleOnAxis().clamp(_fitScale, _maximumScale).toDouble();
+    final scale = _planeScale(candidate).clamp(_fitScale, _maximumScale).toDouble();
     final translation = candidate.getTranslation();
     final width = project.boardWidth * scale;
     final height = project.boardHeight * scale;
@@ -114,18 +125,15 @@ class CircuitBoardState extends State<CircuitBoard> {
 
     final tx = axisTranslation(_viewportSize.width, width, translation.x);
     final ty = axisTranslation(_viewportSize.height, height, translation.y);
-    final bounded = Matrix4.identity()
-      ..scaleByDouble(scale, scale, 1, 1)
+    final bounded = Matrix4.diagonal3Values(scale, scale, 1)
       ..setTranslationRaw(tx, ty, 0);
-    debugPrint('BOUND candidate=${candidate.getMaxScaleOnAxis()} scale=$scale result=${bounded.getMaxScaleOnAxis()} diagonal=${bounded.storage[0]}');
     return bounded;
   }
 
   void _syncController() {
     final matrix = _transformation.value;
-    debugPrint('FIT sync scale=${matrix.getMaxScaleOnAxis()} viewport=$_viewportSize');
     widget.controller.setViewport(
-      scale: matrix.getMaxScaleOnAxis(),
+      scale: _planeScale(matrix),
       offset: BoardPoint(matrix.storage[12], matrix.storage[13]),
     );
   }
