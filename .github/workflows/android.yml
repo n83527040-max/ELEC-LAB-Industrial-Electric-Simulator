@@ -36,6 +36,34 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Audit published APK signing and archive integrity
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/elec-signing-audit
+          for TAG in v0.4.0 v0.5.0; do
+            mkdir -p "/tmp/elec-signing-audit/$TAG"
+            gh release download "$TAG" --pattern app-release.apk --dir "/tmp/elec-signing-audit/$TAG" --clobber
+          done
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)
+          ZIPALIGN=$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -n 1)
+          AAPT=$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)
+          for TAG in v0.4.0 v0.5.0; do
+            APK="/tmp/elec-signing-audit/$TAG/app-release.apk"
+            unzip -tqq "$APK"
+            "$ZIPALIGN" -c 4 "$APK"
+            "$APKSIGNER" verify --verbose --print-certs "$APK" > "/tmp/$TAG-signature.log"
+            "$AAPT" dump badging "$APK" | head -n 4
+            python3 - "$TAG" "/tmp/$TAG-signature.log" <<'PY'
+          import sys
+          tag, path = sys.argv[1:]
+          for line in open(path, encoding='utf-8'):
+              line = line.strip()
+              if 'Verified using' in line or 'certificate SHA-256 digest' in line:
+                  print('::notice::' + tag + ' ' + line)
+          PY
+          done
+
       - name: Install Flutter stable
         uses: subosito/flutter-action@v2
         with:
